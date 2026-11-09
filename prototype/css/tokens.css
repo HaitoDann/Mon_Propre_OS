@@ -1,0 +1,116 @@
+/* =====================================================================
+   DESIGN TOKENS — source unique du style (miroir de branding/brand.toml)
+   Futur équivalent QML : singleton Theme.qml (Theme.accent, Theme.space2…)
+   Aucun composant ne doit utiliser de valeur en dur.
+   ===================================================================== */
+:root {
+  /* Marque */
+  --accent: #5B7CFF;
+  --accent-2: #8B5CF6;
+  --accent-text: #ffffff;
+  --gradient-brand: linear-gradient(135deg, var(--accent), var(--accent-2));
+
+  /* États */
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+
+  /* Typographie */
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-md: 13px;
+  --fs-lg: 15px;
+  --fs-xl: 20px;
+  --fs-display: 56px;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Espacements (échelle de 4 px) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Rayons */
+  --radius-xs: 5px;
+  --radius-sm: 7px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  /* Dimensions du shell */
+  --topbar-h: 34px;
+  --dock-icon: 48px;
+  --dock-icon-max: 70px;
+  --dock-margin: 8px;
+
+  /* Animation */
+  --dur-fast: 120ms;
+  --dur-normal: 220ms;
+  --dur-slow: 360ms;
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --ease-spring: cubic-bezier(.34, 1.4, .64, 1);
+
+  /* Matériaux */
+  --blur: blur(28px) saturate(1.5);
+}
+
+/* ---------- Thème sombre (par défaut) ---------- */
+:root, [data-theme="dark"] {
+  --wall-1: #0b0f1f;
+  --wall-2: #1b1440;
+  --wall-glow-1: rgba(91, 124, 255, .45);
+  --wall-glow-2: rgba(139, 92, 246, .40);
+
+  --surface-glass: rgba(22, 24, 34, .62);
+  --surface-glass-strong: rgba(26, 28, 40, .82);
+  --surface-window: #1b1d27;
+  --surface-sunken: #15171f;
+  --surface-hover: rgba(255, 255, 255, .08);
+  --surface-active: rgba(255, 255, 255, .14);
+
+  --text: #eef0f6;
+  --text-secondary: #a3a9b8;
+  --text-tertiary: #6c7282;
+
+  --border: rgba(255, 255, 255, .08);
+  --border-strong: rgba(255, 255, 255, .14);
+  --highlight: inset 0 1px 0 rgba(255, 255, 255, .06);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, .35), 0 1px 3px rgba(0, 0, 0, .3);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, .5), 0 2px 8px rgba(0, 0, 0, .35);
+}
+
+/* ---------- Thème clair ---------- */
+[data-theme="light"] {
+  --wall-1: #dfe6ff;
+  --wall-2: #ece3ff;
+  --wall-glow-1: rgba(91, 124, 255, .35);
+  --wall-glow-2: rgba(139, 92, 246, .30);
+
+  --surface-glass: rgba(255, 255, 255, .62);
+  --surface-glass-strong: rgba(250, 250, 253, .85);
+  --surface-window: #ffffff;
+  --surface-sunken: #f4f5f8;
+  --surface-hover: rgba(0, 0, 0, .05);
+  --surface-active: rgba(0, 0, 0, .09);
+
+  --text: #1b1d24;
+  --text-secondary: #5d6372;
+  --text-tertiary: #9097a5;
+
+  --border: rgba(0, 0, 0, .08);
+  --border-strong: rgba(0, 0, 0, .14);
+  --highlight: inset 0 1px 0 rgba(255, 255, 255, .6);
+
+  --shadow-sm: 0 1px 2px rgba(20, 25, 50, .12);
+  --shadow-md: 0 8px 24px rgba(20, 25, 50, .16), 0 1px 3px rgba(20, 25, 50, .1);
+  --shadow-lg: 0 24px 60px rgba(20, 25, 50, .25), 0 2px 8px rgba(20, 25, 50, .12);
+}

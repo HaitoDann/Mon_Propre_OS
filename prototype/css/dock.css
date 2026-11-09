@@ -1,0 +1,27 @@
+/* Dock — futur Dock.qml */
+#dock { position: absolute; bottom: var(--dock-margin); left: 50%; transform: translateX(-50%); z-index: 1900;
+  display: flex; align-items: flex-end; gap: 6px; padding: 6px 8px; height: calc(var(--dock-icon) + 14px);
+  border-radius: var(--radius-xl); transition: transform var(--dur-normal) var(--ease-out), opacity var(--dur-normal); }
+#dock.hidden { transform: translate(-50%, 130%); opacity: 0; }
+
+.dock-item { position: relative; width: var(--dock-icon); height: var(--dock-icon); flex: none; transform-origin: bottom center; }
+.dock-item .app-icon { width: 100%; height: 100%; }
+.dock-item.animate { transition: width var(--dur-normal) var(--ease-out), height var(--dur-normal) var(--ease-out); }
+.dock-item.bounce .app-icon { animation: bounce 600ms var(--ease-out); }
+@keyframes bounce { 25% { transform: translateY(-16px); } 50% { transform: none; } 70% { transform: translateY(-6px); } }
+.dock-item.enter { animation: dock-enter var(--dur-normal) var(--ease-spring); }
+@keyframes dock-enter { from { width: 0; opacity: 0; } }
+
+/* Indicateur d'application ouverte (un point ; deux si plusieurs fenêtres) */
+.dock-item .ind { position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); display: flex; gap: 3px; }
+.dock-item .ind i { width: 4px; height: 4px; border-radius: 50%; background: var(--text); opacity: .85; }
+
+/* Infobulle */
+.dock-tip { position: absolute; z-index: 2400; padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--fs-sm); white-space: nowrap; pointer-events: none;
+  background: var(--surface-glass-strong); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border-strong); box-shadow: var(--shadow-md);
+  transform: translate(-50%, -100%); transition: opacity var(--dur-fast); }
+.dock-tip.hidden { opacity: 0; }
+
+.dock-sep { width: 1px; align-self: stretch; margin: 6px 3px; background: var(--border-strong); flex: none; }
+
+@media (max-width: 760px) { :root { --dock-icon: 38px; } }

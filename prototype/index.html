@@ -1,60 +1,45 @@
 <!doctype html>
-<html lang="fr" data-theme="light">
+<html lang="fr" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>osname — maquette du bureau</title>
-<link rel="stylesheet" href="tokens.css">
-<link rel="stylesheet" href="style.css">
+<title>osname — Desktop Shell</title>
+<!-- Design system -->
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<!-- Composants du shell -->
+<link rel="stylesheet" href="css/topbar.css">
+<link rel="stylesheet" href="css/popover.css">
+<link rel="stylesheet" href="css/dock.css">
+<link rel="stylesheet" href="css/window.css">
+<link rel="stylesheet" href="css/launcher.css">
 </head>
 <body>
 <div id="desktop">
-
-  <!-- Barre supérieure -->
-  <header id="topbar">
-    <div class="left">
-      <button class="brand" id="btn-launcher" title="Lanceur (Ctrl+Espace)"><span class="logo"></span><span class="os-name">osname</span></button>
-      <span id="active-app">Bureau</span>
-    </div>
-    <div class="right">
-      <button class="tb" id="btn-theme" title="Clair / sombre">◐</button>
-      <button class="tb" id="btn-control" title="Centre de contrôle">
-        <span>📶</span><span>🔊</span><span>🔋 86 %</span>
-      </button>
-      <button class="tb" id="clock"></button>
-    </div>
-  </header>
-
-  <!-- Fenêtres -->
   <div id="windows"></div>
+  <header id="topbar"></header>
+  <nav id="dock" class="material" aria-label="Dock"></nav>
 
-  <!-- Dock -->
-  <nav id="dock"></nav>
-
-  <!-- Lanceur -->
-  <div id="launcher" class="overlay hidden">
-    <div class="launcher-box">
-      <input id="search" placeholder="Rechercher une application, un fichier…" autocomplete="off">
+  <div id="launcher" class="hidden">
+    <div class="launcher-box material">
+      <div class="search-field"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="search" placeholder="Rechercher une application…" autocomplete="off"></div>
       <div id="app-grid"></div>
     </div>
   </div>
 
-  <!-- Centre de contrôle -->
-  <aside id="control" class="panel hidden">
-    <div class="tiles">
-      <button class="tile on" data-toggle><b>Wi-Fi</b><small>Maison</small></button>
-      <button class="tile on" data-toggle><b>Bluetooth</b><small>Activé</small></button>
-      <button class="tile" data-toggle><b>Ne pas déranger</b><small>Désactivé</small></button>
-      <button class="tile" id="tile-dark"><b>Mode sombre</b><small>Basculer</small></button>
-    </div>
-    <label class="slider">Luminosité<input type="range" value="70"></label>
-    <label class="slider">Volume<input type="range" value="45"></label>
-    <div class="accent-row"><span>Couleur d'accent</span><div id="accents"></div></div>
-  </aside>
-
-  <!-- Notifications -->
   <div id="toasts"></div>
 </div>
-<script src="app.js"></script>
+
+<!-- Ordre de chargement : noyau → données → composants → démarrage -->
+<script src="js/core.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/apps.js"></script>
+<script src="js/popover.js"></script>
+<script src="js/wm.js"></script>
+<script src="js/dock.js"></script>
+<script src="js/topbar.js"></script>
+<script src="js/launcher.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
