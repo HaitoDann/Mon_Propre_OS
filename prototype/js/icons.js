@@ -35,6 +35,13 @@ const ICONS = {
   close: '<path d="M6 6l12 12M18 6 6 18"/>',
   minus: '<path d="M5 12h14"/>',
   expand: '<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>',
+  grid: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  bolt: '<path d="M13 2.5 4.5 14H11l-1 7.5L18.5 10H12z"/>',
+  equals: '<path d="M5 9h14M5 15h14"/>',
+  splitL: '<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M12 4v16"/><rect x="5" y="6" width="5" height="12" rx="1" fill="currentColor" stroke="none"/>',
+  splitR: '<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M12 4v16"/><rect x="14" y="6" width="5" height="12" rx="1" fill="currentColor" stroke="none"/>',
+  fullscreen: '<path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4"/>',
   check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
   battery(pct = 80) {
     const w = Math.max(1.5, 13 * pct / 100).toFixed(1);

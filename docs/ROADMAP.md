@@ -4,7 +4,7 @@
 |---|---|---|
 | 0 — Fondations | Monorepo, ADR, CI, branding, dépôt APT signé | 2–3 sem. |
 | 1 — Remaster thémé | ISO live-build Trixie, Plasma minimal thémé, Firefox ESR, Calamares | 3–4 sem. |
-| 2 — Design system | Maquette web (`prototype/`), tokens, composants QML | 4–6 sem. |
+| 2 — Design system | Maquette web (`prototype/`) ✅ finalisée, guide UX ([UX.md](UX.md)) ✅, composants QML | 4–6 sem. |
 | 3 — Shell v0.1 | Barre, dock, lanceur, notifications, centre de contrôle | 3–4 mois |
 | 4 — Paramètres + premier démarrage | | 2–3 mois |
 | 5 — Store v0.1 | Flatpak + packs APT via PackageKit | 2–3 mois |

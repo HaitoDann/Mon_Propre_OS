@@ -9,6 +9,7 @@ const TopBar = {
         <div class="zone" id="tb-menus"></div>
       </div>
       <div class="zone">
+        <button class="tb-item tb-ws" id="tb-ws" title="Vue d'ensemble (F3)"></button>
         <button class="tb-item" id="tb-search" title="Rechercher (Ctrl+Espace)">${icon("search")}</button>
         <button class="tb-item tb-status" id="tb-status" title="Centre de contrôle"></button>
         <button class="tb-item tb-clock" id="tb-clock" title="Calendrier et notifications"></button>
@@ -18,7 +19,10 @@ const TopBar = {
     this.bindMenu($("#tb-app"), () => this.appMenu());
     this.bindMenu($("#tb-status"), () => ControlCenter.build(), "right");
     this.bindMenu($("#tb-clock"), () => CalendarPanel.build(), "right");
-    $("#tb-search").onclick = () => Launcher.toggle(true);
+    $("#tb-search").onclick = () => Search.toggle(true);
+    $("#tb-ws").onclick = () => Expose.toggle();
+    Shell.on("workspace", () => this.updateWs());
+    this.updateWs();
 
     Shell.on("windows", () => this.updateApp());
     Shell.on("state", () => this.updateStatus());
@@ -34,6 +38,11 @@ const TopBar = {
       const c = Popover.current;
       if (c && c.anchor !== btn && c.anchor.closest("#topbar")) open();
     });
+  },
+
+  updateWs() {
+    $("#tb-ws").innerHTML = Array.from({ length: WM.ws.count }, (_, i) => `<i class="${i === WM.ws.current ? "on" : ""}"></i>`).join("");
+    $("#tb-ws").setAttribute("aria-label", `Bureau ${WM.ws.current + 1} sur ${WM.ws.count}`);
   },
 
   focusedApp() { const w = WM.focused(); return w ? appById(w.appId) : null; },
@@ -87,16 +96,23 @@ const TopBar = {
   },
 
   genericMenu(name) {
-    const w = WM.focused();
+    const w = WM.focused(), sw = Shell.state.widgets;
     const menus = {
       Fichier: [{ label: "Nouvelle fenêtre", kbd: "Ctrl+N", action: () => w && WM.create(w.appId) }, { label: "Ouvrir…", kbd: "Ctrl+O", disabled: true }, "-", { label: "Fermer la fenêtre", kbd: "Ctrl+W", action: () => w && WM.close(w) }],
       Édition: [{ label: "Annuler", kbd: "Ctrl+Z", disabled: true }, { label: "Rétablir", kbd: "Ctrl+Maj+Z", disabled: true }, "-", { label: "Couper", kbd: "Ctrl+X", disabled: true }, { label: "Copier", kbd: "Ctrl+C", disabled: true }, { label: "Coller", kbd: "Ctrl+V", disabled: true }],
       Affichage: [
+        { label: "Vue d'ensemble", icon: "grid", kbd: "F3", action: () => Expose.enter() },
+        { label: "Recherche", icon: "search", kbd: "Ctrl+Espace", action: () => Search.toggle(true) },
+        "-",
+        { header: "Widgets" },
+        ...Object.entries(WIDGETS).map(([k, d]) => ({ label: d.name, checked: !!sw[k], action: () => Desktop.toggleWidget(k) })),
+        "-",
         { label: "Thème sombre", checked: Shell.state.theme === "dark", action: () => Shell.set("theme", Shell.state.theme === "dark" ? "light" : "dark") },
-        "-", { label: "Plein écran", kbd: "Ctrl+Cmd+F", disabled: !w, action: () => w && WM.toggleMaximize(w) }],
-      Fenêtre: [{ label: "Réduire", kbd: "Ctrl+M", disabled: !w, action: () => w && WM.minimize(w) }, { label: "Agrandir / restaurer", disabled: !w, action: () => w && WM.toggleMaximize(w) }, "-",
-        ...WM.windows.map((x) => ({ label: appById(x.appId).name, checked: x === w, action: () => (x.minimized ? WM.restore(x) : WM.focus(x)) }))],
-      Aide: [{ label: "Raccourcis clavier", action: () => toast("Aide", "Ctrl+Espace : rechercher · Échap : fermer") }],
+      ],
+      Fenêtre: w ? [...WM.windowMenu(w), "-", { header: "Fenêtres ouvertes" },
+        ...WM.windows.map((x) => ({ label: `${appById(x.appId).name} — Bureau ${x.ws + 1}`, checked: x === w, action: () => (x.minimized ? WM.restore(x) : WM.focus(x)) }))]
+        : [{ label: "Aucune fenêtre active", disabled: true }],
+      Aide: [{ label: "Raccourcis clavier", icon: "info", action: () => WM.activate("help") }, { label: "À propos de VinX OS", action: () => toast("Système", "VinX OS 0.1 — Debian 13 « Trixie »") }],
     };
     return buildMenu(menus[name] || []);
   },

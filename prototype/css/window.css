@@ -1,13 +1,32 @@
 /* Fenêtres — futur Window decorations (KWin) + contenu QML. Enrichi au lot 3. */
-#windows { position: absolute; inset: 0; }
-.window { position: absolute; display: flex; flex-direction: column; min-width: 360px; min-height: 220px; overflow: hidden; resize: both;
+#windows { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
+#windows > * { pointer-events: auto; }
+.window { position: absolute; display: flex; flex-direction: column; min-width: 360px; min-height: 220px; overflow: hidden;
   border-radius: var(--radius-lg); background: var(--surface-window); border: 1px solid var(--border-strong); box-shadow: var(--shadow-lg);
   animation: win-open var(--dur-normal) var(--ease-out); }
 .window.closing { animation: win-close 160ms ease-in forwards; pointer-events: none; }
 .window.minimized { display: none; }
-.window.maximized { border-radius: 0; resize: none; }
+.window.offws { display: none; }
+.window[data-state="full"] { border-radius: 0; border: 0; }
+.window[data-state="full"] .rh { display: none; }
 .window:not(.focused) { box-shadow: var(--shadow-md); }
 .window.animating { transition: left var(--dur-normal) var(--ease-out), top var(--dur-normal) var(--ease-out), width var(--dur-normal) var(--ease-out), height var(--dur-normal) var(--ease-out), border-radius var(--dur-normal); }
+
+/* Poignées de redimensionnement (bords et coins) */
+.rh { position: absolute; z-index: 5; }
+.rh.n, .rh.s { left: 10px; right: 10px; height: 6px; cursor: ns-resize; }
+.rh.e, .rh.w { top: 10px; bottom: 10px; width: 6px; cursor: ew-resize; }
+.rh.n { top: 0; } .rh.s { bottom: 0; } .rh.e { right: 0; } .rh.w { left: 0; }
+.rh.ne, .rh.nw, .rh.se, .rh.sw { width: 14px; height: 14px; }
+.rh.ne { top: 0; right: 0; cursor: nesw-resize; } .rh.sw { bottom: 0; left: 0; cursor: nesw-resize; }
+.rh.nw { top: 0; left: 0; cursor: nwse-resize; } .rh.se { bottom: 0; right: 0; cursor: nwse-resize; }
+body.dragging, body.dragging * { user-select: none !important; }
+body.dragging .content { pointer-events: none; }
+
+/* Aperçu du magnétisme */
+#snap-preview { position: absolute; border-radius: var(--radius-lg); background: color-mix(in srgb, var(--accent) 18%, transparent); border: 1.5px solid color-mix(in srgb, var(--accent) 60%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transition: left var(--dur-fast) var(--ease-out), top var(--dur-fast) var(--ease-out), width var(--dur-fast) var(--ease-out), height var(--dur-fast) var(--ease-out), opacity var(--dur-fast); pointer-events: none !important; }
+#snap-preview.hidden { opacity: 0; }
 @keyframes win-open { from { opacity: 0; transform: scale(.95) translateY(8px); } }
 @keyframes win-close { to { opacity: 0; transform: scale(.95); } }
 
@@ -46,3 +65,22 @@
 .sw { width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); }
 .sw.on { outline: 2px solid var(--text); outline-offset: 2px; }
 .placeholder { color: var(--text-secondary); }
+
+/* Paramètres */
+.settings section { margin-bottom: var(--space-5); }
+.settings h4 { margin: 0 0 var(--space-1); font-size: var(--fs-sm); color: var(--text-secondary); text-transform: uppercase; letter-spacing: .05em; }
+.range.small { width: 180px; height: 18px; }
+.range.small::-webkit-slider-thumb { width: 18px; height: 18px; box-shadow: -400px 0 0 391px var(--accent), var(--shadow-sm); }
+.switch { position: relative; width: 38px; height: 22px; flex: none; }
+.switch input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; z-index: 1; }
+.switch span { position: absolute; inset: 0; border-radius: var(--radius-full); background: var(--surface-active); transition: background var(--dur-fast); }
+.switch span::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: var(--shadow-sm); transition: transform var(--dur-fast) var(--ease-out); }
+.switch input:checked + span { background: var(--accent); }
+.switch input:checked + span::after { transform: translateX(16px); }
+.switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wall-choices { display: flex; gap: var(--space-3); padding-top: var(--space-2); }
+.wall { display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--fs-sm); color: var(--text-secondary); }
+.wall span { width: 160px; height: 90px; border-radius: var(--radius-md); background-size: cover; background-position: center; box-shadow: var(--shadow-sm); outline: 2px solid transparent; outline-offset: 2px; transition: outline-color var(--dur-fast); }
+.wall.on span { outline-color: var(--accent); } .wall.on { color: var(--text); }
+.shortcuts { display: grid; grid-template-columns: max-content 1fr; gap: var(--space-2) var(--space-4); align-items: center; margin-bottom: var(--space-4); }
+kbd { font: inherit; font-size: var(--fs-sm); padding: 2px var(--space-2); border-radius: var(--radius-xs); background: var(--surface-sunken); border: 1px solid var(--border-strong); white-space: nowrap; }

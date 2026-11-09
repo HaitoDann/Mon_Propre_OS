@@ -1,0 +1,35 @@
+/* Vue d'ensemble (Exposé) — futur effet Overview KWin + vignettes QML */
+#expose-bg { position: absolute; inset: 0; z-index: 6; background: rgba(6, 4, 16, .5); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  opacity: 0; pointer-events: none; transition: opacity var(--dur-slow); }
+#expose-top { position: absolute; inset: 0; z-index: 1950; pointer-events: none; opacity: 0; transition: opacity var(--dur-normal); }
+body.expose #expose-bg { opacity: 1; pointer-events: auto; }
+body.expose #expose-top { opacity: 1; }
+body.expose #widgets { opacity: .25; }
+#widgets { transition: opacity var(--dur-normal); }
+
+.window.exposing { transition: transform var(--dur-slow) var(--ease-out), box-shadow var(--dur-fast); }
+body.expose .window * { pointer-events: none !important; }
+body.expose .window { cursor: pointer; }
+body.expose .window:hover { box-shadow: 0 0 0 6px var(--accent), var(--shadow-lg); }
+.window.expose-drag { transition: none; pointer-events: none; z-index: 99999 !important; opacity: .9; }
+
+#ws-strip { position: absolute; top: calc(var(--topbar-h) + var(--space-5)); left: 50%; transform: translateX(-50%); display: flex; gap: var(--space-4); align-items: flex-start; pointer-events: auto;
+  animation: strip-in var(--dur-slow) var(--ease-out); }
+body:not(.expose) #ws-strip { pointer-events: none; }
+@keyframes strip-in { from { transform: translate(-50%, -12px); opacity: 0; } }
+.ws-thumb { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); font-size: var(--fs-sm); color: var(--text-secondary); }
+.ws-thumb .mini { position: relative; width: 168px; height: 95px; border-radius: var(--radius-md); overflow: hidden; background: var(--wallpaper) center / cover, var(--wall-1);
+  outline: 2px solid transparent; outline-offset: 3px; box-shadow: var(--shadow-md); transition: outline-color var(--dur-fast), transform var(--dur-fast); }
+.ws-thumb .mini i { position: absolute; border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,.4); opacity: .9; }
+.ws-thumb:hover .mini { transform: translateY(-2px); }
+.ws-thumb.on { color: var(--text); font-weight: var(--fw-semibold); }
+.ws-thumb.on .mini { outline-color: var(--accent); }
+.ws-thumb.drop .mini { outline-color: var(--accent); transform: scale(1.06); }
+.ws-add { width: 48px; height: 95px; border-radius: var(--radius-md); display: grid; place-items: center; color: var(--text-secondary); border: 1.5px dashed var(--border-strong); transition: background var(--dur-fast); }
+.ws-add:hover { background: var(--surface-hover); color: var(--text); }
+
+.expose-label { position: absolute; transform: translateX(-50%); display: flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+  border-radius: var(--radius-full); background: var(--surface-glass-strong); border: 1px solid var(--border); font-size: var(--fs-sm); font-weight: var(--fw-medium); white-space: nowrap;
+  animation: pop-in var(--dur-slow) var(--ease-out); }
+.expose-label .app-icon { width: 22px; height: 22px; }
+.expose-empty { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--text-secondary); font-size: var(--fs-lg); }

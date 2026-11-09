@@ -1,0 +1,30 @@
+/* Bureau : widgets, indicateur d'espace, plein écran — futur Desktop.qml */
+#widgets { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+.widget { position: absolute; width: 260px; padding: var(--space-4); border-radius: var(--radius-xl); pointer-events: auto; cursor: grab;
+  animation: widget-in var(--dur-slow) var(--ease-out); transition: box-shadow var(--dur-fast), transform var(--dur-fast); }
+.widget.moving { cursor: grabbing; transform: scale(1.02); box-shadow: var(--shadow-lg); }
+@keyframes widget-in { from { opacity: 0; transform: translateY(6px); } }
+.w-time { font-size: var(--fs-display); font-weight: 300; line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.w-date { margin-top: var(--space-2); color: var(--text-secondary); text-transform: capitalize; }
+.w-head { font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--text-secondary); margin-bottom: var(--space-2); text-transform: uppercase; letter-spacing: .05em; }
+.w-event { display: grid; grid-template-columns: 3px 1fr auto; gap: var(--space-2); align-items: center; padding: 6px 0; }
+.w-event i { height: 100%; min-height: 18px; border-radius: 2px; }
+.w-event small { color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.w-event.past { opacity: .45; }
+.w-note { width: 100%; height: 110px; resize: none; border: 0; outline: 0; background: transparent; color: var(--text); font: inherit; line-height: 1.5; cursor: text; }
+
+/* Indicateur de changement d'espace */
+#ws-osd { position: absolute; left: 50%; top: 22%; transform: translateX(-50%); z-index: 2700; padding: var(--space-3) var(--space-5); border-radius: var(--radius-xl);
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-2); font-weight: var(--fw-semibold); transition: opacity var(--dur-normal), transform var(--dur-normal) var(--ease-out); pointer-events: none; }
+#ws-osd.hidden { opacity: 0; transform: translate(-50%, -6px); }
+#ws-osd .dots, .tb-ws { display: flex; gap: 5px; align-items: center; }
+#ws-osd .dots i, .tb-ws i { width: 6px; height: 6px; border-radius: 50%; background: var(--text-tertiary); transition: background var(--dur-fast), width var(--dur-fast); }
+#ws-osd .dots i.on, .tb-ws i.on { background: var(--text); width: 14px; border-radius: 3px; }
+
+/* Plein écran : barre et dock s'effacent */
+#topbar, #dock { transition: transform var(--dur-normal) var(--ease-out), opacity var(--dur-normal); }
+body.fullscreen #topbar { transform: translateY(-100%); }
+body.fullscreen #dock { transform: translate(-50%, 140%); opacity: 0; }
+body.fullscreen #widgets { opacity: 0; }
+
+#ctx-anchor { position: absolute; width: 1px; height: 1px; pointer-events: none; }

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160" width="3840" height="2160">
+  <title>VinX OS — Nebula (sans logo)</title>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0" stop-color="#241446"/>
+      <stop offset=".55" stop-color="#120c26"/>
+      <stop offset="1" stop-color="#07060f"/>
+    </radialGradient>
+    <radialGradient id="glowV" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#A855F7" stop-opacity=".55"/><stop offset="1" stop-color="#A855F7" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowI" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#6366F1" stop-opacity=".45"/><stop offset="1" stop-color="#6366F1" stop-opacity="0"/></radialGradient>
+    <linearGradient id="logoFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C084FC"/><stop offset="1" stop-color="#6366F1"/></linearGradient>
+    <linearGradient id="beamL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A855F7" stop-opacity="0"/><stop offset=".5" stop-color="#A855F7" stop-opacity=".22"/><stop offset="1" stop-color="#6366F1" stop-opacity="0"/></linearGradient>
+    <linearGradient id="beamR" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6366F1" stop-opacity="0"/><stop offset=".5" stop-color="#8B5CF6" stop-opacity=".2"/><stop offset="1" stop-color="#A855F7" stop-opacity="0"/></linearGradient>
+    <filter id="blur80" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="80"/></filter>
+    <filter id="blur30" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="30"/></filter>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .035 0"/></filter>
+  </defs>
+
+  <rect width="3840" height="2160" fill="url(#bg)"/>
+  <!-- Halos de couleur -->
+  <ellipse cx="1150" cy="700" rx="1400" ry="900" fill="url(#glowI)"/>
+  <ellipse cx="2750" cy="1450" rx="1500" ry="950" fill="url(#glowV)"/>
+  <!-- Faisceaux à 45°, prolongeant les branches du logo -->
+  <g filter="url(#blur80)">
+    <polygon points="-200,-300 300,-300 2150,1550 1650,1550" fill="url(#beamL)"/>
+    <polygon points="4040,-300 3540,-300 1690,1550 2190,1550" fill="url(#beamR)"/>
+  </g>
+  <rect width="3840" height="2160" filter="url(#grain)"/>
+</svg>

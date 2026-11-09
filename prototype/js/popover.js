@@ -3,28 +3,36 @@
 const Popover = {
   current: null,
 
-  open(anchor, content, { align = "left", onClose } = {}) {
+  open(anchor, content, { align = "left" } = {}) {
     this.close(true);
     const el = h(`<div class="popover"></div>`);
     typeof content === "string" ? (el.innerHTML = content) : el.appendChild(content);
     $("#desktop").appendChild(el);
     const r = anchor.getBoundingClientRect();
-    const top = r.bottom + 6;
+    let top = r.bottom + 6;
+    if (top + el.offsetHeight > innerHeight - 8) top = Math.max(8, r.top - el.offsetHeight - 6);
     let left = align === "right" ? r.right - el.offsetWidth : r.left;
     left = Math.max(8, Math.min(left, innerWidth - el.offsetWidth - 8));
     Object.assign(el.style, { top: top + "px", left: left + "px" });
     anchor.classList.add("open");
-    this.current = { el, anchor, onClose };
+    this.current = { el, anchor };
     return el;
   },
 
+  // Menu contextuel à la position du pointeur.
+  openAt(x, y, content) {
+    const a = $("#ctx-anchor");
+    Object.assign(a.style, { left: x + "px", top: y - 7 + "px" });
+    return this.open(a, content);
+  },
+
   close(immediate = false) {
-    const c = this.current; if (!c) return;
+    const c = this.current; if (!c) return false;
     this.current = null;
     c.anchor.classList.remove("open");
-    c.onClose?.();
     if (immediate) c.el.remove();
     else { c.el.classList.add("closing"); setTimeout(() => c.el.remove(), 100); }
+    return true;
   },
 
   isOpenFor(anchor) { return this.current?.anchor === anchor; },
@@ -49,4 +57,3 @@ document.addEventListener("pointerdown", (e) => {
   const c = Popover.current;
   if (c && !c.el.contains(e.target) && !c.anchor.contains(e.target)) Popover.close();
 });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") Popover.close(); });

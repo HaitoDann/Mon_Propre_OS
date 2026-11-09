@@ -8,27 +8,35 @@
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/base.css">
 <!-- Composants du shell -->
+<link rel="stylesheet" href="css/desktop.css">
 <link rel="stylesheet" href="css/topbar.css">
 <link rel="stylesheet" href="css/popover.css">
 <link rel="stylesheet" href="css/dock.css">
 <link rel="stylesheet" href="css/window.css">
-<link rel="stylesheet" href="css/launcher.css">
+<link rel="stylesheet" href="css/expose.css">
+<link rel="stylesheet" href="css/search.css">
 </head>
 <body>
 <div id="desktop">
-  <div id="windows"></div>
+  <!-- Couches, de l'arrière vers l'avant -->
+  <div id="widgets"></div>
+  <div id="expose-bg"></div>
+  <div id="windows"><div id="snap-preview" class="hidden"></div></div>
+  <div id="expose-top"><div id="ws-strip"></div><div id="expose-labels"></div></div>
   <header id="topbar"></header>
   <nav id="dock" class="material" aria-label="Dock"></nav>
 
   <div id="launcher" class="hidden">
-    <div class="launcher-box material">
+    <div class="launcher-box material" role="dialog" aria-label="Recherche">
       <div class="search-field"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-        <input id="search" placeholder="Rechercher une application…" autocomplete="off"></div>
-      <div id="app-grid"></div>
+        <input id="search" placeholder="Rechercher des applications, fichiers, réglages…" autocomplete="off"></div>
+      <div id="search-results"></div>
     </div>
   </div>
 
+  <div id="ws-osd" class="material hidden"></div>
   <div id="toasts"></div>
+  <div id="ctx-anchor"></div>
 </div>
 
 <!-- Ordre de chargement : noyau → données → composants → démarrage -->
@@ -37,9 +45,11 @@
 <script src="js/apps.js"></script>
 <script src="js/popover.js"></script>
 <script src="js/wm.js"></script>
+<script src="js/expose.js"></script>
+<script src="js/desktop.js"></script>
 <script src="js/dock.js"></script>
 <script src="js/topbar.js"></script>
-<script src="js/launcher.js"></script>
+<script src="js/search.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
