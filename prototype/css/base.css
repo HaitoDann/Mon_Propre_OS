@@ -9,9 +9,10 @@ svg.i { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor;
 /* Matériau verre */
 .material { background: var(--surface-glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border); box-shadow: var(--shadow-md), var(--highlight); }
 
-/* Fond d'écran (sera enrichi au lot 2) */
+/* Fond d'écran : branding/wallpaper (le thème clair l'adoucit via un voile) */
 #desktop { position: fixed; inset: 0; overflow: hidden;
   background:
+    var(--wallpaper) center / cover no-repeat,
     radial-gradient(900px 600px at 20% 25%, var(--wall-glow-1), transparent 65%),
     radial-gradient(900px 650px at 80% 75%, var(--wall-glow-2), transparent 65%),
     linear-gradient(160deg, var(--wall-1), var(--wall-2));
@@ -47,3 +48,5 @@ svg.i { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor;
 @keyframes toast-out { to { opacity: 0; transform: translateX(24px); } }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; } }
+
+[data-theme="light"] #desktop::before { content: ""; position: absolute; inset: 0; background: rgba(247, 245, 255, .55); pointer-events: none; }

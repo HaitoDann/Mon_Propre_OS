@@ -5,10 +5,11 @@
    ===================================================================== */
 :root {
   /* Marque */
-  --accent: #5B7CFF;
-  --accent-2: #8B5CF6;
+  --accent: #A855F7;      /* violet du logo VinX */
+  --accent-2: #6366F1;    /* indigo */
   --accent-text: #ffffff;
-  --gradient-brand: linear-gradient(135deg, var(--accent), var(--accent-2));
+  --gradient-brand: linear-gradient(135deg, #C084FC, #6366F1);
+  --wallpaper: url("../../branding/wallpaper/vinx-nebula.svg");
 
   /* États */
   --success: #22C55E;
@@ -63,13 +64,13 @@
 
 /* ---------- Thème sombre (par défaut) ---------- */
 :root, [data-theme="dark"] {
-  --wall-1: #0b0f1f;
-  --wall-2: #1b1440;
+  --wall-1: #0D0B1A;
+  --wall-2: #1d1238;
   --wall-glow-1: rgba(91, 124, 255, .45);
   --wall-glow-2: rgba(139, 92, 246, .40);
 
   --surface-glass: rgba(22, 24, 34, .62);
-  --surface-glass-strong: rgba(26, 28, 40, .82);
+  --surface-glass-strong: rgba(24, 22, 36, .94);
   --surface-window: #1b1d27;
   --surface-sunken: #15171f;
   --surface-hover: rgba(255, 255, 255, .08);
@@ -90,13 +91,14 @@
 
 /* ---------- Thème clair ---------- */
 [data-theme="light"] {
-  --wall-1: #dfe6ff;
+  --accent: #7C3AED;
+  --wall-1: #e9e2ff;
   --wall-2: #ece3ff;
   --wall-glow-1: rgba(91, 124, 255, .35);
   --wall-glow-2: rgba(139, 92, 246, .30);
 
   --surface-glass: rgba(255, 255, 255, .62);
-  --surface-glass-strong: rgba(250, 250, 253, .85);
+  --surface-glass-strong: rgba(250, 249, 255, .95);
   --surface-window: #ffffff;
   --surface-sunken: #f4f5f8;
   --surface-hover: rgba(0, 0, 0, .05);

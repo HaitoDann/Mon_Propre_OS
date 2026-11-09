@@ -4,7 +4,7 @@ const TopBar = {
     const bar = $("#topbar");
     bar.innerHTML = `
       <div class="zone">
-        <button class="tb-item tb-logo" id="tb-logo" aria-label="Menu système"><span class="logo-mark"></span></button>
+        <button class="tb-item tb-logo" id="tb-logo" aria-label="Menu système">${VINX_LOGO}</button>
         <button class="tb-item tb-app" id="tb-app">Bureau</button>
         <div class="zone" id="tb-menus"></div>
       </div>
@@ -61,7 +61,7 @@ const TopBar = {
 
   systemMenu() {
     return buildMenu([
-      { label: "À propos de ce système", icon: "info", action: () => toast("Système", "osname 0.1 — Debian 13 « Trixie »") },
+      { label: "À propos de ce système", icon: "info", action: () => toast("Système", "VinX OS 0.1 — Debian 13 « Trixie »") },
       "-",
       { label: "Paramètres…", icon: "sliders", action: () => WM.activate("settings") },
       { label: "Store…", icon: "bag", action: () => WM.activate("store") },

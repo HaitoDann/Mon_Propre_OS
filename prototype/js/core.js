@@ -8,7 +8,7 @@ window.Shell = {
   // État global (futur : services D-Bus / fichiers de configuration)
   state: {
     theme: "dark",
-    accent: "#5B7CFF",
+    accent: "#A855F7",
     wifi: true,
     bluetooth: true,
     dnd: false,

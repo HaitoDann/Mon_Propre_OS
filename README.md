@@ -1,6 +1,6 @@
-# osname — distribution Linux de bureautique
+# VinX OS — distribution Linux de bureautique
 
-> `osname` est un nom de code provisoire. Le nom définitif et l'identité visuelle se définissent dans [`branding/`](branding/).
+> Le nom et l'identité visuelle se définissent dans [`branding/`](branding/).
 
 Distribution basée sur **Debian 13 « Trixie »** (amd64), pensée pour la bureautique et la productivité.
 Trois piliers : **simplicité, ergonomie, stabilité**.

@@ -1,12 +1,21 @@
 # Source de vérité de l'identité visuelle.
 # Ces valeurs alimentent prototype/tokens.css aujourd'hui, puis le design system QML.
 [identity]
-name = "osname"          # nom provisoire
+name = "VinX OS"
 tagline = "Simple. Ergonomique. Stable."
 
+[logo]
+svg = "logo/vinx-logo.svg"
+white = "logo/vinx-logo-white.svg"
+gradient = "logo/vinx-logo-gradient.svg"
+wallpaper = "wallpaper/vinx-nebula.svg"
+
 [colors]
-accent = "#4F7CFF"
-accent_alt = "#8B5CF6"
+accent = "#A855F7"          # violet du logo
+accent_light_theme = "#7C3AED"
+gradient = ["#6366F1", "#A855F7"]
+background_dark = "#0D0B1A"
+background_light = "#F7F5FF"
 success = "#22C55E"
 warning = "#F59E0B"
 danger = "#EF4444"

@@ -49,3 +49,6 @@ function icon(name, arg) {
 function appIcon(app, cls = "") {
   return `<div class="app-icon ${cls}" style="background:linear-gradient(160deg, ${app.colors[0]}, ${app.colors[1]})">${icon(app.glyph)}</div>`;
 }
+
+// Logo VinX (copie de branding/logo/vinx-logo.svg — couleur héritée de currentColor).
+const VINX_LOGO = '<svg class="vinx-logo" viewBox="115 268 1024 735" fill="currentColor" aria-label="VinX OS"><polygon points="125,278 253,278 618,645 263,993 263,493 349,578 349,795 491,653"/><polygon transform="translate(1254 0) scale(-1 1)" points="125,278 253,278 618,645 263,993 263,493 349,578 349,795 491,653"/><polygon points="627,283 707,383 627,488 547,383"/><polygon points="627,693 752,823 502,823"/></svg>';

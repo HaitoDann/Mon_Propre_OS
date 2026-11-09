@@ -45,7 +45,7 @@ function appContent(app) {
     case "settings":
       return `<h3 style="margin-top:0">Apparence</h3>
         <div class="settings-row"><span>Thème</span><div class="seg" data-theme-seg><button data-v="light">Clair</button><button data-v="dark">Sombre</button></div></div>
-        <div class="settings-row"><span>Couleur d'accent</span><div class="swatches">${["#5B7CFF", "#8B5CF6", "#EC4899", "#F97316", "#16A34A", "#0EA5E9"].map((c) => `<button class="sw" style="background:${c}" data-accent="${c}"></button>`).join("")}</div></div>`;
+        <div class="settings-row"><span>Couleur d'accent</span><div class="swatches">${["#A855F7", "#6366F1", "#EC4899", "#F97316", "#16A34A", "#0EA5E9"].map((c) => `<button class="sw" style="background:${c}" data-accent="${c}"></button>`).join("")}</div></div>`;
     default:
       return `<p class="placeholder">${app.name} — application de démonstration.</p>`;
   }
