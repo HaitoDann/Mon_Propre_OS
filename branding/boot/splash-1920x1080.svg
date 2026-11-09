@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <title>VinX OS — écran de démarrage</title>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#241446"/><stop offset=".6" stop-color="#120c26"/><stop offset="1" stop-color="#07060f"/></radialGradient>
+    <linearGradient id="logo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C084FC"/><stop offset="1" stop-color="#6366F1"/></linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <g transform="translate(960 453) scale(0.26) translate(-627 -635)" fill="url(#logo)"><polygon points="125,278 253,278 618,645 263,993 263,493 349,578 349,795 491,653"/><polygon transform="translate(1254 0) scale(-1 1)" points="125,278 253,278 618,645 263,993 263,493 349,578 349,795 491,653"/><polygon points="627,283 707,383 627,488 547,383"/><polygon points="627,693 752,823 502,823"/></g>
+  <text x="960" y="777" text-anchor="middle" fill="#EEF0F6" font-family="Inter, sans-serif" font-weight="300" font-size="54" letter-spacing="8">VinX OS</text>
+</svg>

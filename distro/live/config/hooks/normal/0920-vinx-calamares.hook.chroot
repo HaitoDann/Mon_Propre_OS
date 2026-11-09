@@ -1,0 +1,13 @@
+#!/bin/sh
+# Installateur : charte VinX et libellés.
+set -e
+if [ -f /etc/calamares/settings.conf ]; then
+	sed -i 's/^branding:.*/branding: vinx/' /etc/calamares/settings.conf
+fi
+# Renomme le raccourci « Install Debian » fourni par calamares-settings-debian.
+for f in /usr/share/applications/*.desktop /etc/skel/Desktop/*.desktop; do
+	[ -f "$f" ] && grep -q "Install Debian" "$f" && sed -i \
+		-e 's/^Name=.*/Name=Installer VinX OS/' \
+		-e 's/^Icon=.*/Icon=vinx-logo/' "$f"
+done
+exit 0

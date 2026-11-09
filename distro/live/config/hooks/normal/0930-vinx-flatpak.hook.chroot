@@ -1,0 +1,4 @@
+#!/bin/sh
+# Store provisoire (phase 1) : Discover + dépôt Flathub.
+set -e
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo

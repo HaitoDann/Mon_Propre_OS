@@ -1,0 +1,15 @@
+#!/bin/sh
+# Identité du système : nom affiché, version, invite de connexion.
+# NB : /usr/lib/os-release appartient à base-files ; un paquet vinx-base
+# le détournera proprement (dpkg-divert) dans une phase ultérieure.
+set -e
+# shellcheck source=/dev/null
+. /etc/vinx-release
+
+sed -i \
+	-e "s/^PRETTY_NAME=.*/PRETTY_NAME=\"VinX OS ${VINX_VERSION} (Debian 13 trixie)\"/" \
+	-e 's/^NAME=.*/NAME="VinX OS"/' \
+	/usr/lib/os-release
+grep -q '^VINX_VERSION=' /usr/lib/os-release || echo "VINX_VERSION=\"${VINX_VERSION}\"" >> /usr/lib/os-release
+
+printf 'VinX OS %s \\n \\l\n\n' "${VINX_VERSION}" > /etc/issue

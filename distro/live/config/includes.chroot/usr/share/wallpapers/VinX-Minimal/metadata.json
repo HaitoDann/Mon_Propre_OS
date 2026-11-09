@@ -1,0 +1,8 @@
+{
+    "KPlugin": {
+        "Id": "VinX-Minimal",
+        "Name": "VinX Nebula épuré",
+        "Authors": [ { "Name": "VinX OS" } ],
+        "License": "CC-BY-SA-4.0"
+    }
+}

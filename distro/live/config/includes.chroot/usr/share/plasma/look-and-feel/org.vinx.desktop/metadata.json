@@ -1,0 +1,12 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Id": "org.vinx.desktop",
+        "Name": "VinX OS",
+        "Description": "Apparence et disposition par défaut de VinX OS",
+        "Authors": [ { "Name": "VinX OS" } ],
+        "License": "GPL-2.0+",
+        "Version": "0.1"
+    },
+    "X-Plasma-APIVersion": "2"
+}

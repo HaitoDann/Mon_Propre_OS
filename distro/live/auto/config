@@ -1,0 +1,20 @@
+#!/bin/sh
+# Configuration live-build de VinX OS (Debian 13 « trixie », amd64).
+set -e
+
+lb config noauto \
+	--distribution trixie \
+	--architectures amd64 \
+	--linux-flavours amd64 \
+	--archive-areas "main contrib non-free-firmware" \
+	--firmware-chroot true \
+	--security true \
+	--updates true \
+	--binary-images iso-hybrid \
+	--debian-installer none \
+	--image-name vinx-os \
+	--iso-application "VinX OS" \
+	--iso-publisher "VinX OS" \
+	--iso-volume "VinX OS" \
+	--bootappend-live "boot=live components quiet splash locales=fr_FR.UTF-8 keyboard-layouts=fr username=vinx hostname=vinx-os" \
+	"${@}"

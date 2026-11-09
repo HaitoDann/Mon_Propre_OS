@@ -1,0 +1,38 @@
+---
+# Charte de l'installateur Calamares pour VinX OS.
+componentName:  vinx
+
+welcomeStyleCalamares:   false
+welcomeExpandingLogo:    true
+windowExpanding:    normal
+windowSize: 920px,620px
+windowPlacement: center
+sidebar: widget
+navigation: widget
+
+strings:
+    productName:         "VinX OS"
+    shortProductName:    "VinX"
+    version:             "0.1"
+    shortVersion:        "0.1"
+    versionedName:       "VinX OS 0.1"
+    shortVersionedName:  "VinX 0.1"
+    bootloaderEntryName: "VinX OS"
+    productUrl:          "https://github.com/haitodann/mon_propre_os"
+    supportUrl:          "https://github.com/haitodann/mon_propre_os/issues"
+    knownIssuesUrl:      "https://github.com/haitodann/mon_propre_os/issues"
+    releaseNotesUrl:     "https://github.com/haitodann/mon_propre_os"
+
+images:
+    productLogo:         "logo.png"
+    productIcon:         "logo.png"
+    productWelcome:      "welcome.png"
+
+slideshow:               "show.qml"
+slideshowAPI: 2
+
+style:
+   SidebarBackground:        "#0D0B1A"
+   SidebarText:              "#EEF0F6"
+   SidebarTextCurrent:       "#FFFFFF"
+   SidebarBackgroundCurrent: "#A855F7"

@@ -1,0 +1,19 @@
+#!/bin/sh
+# Écran de démarrage : thème « vinx » dérivé du thème spinner (logo VinX au centre).
+set -e
+SRC=/usr/share/plymouth/themes/spinner
+DST=/usr/share/plymouth/themes/vinx
+
+for f in "$SRC"/*.png; do
+	[ "$(basename "$f")" = watermark.png ] || cp "$f" "$DST/"
+done
+
+sed \
+	-e 's/^Name=.*/Name=VinX OS/' \
+	-e "s#^ImageDir=.*#ImageDir=$DST#" \
+	-e 's/^BackgroundStartColor=.*/BackgroundStartColor=0x0d0b1a/' \
+	-e 's/^BackgroundEndColor=.*/BackgroundEndColor=0x0d0b1a/' \
+	-e 's/^WatermarkVerticalAlignment=.*/WatermarkVerticalAlignment=.42/' \
+	"$SRC/spinner.plymouth" > "$DST/vinx.plymouth"
+
+plymouth-set-default-theme vinx

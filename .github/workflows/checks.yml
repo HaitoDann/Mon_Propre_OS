@@ -1,0 +1,24 @@
+name: Vérifications
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scripts shell (shellcheck)
+        run: shellcheck distro/*.sh distro/scripts/*.sh distro/live/auto/* distro/live/config/hooks/normal/*
+      - name: JavaScript de la maquette et de la disposition Plasma
+        run: |
+          for f in prototype/js/*.js distro/live/config/includes.chroot/usr/share/plasma/look-and-feel/*/contents/layouts/*.js; do
+            node --check "$f"
+          done
+      - name: Génération des images
+        run: |
+          sudo apt-get update && sudo apt-get install -y librsvg2-bin
+          tmp="$(mktemp -d)"
+          cp -r distro/live/config/includes.chroot "$tmp/"
+          ./distro/scripts/render-assets.sh "$tmp/includes.chroot" "$tmp/boot"

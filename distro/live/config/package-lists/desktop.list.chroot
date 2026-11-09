@@ -1,0 +1,19 @@
+# Bureau provisoire (phase 1) : Plasma minimal, habillé aux couleurs de VinX OS.
+# Il sera remplacé progressivement par le shell natif (phase 3).
+kde-plasma-desktop
+sddm
+plasma-nm
+plasma-pa
+bluedevil
+powerdevil
+kscreen
+plasma-discover
+plasma-discover-backend-flatpak
+konsole
+dolphin
+ark
+gwenview
+okular
+kcalc
+spectacle
+kde-config-sddm

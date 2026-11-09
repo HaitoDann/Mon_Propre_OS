@@ -1,0 +1,14 @@
+# Boutons de fenêtre à gauche (fermer, réduire, agrandir), comme dans la maquette.
+[org.kde.kdecoration2]
+library=org.kde.breeze
+theme=Breeze
+ButtonsOnLeft=XIA
+ButtonsOnRight=
+
+[Desktops]
+Number=3
+Rows=1
+
+[Windows]
+ElectricBorderMaximize=true
+ElectricBorderTiling=true

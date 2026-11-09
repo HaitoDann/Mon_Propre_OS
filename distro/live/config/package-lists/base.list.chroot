@@ -1,0 +1,24 @@
+# Système de base, matériel, réseau, son
+live-boot
+live-config
+live-config-systemd
+sudo
+locales
+console-setup
+keyboard-configuration
+network-manager
+bluez
+pipewire
+pipewire-pulse
+wireplumber
+firmware-linux
+firmware-iwlwifi
+firmware-realtek
+firmware-misc-nonfree
+firmware-sof-signed
+plymouth
+plymouth-themes
+fonts-inter
+fonts-noto-core
+fonts-noto-color-emoji
+flatpak
