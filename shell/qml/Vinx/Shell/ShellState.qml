@@ -3,12 +3,14 @@ import QtQuick
 
 // État partagé entre la barre et la couche des panneaux (fenêtres distinctes en session réelle).
 QtObject {
-    // Panneau ouvert : "" | "system" | "control" | "calendar" | "confirm"
+    // Panneau ouvert : "" | "system" | "control" | "calendar" | "confirm" | "dock"
     property string openPanel: ""
     property rect anchorRect
     // Action en attente de confirmation : "poweroff" | "reboot" | "logout"
     property string pendingAction: ""
     property bool doNotDisturb: false
+    // Menu contextuel du dock : { index, name, running, pinned }
+    property var dockMenu: ({})
 
     function toggle(name, rect) {
         if (openPanel === name) { close(); return }
@@ -17,4 +19,9 @@ QtObject {
     }
     function close() { openPanel = ""; pendingAction = "" }
     function confirm(action) { pendingAction = action; openPanel = "confirm" }
+    function openDockMenu(index, name, running, pinned, rect) {
+        dockMenu = { index: index, name: name, running: running, pinned: pinned }
+        anchorRect = rect
+        openPanel = "dock"
+    }
 }

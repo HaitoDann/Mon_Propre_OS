@@ -24,6 +24,7 @@ public:
     Q_INVOKABLE void powerOff();
     // Lance un programme (ex. « systemsettings »). Renvoie false s'il est introuvable.
     Q_INVOKABLE bool launch(const QString &program, const QStringList &arguments = {});
+    Q_INVOKABLE bool fileExists(const QString &path) const;
 
 private:
     void callManager(const QString &method);

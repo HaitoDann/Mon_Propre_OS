@@ -1,0 +1,4 @@
+#!/bin/sh
+# Démarre vinx-shell uniquement dans la session VinX OS.
+[ "${VINX_SESSION:-0}" = 1 ] || exit 0
+exec /usr/bin/vinx-shell

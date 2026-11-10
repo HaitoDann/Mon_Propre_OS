@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=VinX OS (expérimental)
+Comment=Bureau VinX OS : barre supérieure et dock natifs sur KWin
+Exec=/usr/bin/vinx-session
+TryExec=/usr/bin/startplasma-wayland
+DesktopNames=KDE

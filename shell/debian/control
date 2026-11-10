@@ -24,7 +24,8 @@ Depends: ${shlibs:Depends},
          qml6-module-qtquick-window,
          qml6-module-qtqml-workerscript,
          fonts-inter
-Recommends: wireplumber,
+Recommends: plasma-workspace,
+            wireplumber,
             network-manager,
             bluez,
             upower

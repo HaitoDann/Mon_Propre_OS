@@ -1,0 +1,5 @@
+#!/bin/sh
+# Session VinX OS : infrastructure Plasma (KWin, services, portails) avec le shell VinX
+# à la place de plasmashell (cf. docs/adr/0009-session-vinx.md).
+export VINX_SESSION=1
+exec /usr/bin/startplasma-wayland "$@"

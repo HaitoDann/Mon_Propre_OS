@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=VinX Shell
+Comment=Barre supérieure, dock et fond d'écran de VinX OS
+Exec=/usr/libexec/vinx-shell-autostart
+OnlyShowIn=KDE;
+NoDisplay=true
+X-KDE-autostart-phase=1

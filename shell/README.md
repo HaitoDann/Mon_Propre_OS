@@ -10,8 +10,8 @@ Référence UX : la [maquette](../prototype/) et le [guide UX](../docs/UX.md).
 | 1. Socle | CMake, thème généré, paquet `.deb`, CI, galerie | ✅ |
 | 2. Design system | `Vinx.Theme`, `Vinx.Controls` | ✅ |
 | 3. Barre supérieure | `vinx-shell` : barre, centre de contrôle, calendrier, menu système | ✅ |
-| 4. Dock | | à venir |
-| 5. Session « VinX » | | à venir |
+| 4. Dock | Épinglées / ouvertes, agrandissement, indicateurs, menu contextuel, tâches KWin | ✅ |
+| 5. Session « VinX » | `vinx.desktop` : KWin + services Plasma, `vinx-shell` à la place de plasmashell ([ADR 0009](../docs/adr/0009-session-vinx.md)) | ✅ |
 
 ## Architecture
 
@@ -29,8 +29,8 @@ Vinx.System (C++ : UPower, NetworkManager, BlueZ, WirePlumber, logind) ──▶
 | `Vinx.Theme` | Singleton `Theme` **généré** : couleurs (sombre/clair), typographie, espacements, rayons, durées. `Theme.dark` et `Theme.accentOverride` sont modifiables à l'exécution. |
 | `Vinx.Controls` | `Label`, `Surface`, `Elevation`, `Button`, `IconButton`, `AppIcon`, `Icon` (C++), `Switch`, `Slider`, `SegmentedControl`, `Tile`, `Popover`, `Menu`, `MenuItem` |
 | `Vinx.System` | Singletons C++ : `Battery` (UPower), `Network` (NetworkManager), `Bluetooth` (BlueZ), `Audio` (WirePlumber/`wpctl`), `Session` (logind : verrouiller, veille, redémarrer, éteindre ; lancement d'apps). Chaque service signale `available: false` s'il est absent. |
-| `Vinx.Shell` | `TopBar`, `ControlCenter`, `CalendarPanel`, `Panels`, `ShellState`, fenêtres layer-shell et `Preview` |
-| `vinx-shell` | Sous Wayland (KWin) : barre ancrée en haut (zone réservée de 34 px) + couche de panneaux. Sinon ou avec `--preview` : fenêtre d'aperçu. Options `--light`, `--open system\|control\|calendar`, `--screenshot fichier.png` |
+| `Vinx.Shell` | `TopBar`, `Dock`, `DockItem`, `Background`, `ControlCenter`, `CalendarPanel`, `Panels`, `ShellState`, `Tasks` (KDE ou aperçu), fenêtres layer-shell et `Preview` |
+| `vinx-shell` | Sous Wayland (KWin) : barre ancrée en haut (zone réservée de 34 px) + couche de panneaux. Sinon ou avec `--preview` : fenêtre d'aperçu. Options `--light`, `--demo` (fenêtres simulées), `--open system\|control\|calendar\|dock`, `--screenshot fichier.png` |
 | `vinx-gallery` | Présente tous les composants ; options `--light`, `--open cc\|menu`, `--screenshot fichier.png` |
 
 Règles : aucun composant ne code de valeur de style en dur (tout vient de `Theme`) ; chaque contrôle
@@ -77,10 +77,16 @@ Le paquet est aussi intégré à l'ISO : *VinX Design System* apparaît dans le 
 - Icônes : `branding/icons/*.svg` (trait `currentColor`, grille 24 px). `node shell/tools/export_icons.js`
   régénère ce dossier depuis le jeu d'icônes de la maquette.
 
-## Limites connues (v0.2)
+## Tester la session sur l'ISO
 
-- Le nom de l'application active (« Bureau ») et les menus d'application arriveront avec l'étape 4
-  (liste des fenêtres fournie par KWin).
+1. Démarrer l'ISO, puis **Fermer la session** (menu Plasma).
+2. Sur l'écran de connexion, choisir la session **« VinX OS (expérimental) »** (en bas à gauche), utilisateur `vinx`, mot de passe `live`.
+3. Pour revenir à Plasma, se déconnecter et choisir « Plasma (Wayland) ».
+
+## Limites connues (v0.3)
+
+- Pas encore de serveur de notifications en session VinX (étape 6) ; barre et dock sur l'écran principal seulement.
+- Menus d'application dans la barre : plus tard (menu global).
 - Le son passe par l'outil `wpctl` (interrogé toutes les 4 s) ; une liaison PipeWire native suivra.
 - Luminosité, notifications et recherche : étapes 6 et 7.
-- Le mode layer-shell n'est compilé qu'avec LayerShellQt 6 (Debian 13) et sera validé dans la session « VinX » (étape 5).
+- Le mode layer-shell n'est compilé qu'avec LayerShellQt 6 (Debian 13) ; validation sur l'ISO.

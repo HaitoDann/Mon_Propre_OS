@@ -11,7 +11,7 @@ Item {
 
     function sync() {
         const name = ShellState.openPanel
-        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm }
+        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu }
         for (const k in all) {
             const p = all[k]
             if (k === name) { p.anchorRect = ShellState.anchorRect; if (!p.open) p.show() }
@@ -49,6 +49,28 @@ Item {
             case 8: ShellState.confirm("reboot"); break
             case 9: ShellState.confirm("poweroff"); break
             }
+        }
+    }
+
+    // Menu contextuel d'une icône du dock (au-dessus de l'icône).
+    Menu {
+        id: dockMenu
+        edge: Popover.Above
+        align: Popover.Center
+        onClosed: if (ShellState.openPanel === "dock") ShellState.close()
+        readonly property var info: ShellState.dockMenu
+        model: {
+            const m = [{ header: info.name || "" }, { text: qsTr("Nouvelle fenêtre") }]
+            m.push({ text: info.pinned ? qsTr("Retirer du dock") : qsTr("Garder dans le dock") })
+            if (info.running) m.push({ separator: true }, { text: qsTr("Quitter") })
+            return m
+        }
+        onTriggered: (i, entry) => {
+            const idx = info.index
+            ShellState.close()
+            if (entry.text === qsTr("Nouvelle fenêtre")) Tasks.backend.newInstance(idx)
+            else if (entry.text === qsTr("Quitter")) Tasks.backend.close(idx)
+            else Tasks.backend.togglePin(idx)
         }
     }
 

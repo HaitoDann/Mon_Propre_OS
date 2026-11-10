@@ -58,3 +58,8 @@ bool Session::launch(const QString &program, const QStringList &arguments)
         return false;
     return QProcess::startDetached(program, arguments);
 }
+
+bool Session::fileExists(const QString &path) const
+{
+    return !path.isEmpty() && QFile::exists(path);
+}

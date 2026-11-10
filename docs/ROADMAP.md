@@ -5,7 +5,7 @@
 | 0 — Fondations | Monorepo, ADR, CI, branding, dépôt APT signé | 2–3 sem. |
 | 1 — Remaster thémé | ISO live-build Trixie, Plasma minimal thémé, Firefox ESR, Calamares — ✅ ISO construite en CI et démarrée en machine virtuelle ([distro/](../distro)) | 3–4 sem. |
 | 2 — Design system | Maquette web (`prototype/`) ✅ finalisée, guide UX ([UX.md](UX.md)) ✅, composants QML | 4–6 sem. |
-| 3 — Shell v0.1 | Socle + design system QML ✅, barre supérieure ✅ ([shell/](../shell)) ; dock, session, notifications, recherche | 3–4 mois |
+| 3 — Shell v0.1 | Socle + design system QML ✅, barre supérieure ✅, dock ✅, session « VinX OS » ✅ ([shell/](../shell)) ; notifications, recherche, fenêtres | 3–4 mois |
 | 4 — Paramètres + premier démarrage | | 2–3 mois |
 | 5 — Store v0.1 | Flatpak + packs APT via PackageKit | 2–3 mois |
 | 6 — Stabilisation 1.0 | Matériel, accessibilité, i18n, performances | 2 mois |

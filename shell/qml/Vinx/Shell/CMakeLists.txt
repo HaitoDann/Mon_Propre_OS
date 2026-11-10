@@ -1,5 +1,5 @@
 # Module Vinx.Shell : éléments du shell (barre supérieure, panneaux, fenêtres).
-set_source_files_properties(ShellState.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+set_source_files_properties(ShellState.qml Tasks.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_qml_module(vinxshell
     URI Vinx.Shell
@@ -17,6 +17,16 @@ qt_add_qml_module(vinxshell
         TopBarWindow.qml
         PopupWindow.qml
         Preview.qml
+        Tasks.qml
+        PreviewTasksBackend.qml
+        AppStyle.js
+        Dock.qml
+        DockItem.qml
+        DockWindow.qml
+        Background.qml
+        BackgroundWindow.qml
+    # Chargé dynamiquement (dépend de org.kde.taskmanager, absent à la compilation) :
+    RESOURCES KdeTasksBackend.qml
 )
 
 install(TARGETS vinxshell LIBRARY DESTINATION "${VINX_QML_INSTALL_DIR}/Vinx/Shell")

@@ -14,3 +14,8 @@ qt_add_executable(tst_wpctl tst_wpctl.cpp)
 target_include_directories(tst_wpctl PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
 target_link_libraries(tst_wpctl PRIVATE Qt6::Test)
 add_test(NAME wpctl-parsing COMMAND tst_wpctl)
+
+qt_add_executable(tst_desktopentry tst_desktopentry.cpp)
+target_include_directories(tst_desktopentry PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
+target_link_libraries(tst_desktopentry PRIVATE Qt6::Test)
+add_test(NAME desktop-entry COMMAND tst_desktopentry)

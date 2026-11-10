@@ -6,7 +6,8 @@ import Vinx.System
 // Barre supérieure de VinX OS (34 px) : menu système à gauche, état du système et heure à droite.
 Rectangle {
     id: bar
-    property string activeTitle: qsTr("Bureau")
+    // Nom de l'application active (fourni par le gestionnaire de tâches).
+    readonly property string activeTitle: Tasks.backend && Tasks.backend.activeAppName ? Tasks.backend.activeAppName : qsTr("Bureau")
     property date now: new Date()
 
     implicitHeight: Theme.topbarHeight
