@@ -50,6 +50,6 @@ Item {
         id: mouse
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: { root.forceActiveFocus(); root.clicked() }
+        onClicked: root.clicked()
     }
 }

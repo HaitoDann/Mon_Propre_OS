@@ -30,8 +30,13 @@ Le résultat est dans `distro/out/vinx-os-<version>-amd64.iso`.
 qemu-system-x86_64 -enable-kvm -m 4096 -smp 2 -cdrom distro/out/vinx-os-0.1-amd64.iso
 ```
 
-Ou VirtualBox / GNOME Boxes, ou une clé USB (`dd` ou Ventoy). Session live : utilisateur `vinx`,
-connexion automatique. L'icône « Installer VinX OS » lance Calamares.
+Ou VirtualBox / GNOME Boxes, ou une clé USB (`dd` ou Ventoy). Session live : utilisateur `vinx`
+(mot de passe `live`), connexion automatique dans la session **VinX OS** ; Plasma reste disponible
+à l'écran de connexion. L'icône « Installer VinX OS » lance Calamares.
+
+Premier lancement épuré : pas de Centre de bienvenue KDE (remplacé par l'assistant VinX), pas de pages
+d'accueil Firefox ni de télémétrie (`/etc/firefox-esr/policies`), pas de bandeau « nouveautés » dans
+LibreOffice (`/etc/libreoffice/registry/vinx.xcd`).
 
 ## Contenu de l'image
 

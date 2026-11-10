@@ -1,0 +1,21 @@
+{
+  "policies": {
+    "OverrideFirstRunPage": "",
+    "OverridePostUpdatePage": "",
+    "DisableTelemetry": true,
+    "DisableFirefoxStudies": true,
+    "DontCheckDefaultBrowser": true,
+    "Homepage": { "URL": "about:home", "StartPage": "homepage" },
+    "UserMessaging": {
+      "WhatsNew": false,
+      "ExtensionRecommendations": false,
+      "FeatureRecommendations": false,
+      "MoreFromMozilla": false,
+      "SkipOnboarding": true
+    },
+    "Preferences": {
+      "datareporting.policy.firstRunURL": { "Value": "", "Status": "default" },
+      "browser.aboutwelcome.enabled": { "Value": false, "Status": "default" }
+    }
+  }
+}

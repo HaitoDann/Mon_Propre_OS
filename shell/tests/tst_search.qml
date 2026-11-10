@@ -2,6 +2,7 @@ import QtQuick
 import QtTest
 import Vinx.Shell
 import "../qml/Vinx/Shell/Calc.js" as Calc
+import "../qml/Vinx/Shell/AppStyle.js" as AppStyle
 
 Item {
     width: 800; height: 600
@@ -10,6 +11,14 @@ Item {
     TestCase {
         name: "VinxSearch"
         when: windowShown
+
+        function test_app_id_normalization() {
+            compare(AppStyle.normalizeId("org.vinx.store", ""), "org.vinx.store")
+            compare(AppStyle.normalizeId("org.vinx.store.desktop", ""), "org.vinx.store")
+            compare(AppStyle.normalizeId("", "applications:firefox-esr.desktop"), "firefox-esr")
+            compare(AppStyle.normalizeId("/usr/share/applications/thunderbird.desktop", ""), "thunderbird")
+            compare(AppStyle.normalizeId(undefined, undefined), "")
+        }
 
         function test_calc() {
             compare(Calc.evaluate("2+3*4"), 14)

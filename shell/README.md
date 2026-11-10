@@ -84,9 +84,9 @@ Le paquet est aussi intégré à l'ISO : *VinX Design System* apparaît dans le 
 
 ## Tester la session sur l'ISO
 
-1. Démarrer l'ISO, puis **Fermer la session** (menu Plasma).
-2. Sur l'écran de connexion, choisir la session **« VinX OS (expérimental) »** (en bas à gauche), utilisateur `vinx`, mot de passe `live`.
-3. Pour revenir à Plasma, se déconnecter et choisir « Plasma (Wayland) ».
+Le live démarre directement dans la session **« VinX OS (expérimental) »** (validée sous KWin le 10/11/2026).
+Pour revenir à Plasma : menu système → Fermer la session, puis choisir « Plasma (Wayland) » à la connexion
+(utilisateur `vinx`, mot de passe `live`).
 
 ## Limites connues (v0.4)
 

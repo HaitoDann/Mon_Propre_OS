@@ -1,0 +1,11 @@
+#!/bin/sh
+# Session VinX OS par défaut (live et système installé) ; Plasma reste proposé à la connexion.
+set -e
+
+# Accueil : l'assistant VinX remplace le Centre de bienvenue de KDE.
+apt-get purge -y plasma-welcome 2>/dev/null || true
+
+# Écran de connexion : dernière session = VinX OS (le système installé hérite de ce choix).
+mkdir -p /var/lib/sddm
+printf '[Last]\nSession=/usr/share/wayland-sessions/vinx.desktop\n' > /var/lib/sddm/state.conf
+if getent passwd sddm >/dev/null; then chown sddm:sddm /var/lib/sddm/state.conf; fi

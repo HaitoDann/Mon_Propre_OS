@@ -52,7 +52,7 @@ Item {
             const p = (mx - knob.width / 2) / (width - knob.width)
             root.setValue(root.from + Math.max(0, Math.min(1, p)) * (root.to - root.from))
         }
-        onPressed: (m) => { root.forceActiveFocus(); update(m.x) }
+        onPressed: (m) => update(m.x)
         onPositionChanged: (m) => update(m.x)
     }
 }

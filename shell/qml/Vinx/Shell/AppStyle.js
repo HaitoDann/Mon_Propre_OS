@@ -35,3 +35,14 @@ function asList(v, fallback) {
     if (v === undefined || v === null || v === "") return fallback.slice();
     return Array.isArray(v) ? v.slice() : [String(v)];
 }
+
+// Identifiant .desktop normalisé à partir de ce que fournit le gestionnaire de tâches :
+// « org.vinx.store », « org.vinx.store.desktop », « applications:org.vinx.store.desktop »,
+// ou un chemin « /usr/share/applications/org.vinx.store.desktop ».
+function normalizeId(appId, launcherUrl) {
+    let id = appId ? String(appId) : ""
+    if (!id && launcherUrl) id = String(launcherUrl)
+    id = id.replace(/^applications:/, "").replace(/^file:\/\//, "")
+    id = id.split("/").pop()
+    return id.replace(/\.desktop$/, "")
+}

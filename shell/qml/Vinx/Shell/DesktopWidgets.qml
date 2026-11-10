@@ -13,7 +13,9 @@ Item {
 
     readonly property real firstY: Theme.topbarHeight + Theme.space5
 
+    // Position par défaut : chaque widget visible se place sous le précédent.
     Widget {
+        id: clockW
         key: "clock"
         visible: widgets.isOn("clock", true)
         defaultPosition: Qt.point(Theme.space5, widgets.firstY)
@@ -28,16 +30,18 @@ Item {
     }
 
     Widget {
+        id: calendarW
         key: "calendar"
         visible: widgets.isOn("calendar", false)
-        defaultPosition: Qt.point(Theme.space5, widgets.firstY + 150)
+        defaultPosition: Qt.point(Theme.space5, clockW.visible ? clockW.y + clockW.height + Theme.space4 : widgets.firstY)
         CalendarGrid { width: parent.width; compact: true }
     }
 
     Widget {
         key: "note"
         visible: widgets.isOn("note", false)
-        defaultPosition: Qt.point(Theme.space5, widgets.firstY + 430)
+        defaultPosition: Qt.point(Theme.space5, calendarW.visible ? calendarW.y + calendarW.height + Theme.space4
+                                              : clockW.visible ? clockW.y + clockW.height + Theme.space4 : widgets.firstY)
         Column {
             width: parent.width
             spacing: Theme.space2

@@ -37,6 +37,6 @@ Item {
     MouseArea {
         anchors.fill: parent
         enabled: root.enabled
-        onClicked: { root.forceActiveFocus(); root.toggle() }
+        onClicked: root.toggle()
     }
 }

@@ -1,6 +1,7 @@
 import QtQuick
 import Vinx.Theme
 import Vinx.Controls
+import Vinx.System
 import "AppStyle.js" as AppStyle
 
 // Icône du dock : agrandissement selon la distance au pointeur, indicateur d'ouverture.
@@ -18,6 +19,12 @@ Item {
     signal contextRequested()
 
     readonly property var style: AppStyle.forApp(appId)
+    // Icône du thème : nom donné par le fichier .desktop (Icon=), sinon l'identifiant.
+    readonly property string themeIcon: {
+        if (style !== null || !appId) return ""
+        const icon = Applications.info(appId).icon || appId
+        return icon[0] === "/" ? "file://" + icon : "image://theme/" + icon
+    }
     property real base: Theme.dockIcon
     readonly property real size: {
         if (!magnify || pointerX < 0) return base
@@ -59,7 +66,7 @@ Item {
                 anchors.centerIn: parent
                 width: parent.width * 0.72; height: width
                 sourceSize: Qt.size(width * 2, height * 2)
-                source: item.style === null && item.appId ? "image://theme/" + item.appId : ""
+                source: item.themeIcon
                 smooth: true
             }
         }

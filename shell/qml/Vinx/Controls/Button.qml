@@ -66,6 +66,6 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         enabled: root.enabled
-        onClicked: { root.forceActiveFocus(); root.clicked() }
+        onClicked: root.clicked()
     }
 }

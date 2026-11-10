@@ -39,7 +39,9 @@ Item {
 
     function _index(i) { return tasks.makeModelIndex(i) }
     function _data(i, role) { return tasks.data(_index(i), role) }
-    function _appId(i) { return _data(i, TaskManager.AbstractTasksModel.AppId) }
+    function _appId(i) {
+        return AppStyle.normalizeId(_data(i, TaskManager.AbstractTasksModel.AppId), _data(i, TaskManager.AbstractTasksModel.LauncherUrlWithoutIcon))
+    }
 
     function isPinned(i) { return root.pinned.indexOf(_appId(i)) >= 0 }
     function activate(i) {

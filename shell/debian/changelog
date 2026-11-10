@@ -1,3 +1,12 @@
+vinx-shell (0.4.1) unstable; urgency=medium
+
+  * Dock : icônes vides corrigées (identifiants d'applications du gestionnaire
+    de tâches KDE normalisés ; icône du thème lue dans le fichier .desktop).
+  * Widgets empilés selon leur hauteur réelle (plus de chevauchement).
+  * Anneau de focus affiché seulement en navigation au clavier.
+
+ -- VinX OS <maintainers@vinx-os.invalid>  Tue, 10 Nov 2026 19:00:00 +0000
+
 vinx-shell (0.4.0) unstable; urgency=medium
 
   * Notifications : serveur org.freedesktop.Notifications, bulles, historique,

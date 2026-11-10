@@ -31,6 +31,8 @@ Item {
             compare(sw.checked, false)
             mouseClick(sw)
             compare(sw.checked, true)
+            verify(!sw.activeFocus)          // un clic souris n'affiche pas l'anneau de focus
+            sw.forceActiveFocus()            // équivalent de la touche Tab
             keyClick(Qt.Key_Space)
             compare(sw.checked, false)
         }
@@ -51,6 +53,7 @@ Item {
             compare(seg.currentIndex, 0)
             mouseClick(seg, seg.width - 5, seg.height / 2)
             compare(seg.currentIndex, 2)
+            seg.forceActiveFocus()
             keyClick(Qt.Key_Left)
             compare(seg.currentIndex, 1)
         }
@@ -58,6 +61,7 @@ Item {
         function test_button_click_and_keyboard() {
             mouseClick(btn)
             compare(btn.count, 1)
+            btn.forceActiveFocus()
             keyClick(Qt.Key_Return)
             compare(btn.count, 2)
             btn.enabled = false

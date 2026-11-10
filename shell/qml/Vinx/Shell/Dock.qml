@@ -2,6 +2,7 @@ import QtQuick
 import Vinx.Theme
 import Vinx.Controls
 import Vinx.System
+import "AppStyle.js" as AppStyle
 
 // Dock centré en bas : applications épinglées | séparateur | applications ouvertes non épinglées.
 // Remplit sa fenêtre ; le plateau est ancré en bas. screenOffset convertit vers les coordonnées écran.
@@ -63,7 +64,7 @@ Item {
                 }
                 DockItem {
                     id: icon
-                    appId: cell.model.AppId || ""
+                    appId: AppStyle.normalizeId(cell.model.AppId, cell.model.LauncherUrlWithoutIcon)
                     appName: cell.model.AppName || cell.model.display || appId
                     running: !!cell.model.IsWindow || cell.model.ChildCount > 0
                     active: !!cell.model.IsActive

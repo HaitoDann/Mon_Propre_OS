@@ -51,7 +51,7 @@ Item {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: { root.forceActiveFocus(); root.select(index) }
+                    onClicked: root.select(index)
                 }
             }
         }
