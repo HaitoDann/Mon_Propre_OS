@@ -35,7 +35,7 @@ Ou VirtualBox / GNOME Boxes, ou une clé USB (`dd` ou Ventoy). Session live : ut
 à l'écran de connexion. L'icône « Installer VinX OS » lance Calamares.
 
 Premier lancement épuré : pas de Centre de bienvenue KDE (remplacé par l'assistant VinX), pas de pages
-d'accueil Firefox ni de télémétrie (`/etc/firefox-esr/policies`), pas de bandeau « nouveautés » dans
+d'accueil Firefox ni de télémétrie (`/etc/firefox/policies`), pas de bandeau « nouveautés » dans
 LibreOffice (`/etc/libreoffice/registry/vinx.xcd`).
 
 ## Contenu de l'image

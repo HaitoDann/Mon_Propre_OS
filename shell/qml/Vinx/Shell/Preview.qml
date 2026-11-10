@@ -41,7 +41,7 @@ Window {
         onTriggered: {
             if (win.startOpen === "dock") {
                 const it = dock.itemAt(1)
-                if (it) ShellState.openDockMenu(1, it.appName, it.running, true, dock.rectOf(it))
+                if (it) ShellState.openDockMenu(1, it.appName, it.running, true, dock.rectOf(it), "")
                 return
             }
             const target = bar.findButton(win.startOpen)

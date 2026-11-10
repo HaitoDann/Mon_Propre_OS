@@ -20,7 +20,8 @@ Item {
 
     function open() {
         const p = mapToItem(null, 0, 0)
-        ShellState.toggle(panel, Qt.rect(p.x, p.y, width, height + (Theme.topbarHeight - height) / 2))
+        const scr = Window.window && Window.window.screen ? Window.window.screen.name : ""
+        ShellState.toggle(panel, Qt.rect(p.x, p.y, width, height + (Theme.topbarHeight - height) / 2), scr)
         activated()
     }
 

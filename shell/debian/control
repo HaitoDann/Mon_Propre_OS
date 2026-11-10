@@ -25,6 +25,7 @@ Depends: ${shlibs:Depends},
          qml6-module-qtqml-workerscript,
          fonts-inter
 Recommends: plasma-workspace,
+            libkf6config-bin,
             flatpak,
             wireplumber,
             network-manager,

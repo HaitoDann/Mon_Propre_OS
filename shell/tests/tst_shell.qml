@@ -43,6 +43,16 @@ Item {
             compare(ShellState.openPanel, "desktop")
         }
 
+        function test_panel_remembers_its_screen() {
+            ShellState.toggle("calendar", Qt.rect(10, 0, 20, 20), "HDMI-1")
+            compare(ShellState.screenName, "HDMI-1")
+            ShellState.toggle("calendar", Qt.rect(10, 0, 20, 20), "DP-2")     // même panneau, autre écran : il s'y déplace
+            compare(ShellState.openPanel, "calendar")
+            compare(ShellState.screenName, "DP-2")
+            ShellState.toggle("calendar", Qt.rect(10, 0, 20, 20), "DP-2")     // même écran : fermeture
+            compare(ShellState.openPanel, "")
+        }
+
         function test_bar_height() { compare(bar.height, Theme.topbarHeight) }
 
         function test_button_toggles_panel() {

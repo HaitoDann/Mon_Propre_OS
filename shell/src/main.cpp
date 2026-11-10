@@ -5,6 +5,9 @@
 
 #include <QCommandLineParser>
 #include <QDir>
+#include <QHash>
+#include <QPointer>
+#include <QScreen>
 #include <QGuiApplication>
 #include <QIcon>
 #include <QQuickImageProvider>
@@ -111,33 +114,70 @@ int main(int argc, char *argv[])
     using LSW = LayerShellQt::Window;
     // Ce processus est le serveur de notifications de la session (org.freedesktop.Notifications).
     qputenv("VINX_SHELL_PROCESS", "1");
-    QWindow *background = create("BackgroundWindow");
-    QWindow *toasts = create("ToastWindow");
-    QWindow *dock = create("DockWindow");
-    QWindow *bar = create("TopBarWindow");
-    QWindow *panels = create("PopupWindow");
-    if (!background || !toasts || !dock || !bar || !panels)
-        return 1;
     const auto all = LSW::Anchors(LSW::AnchorTop | LSW::AnchorBottom | LSW::AnchorLeft | LSW::AnchorRight);
+    const auto onScreen = [](QScreen *screen, bool primary = true) {
+        return QVariantMap{{QStringLiteral("screen"), QVariant::fromValue(screen)}, {QStringLiteral("isPrimary"), primary}};
+    };
 
-    // Fond d'écran : sous toutes les fenêtres.
-    // Clavier à la demande : la note rapide du bureau doit pouvoir recevoir la saisie.
-    configureLayer(background, LSW::LayerBackground, all, -1, LSW::KeyboardInteractivityOnDemand, QStringLiteral("vinx-background"));
-    // Dock : en bas au centre ; réserve la hauteur de son plateau.
-    configureLayer(dock, LSW::LayerTop, LSW::Anchors(LSW::AnchorBottom), dock->property("reservedHeight").toInt(),
-                   LSW::KeyboardInteractivityNone, QStringLiteral("vinx-dock"));
-    // Barre : ancrée en haut sur toute la largeur, réserve sa hauteur (les fenêtres s'arrêtent dessous).
-    configureLayer(bar, LSW::LayerTop, LSW::Anchors(LSW::AnchorTop | LSW::AnchorLeft | LSW::AnchorRight),
-                   bar->height(), LSW::KeyboardInteractivityOnDemand, QStringLiteral("vinx-topbar"));
-    // Panneaux : couche plein écran au-dessus de tout, clavier exclusif tant qu'elle est visible.
-    configureLayer(panels, LSW::LayerOverlay, all, -1, LSW::KeyboardInteractivityExclusive, QStringLiteral("vinx-panels"));
-    // Bulles de notification : en haut à droite, sous la barre.
-    configureLayer(toasts, LSW::LayerTop, LSW::Anchors(LSW::AnchorTop | LSW::AnchorRight), 0,
-                   LSW::KeyboardInteractivityNone, QStringLiteral("vinx-notifications"));
-    background->show();
-    toasts->show();
-    dock->show();
-    bar->show();
+    // ---------- Par écran : fond d'écran, barre, couche des panneaux ----------
+    struct ScreenWindows {
+        QPointer<QWindow> background, bar, panels;
+    };
+    QHash<QScreen *, ScreenWindows> perScreen;
+
+    const auto addScreen = [&](QScreen *screen) {
+        if (perScreen.contains(screen))
+            return;
+        const bool primary = screen == QGuiApplication::primaryScreen();
+        ScreenWindows w;
+        w.background = create("BackgroundWindow", {{QStringLiteral("screen"), QVariant::fromValue(screen)}});
+        w.bar = create("TopBarWindow", {{QStringLiteral("screen"), QVariant::fromValue(screen)}, {QStringLiteral("isPrimary"), primary}});
+        w.panels = create("PopupWindow", onScreen(screen, primary));
+        if (!w.background || !w.bar || !w.panels)
+            return;
+        // Fond : sous toutes les fenêtres ; clavier à la demande (note rapide du bureau).
+        configureLayer(w.background, LSW::LayerBackground, all, -1, LSW::KeyboardInteractivityOnDemand, QStringLiteral("vinx-background"));
+        // Barre : en haut sur toute la largeur, réserve sa hauteur.
+        configureLayer(w.bar, LSW::LayerTop, LSW::Anchors(LSW::AnchorTop | LSW::AnchorLeft | LSW::AnchorRight),
+                       w.bar->height(), LSW::KeyboardInteractivityOnDemand, QStringLiteral("vinx-topbar"));
+        // Panneaux : plein écran au-dessus de tout, clavier exclusif tant qu'ils sont visibles.
+        configureLayer(w.panels, LSW::LayerOverlay, all, -1, LSW::KeyboardInteractivityExclusive, QStringLiteral("vinx-panels"));
+        w.background->show();
+        w.bar->show();
+        perScreen.insert(screen, w);
+    };
+    const auto removeScreen = [&](QScreen *screen) {
+        const ScreenWindows w = perScreen.take(screen);
+        for (QWindow *win : {w.background.data(), w.bar.data(), w.panels.data()})
+            if (win)
+                win->deleteLater();
+    };
+    for (QScreen *screen : QGuiApplication::screens())
+        addScreen(screen);
+    QObject::connect(&app, &QGuiApplication::screenAdded, &app, addScreen);
+    QObject::connect(&app, &QGuiApplication::screenRemoved, &app, removeScreen);
+
+    // ---------- Écran principal : dock et bulles de notification ----------
+    QPointer<QWindow> dock, toasts;
+    const auto placeOnPrimary = [&]() {
+        QScreen *primary = QGuiApplication::primaryScreen();
+        if (dock) dock->deleteLater();
+        if (toasts) toasts->deleteLater();
+        dock = create("DockWindow", {{QStringLiteral("screen"), QVariant::fromValue(primary)}});
+        toasts = create("ToastWindow", {{QStringLiteral("screen"), QVariant::fromValue(primary)}});
+        if (!dock || !toasts)
+            return;
+        // Dock : en bas au centre ; réserve la hauteur de son plateau.
+        configureLayer(dock, LSW::LayerTop, LSW::Anchors(LSW::AnchorBottom), dock->property("reservedHeight").toInt(),
+                       LSW::KeyboardInteractivityNone, QStringLiteral("vinx-dock"));
+        // Bulles : en haut à droite, sous la barre, sans zone réservée.
+        configureLayer(toasts, LSW::LayerTop, LSW::Anchors(LSW::AnchorTop | LSW::AnchorRight), 0,
+                       LSW::KeyboardInteractivityNone, QStringLiteral("vinx-notifications"));
+        dock->show();
+        toasts->show();
+    };
+    placeOnPrimary();
+    QObject::connect(&app, &QGuiApplication::primaryScreenChanged, &app, placeOnPrimary);
 #endif
     return app.exec();
 }

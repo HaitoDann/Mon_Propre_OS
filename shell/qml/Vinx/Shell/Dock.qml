@@ -74,7 +74,8 @@ Item {
                     coordItem: row
                     pointerX: hover.hovered ? row.mapFromItem(dock, hover.point.position.x, 0).x : -1
                     onClicked: { ShellState.close(); dock.backend.activate(cell.index) }
-                    onContextRequested: ShellState.openDockMenu(cell.index, appName, running, dock.backend.isPinned(cell.index), dock.rectOf(icon))
+                    onContextRequested: ShellState.openDockMenu(cell.index, appName, running, dock.backend.isPinned(cell.index), dock.rectOf(icon),
+                                                                 Window.window && Window.window.screen ? Window.window.screen.name : "")
                     onHoveredChanged: if (hovered) tip.show(icon); else if (tip.target === icon) tip.target = null
                 }
             }

@@ -90,7 +90,7 @@ Pour revenir à Plasma : menu système → Fermer la session, puis choisir « Pl
 
 ## Limites connues (v0.4)
 
-- Barre et dock sur l'écran principal seulement ; menus d'application dans la barre : plus tard (menu global).
+- Multi-écran : barre et fond sur chaque écran, dock sur l'écran principal ; menus d'application dans la barre : plus tard (menu global).
 - Notifications : pas encore de boutons d'action ; Store : applications Flathub uniquement.
 - Widget Calendrier sans événements (pas encore de source d'agenda).
 - Le son passe par l'outil `wpctl` (interrogé toutes les 4 s) ; une liaison PipeWire native suivra.

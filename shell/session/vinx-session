@@ -4,4 +4,18 @@
 export VINX_SESSION=1
 # Réglages propres à la session (KWin…), prioritaires sur ceux du système.
 export XDG_CONFIG_DIRS="/usr/share/vinx/xdg:${XDG_CONFIG_DIRS:-/etc/xdg}"
-exec /usr/bin/startplasma-wayland "$@"
+
+# Touche Méta seule = recherche VinX. KWin la lit dans la configuration de l'utilisateur :
+# on l'y écrit pour la durée de la session et on rétablit le comportement Plasma ensuite.
+KWC=$(command -v kwriteconfig6 || true)
+if [ -n "$KWC" ]; then
+	"$KWC" --file kwinrc --group ModifierOnlyShortcuts --key Meta "org.vinx.Shell,/Shell,org.vinx.Shell,toggleSearch"
+fi
+
+/usr/bin/startplasma-wayland "$@"
+status=$?
+
+if [ -n "$KWC" ]; then
+	"$KWC" --file kwinrc --group ModifierOnlyShortcuts --key Meta --delete
+fi
+exit $status

@@ -27,7 +27,8 @@ Rectangle {
         enabled: bg.interactive
         acceptedButtons: Qt.RightButton | Qt.LeftButton
         onClicked: (m) => {
-            if (m.button === Qt.RightButton) ShellState.openDesktopMenu(Qt.rect(m.x, m.y, 1, 1))
+            if (m.button === Qt.RightButton)
+                ShellState.openDesktopMenu(Qt.rect(m.x, m.y, 1, 1), Window.window && Window.window.screen ? Window.window.screen.name : "")
             else ShellState.close()
         }
     }
