@@ -15,6 +15,9 @@ struct DesktopEntry {
     QString name;
     QString icon;
     QString exec;
+    QString genericName;
+    QString keywords;
+    bool hidden = false;   // NoDisplay=true ou Hidden=true
 };
 
 inline DesktopEntry parseDesktopEntry(const QByteArray &content, const QString &lang = QLocale().name())
@@ -41,6 +44,9 @@ inline DesktopEntry parseDesktopEntry(const QByteArray &content, const QString &
         else if (key == QStringLiteral("Name[%1]").arg(shortLang)) nameShort = value;
         else if (key == QLatin1String("Icon")) e.icon = value;
         else if (key == QLatin1String("Exec")) e.exec = value;
+        else if (key == QLatin1String("GenericName") || key == QStringLiteral("GenericName[%1]").arg(shortLang)) e.genericName = value;
+        else if (key == QLatin1String("Keywords") || key == QStringLiteral("Keywords[%1]").arg(shortLang)) e.keywords = value;
+        else if ((key == QLatin1String("NoDisplay") || key == QLatin1String("Hidden")) && value == QLatin1String("true")) e.hidden = true;
     }
     if (!nameLang.isEmpty()) e.name = nameLang;
     else if (!nameShort.isEmpty()) e.name = nameShort;

@@ -17,4 +17,6 @@ public:
     // { name, icon, exec, valid } pour « firefox-esr » ou « firefox-esr.desktop ».
     Q_INVOKABLE QVariantMap info(const QString &desktopId) const;
     Q_INVOKABLE bool launch(const QString &desktopId) const;
+    // Applications visibles : [{ id, name, icon, genericName, keywords }], triées par nom.
+    Q_INVOKABLE QVariantList all() const;
 };

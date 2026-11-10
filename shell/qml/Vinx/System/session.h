@@ -25,6 +25,8 @@ public:
     // Lance un programme (ex. « systemsettings »). Renvoie false s'il est introuvable.
     Q_INVOKABLE bool launch(const QString &program, const QStringList &arguments = {});
     Q_INVOKABLE bool fileExists(const QString &path) const;
+    // Déclenche un raccourci global de KWin (ex. « Overview », « Window Close »).
+    Q_INVOKABLE void invokeKWinShortcut(const QString &name);
 
 private:
     void callManager(const QString &method);

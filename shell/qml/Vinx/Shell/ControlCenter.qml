@@ -45,7 +45,7 @@ Column {
             title: qsTr("Apparence")
             subtitle: Theme.dark ? qsTr("Sombre") : qsTr("Claire")
             checked: Theme.dark
-            onClicked: Theme.dark = !Theme.dark
+            onClicked: Preferences.setValue("appearance/dark", !Theme.dark)
         }
     }
 

@@ -13,7 +13,7 @@ Rectangle {
     implicitHeight: Theme.topbarHeight
 
     // Bouton associé à un panneau (ouverture au démarrage, tests).
-    function findButton(panel) { return ({ system: systemButton, control: statusButton, calendar: clockButton })[panel] }
+    function findButton(panel) { return ({ system: systemButton, search: searchButton, control: statusButton, calendar: clockButton })[panel] }
     color: Theme.surfaceGlass
     Behavior on color { ColorAnimation { duration: Theme.durNormal } }
 
@@ -52,6 +52,13 @@ Rectangle {
     Row {
         anchors { right: parent.right; rightMargin: Theme.space2; verticalCenter: parent.verticalCenter }
         spacing: 2
+
+        TopBarButton {
+            id: searchButton
+            panel: "search"
+            Accessible.name: qsTr("Rechercher")
+            Icon { name: "search"; color: Theme.text; anchors.verticalCenter: parent.verticalCenter }
+        }
 
         TopBarButton {
             id: statusButton

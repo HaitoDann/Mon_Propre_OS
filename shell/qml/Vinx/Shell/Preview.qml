@@ -8,6 +8,7 @@ Window {
     width: 1280; height: 800
     visible: true
     title: "VinX Shell — aperçu"
+    AppearanceSync { id: appearance }
     color: Theme.background
 
     property bool startLight: false
@@ -15,7 +16,7 @@ Window {
     // Aperçu : fenêtres simulées au démarrage (--demo).
     property bool demo: false
     Component.onCompleted: {
-        if (startLight) Theme.dark = false
+        if (startLight) Theme.dark = false   // aperçu uniquement (sans écrire les préférences)
         if (demo && Tasks.backend.openApp) {
             Tasks.backend.launchApps = false
             Tasks.backend.activate(1)          // Firefox

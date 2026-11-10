@@ -1,0 +1,17 @@
+import QtQuick
+import Vinx.Theme
+import Vinx.System
+
+// Applique au thème les préférences d'apparence partagées (Paramètres, barre, recherche).
+// À placer une fois par processus (shell, applications VinX).
+QtObject {
+    function truthy(v, fallback) { return v === undefined || v === null ? fallback : v === true || v === "true" }
+    function apply() {
+        Theme.dark = truthy(Preferences.value("appearance/dark"), true)
+        const accent = Preferences.value("appearance/accent", "")
+        Theme.accentOverride = accent ? accent : "transparent"
+    }
+    property int revision: Preferences.revision
+    onRevisionChanged: apply()
+    Component.onCompleted: apply()
+}

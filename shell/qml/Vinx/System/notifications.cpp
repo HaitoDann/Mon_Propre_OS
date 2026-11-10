@@ -50,7 +50,7 @@ Notifications::Notifications(QObject *parent)
     : QAbstractListModel(parent)
 {
     // Le serveur n'est publié que dans le processus vinx-shell (pas dans les applications ni les tests).
-    if (qEnvironmentVariableIntValue("VINX_NOTIFICATION_SERVER") != 1)
+    if (qEnvironmentVariableIntValue("VINX_SHELL_PROCESS") != 1)
         return;
     auto bus = QDBusConnection::sessionBus();
     if (!bus.isConnected())

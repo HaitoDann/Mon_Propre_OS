@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
 #ifdef VINX_HAVE_LAYERSHELL
     using LSW = LayerShellQt::Window;
     // Ce processus est le serveur de notifications de la session (org.freedesktop.Notifications).
-    qputenv("VINX_NOTIFICATION_SERVER", "1");
+    qputenv("VINX_SHELL_PROCESS", "1");
     QWindow *background = create("BackgroundWindow");
     QWindow *toasts = create("ToastWindow");
     QWindow *dock = create("DockWindow");

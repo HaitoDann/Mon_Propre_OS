@@ -63,3 +63,10 @@ bool Session::fileExists(const QString &path) const
 {
     return !path.isEmpty() && QFile::exists(path);
 }
+
+void Session::invokeKWinShortcut(const QString &name)
+{
+    QDBusInterface kwin(QStringLiteral("org.kde.kglobalaccel"), QStringLiteral("/component/kwin"),
+                        QStringLiteral("org.kde.kglobalaccel.Component"), QDBusConnection::sessionBus());
+    kwin.asyncCall(QStringLiteral("invokeShortcut"), name);
+}

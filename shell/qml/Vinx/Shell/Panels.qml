@@ -11,15 +11,19 @@ Item {
 
     function sync() {
         const name = ShellState.openPanel
-        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu }
+        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, search: searchPanel }
+        if (name === "search") ShellState.anchorRect = Qt.rect(layer.width / 2 - 1, layer.height * 0.12, 2, 1)
         for (const k in all) {
             const p = all[k]
             if (k === name) { p.anchorRect = ShellState.anchorRect; if (!p.open) p.show() }
             else if (p.open) { p.open = false }
         }
         if (name === "calendar") calendarContent.reset()
+        if (name === "search") searchContent.reset()
     }
     Connections { target: ShellState; function onOpenPanelChanged() { layer.sync() } }
+    // Touche Méta (KWin) ou autre programme : org.vinx.Shell.toggleSearch
+    Connections { target: ShellService; function onSearchRequested() { ShellState.toggle("search", Qt.rect(0, 0, 0, 0)) } }
     Component.onCompleted: sync()
 
     Menu {
@@ -72,6 +76,15 @@ Item {
             else if (entry.text === qsTr("Quitter")) Tasks.backend.close(idx)
             else Tasks.backend.togglePin(idx)
         }
+    }
+
+    // Recherche globale, centrée en haut de l'écran.
+    Popover {
+        id: searchPanel
+        padding: Theme.space3
+        align: Popover.Center
+        onClosed: if (ShellState.openPanel === "search") ShellState.close()
+        Search { id: searchContent; onDone: ShellState.close() }
     }
 
     Popover {
