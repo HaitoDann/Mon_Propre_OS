@@ -6,7 +6,7 @@
 #include <QVariant>
 #include <QtQml/qqmlregistration.h>
 
-// Préférences partagées par le shell et les applications VinX (~/.config/vinx/shell.conf).
+// Préférences partagées par le shell et les applications VinX (~/.config/vinx/shell.ini).
 // Une modification faite par un autre processus (ex. Paramètres) émet changed().
 class Preferences : public QObject
 {

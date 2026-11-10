@@ -121,7 +121,8 @@ int main(int argc, char *argv[])
     const auto all = LSW::Anchors(LSW::AnchorTop | LSW::AnchorBottom | LSW::AnchorLeft | LSW::AnchorRight);
 
     // Fond d'écran : sous toutes les fenêtres.
-    configureLayer(background, LSW::LayerBackground, all, -1, LSW::KeyboardInteractivityNone, QStringLiteral("vinx-background"));
+    // Clavier à la demande : la note rapide du bureau doit pouvoir recevoir la saisie.
+    configureLayer(background, LSW::LayerBackground, all, -1, LSW::KeyboardInteractivityOnDemand, QStringLiteral("vinx-background"));
     // Dock : en bas au centre ; réserve la hauteur de son plateau.
     configureLayer(dock, LSW::LayerTop, LSW::Anchors(LSW::AnchorBottom), dock->property("reservedHeight").toInt(),
                    LSW::KeyboardInteractivityNone, QStringLiteral("vinx-dock"));

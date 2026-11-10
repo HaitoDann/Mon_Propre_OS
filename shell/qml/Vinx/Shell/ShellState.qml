@@ -18,6 +18,7 @@ QtObject {
     }
     function close() { openPanel = ""; pendingAction = "" }
     function confirm(action) { pendingAction = action; openPanel = "confirm" }
+    function openDesktopMenu(rect) { anchorRect = rect; openPanel = "desktop" }
     function openDockMenu(index, name, running, pinned, rect) {
         dockMenu = { index: index, name: name, running: running, pinned: pinned }
         anchorRect = rect

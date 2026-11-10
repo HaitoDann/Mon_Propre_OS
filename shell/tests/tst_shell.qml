@@ -9,6 +9,7 @@ Item {
     id: root
     width: 1100; height: 700
 
+    Background { id: background; anchors.fill: parent }
     TopBar { id: bar; anchors { left: parent.left; right: parent.right; top: parent.top } }
     Panels { id: panels; anchors.fill: parent }
 
@@ -35,6 +36,11 @@ Item {
             compare(Notifications.count, 1)
             Notifications.clear()
             compare(Notifications.count, 0)
+        }
+
+        function test_desktop_context_menu() {
+            mouseClick(background, 600, 400, Qt.RightButton)
+            compare(ShellState.openPanel, "desktop")
         }
 
         function test_bar_height() { compare(bar.height, Theme.topbarHeight) }

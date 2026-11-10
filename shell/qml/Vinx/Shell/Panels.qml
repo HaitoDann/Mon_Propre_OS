@@ -11,7 +11,7 @@ Item {
 
     function sync() {
         const name = ShellState.openPanel
-        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, search: searchPanel }
+        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, search: searchPanel, desktop: desktopMenu }
         if (name === "search") ShellState.anchorRect = Qt.rect(layer.width / 2 - 1, layer.height * 0.12, 2, 1)
         for (const k in all) {
             const p = all[k]
@@ -75,6 +75,30 @@ Item {
             if (entry.text === qsTr("Nouvelle fenêtre")) Tasks.backend.newInstance(idx)
             else if (entry.text === qsTr("Quitter")) Tasks.backend.close(idx)
             else Tasks.backend.togglePin(idx)
+        }
+    }
+
+    // Menu contextuel du bureau : widgets, fond d'écran.
+    Menu {
+        id: desktopMenu
+        onClosed: if (ShellState.openPanel === "desktop") ShellState.close()
+        readonly property int rev: Preferences.revision
+        function on(k, def) { rev; const v = Preferences.value("widgets/" + k, def); return v === true || v === "true" }
+        model: [
+            { header: qsTr("Widgets") },
+            { text: qsTr("Horloge"), checked: on("clock", true) },
+            { text: qsTr("Calendrier"), checked: on("calendar", false) },
+            { text: qsTr("Note rapide"), checked: on("note", false) },
+            { separator: true },
+            { text: qsTr("Changer le fond d'écran…"), iconName: "image" },
+            { text: qsTr("Paramètres…"), iconName: "sliders" }
+        ]
+        onTriggered: (i) => {
+            ShellState.close()
+            const keys = [null, ["clock", true], ["calendar", false], ["note", false]]
+            if (i >= 1 && i <= 3) Preferences.setValue("widgets/" + keys[i][0], !on(keys[i][0], keys[i][1]))
+            else if (i === 5) Session.launch("vinx-settings", ["--page", "wallpaper"])
+            else if (i === 6) Session.launch("vinx-settings")
         }
     }
 

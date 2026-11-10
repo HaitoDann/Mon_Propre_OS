@@ -31,6 +31,9 @@ qt_add_qml_module(vinxshell
         Calc.js
         AppearanceSync.qml
         WorkspaceIndicator.qml
+        Widget.qml
+        DesktopWidgets.qml
+        CalendarGrid.qml
     # Chargé dynamiquement (dépend de org.kde.taskmanager, absent à la compilation) :
     RESOURCES KdeTasksBackend.qml
 )
