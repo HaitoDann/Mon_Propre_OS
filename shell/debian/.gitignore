@@ -1,0 +1,6 @@
+.debhelper/
+debhelper-build-stamp
+files
+vinx-shell/
+*.substvars
+*.debhelper.log

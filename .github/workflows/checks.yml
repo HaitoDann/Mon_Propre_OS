@@ -13,9 +13,11 @@ jobs:
         run: shellcheck distro/*.sh distro/scripts/*.sh distro/live/auto/* distro/live/config/hooks/normal/*
       - name: JavaScript de la maquette et de la disposition Plasma
         run: |
-          for f in prototype/js/*.js distro/live/config/includes.chroot/usr/share/plasma/look-and-feel/*/contents/layouts/*.js; do
+          for f in prototype/js/*.js shell/tools/*.js distro/live/config/includes.chroot/usr/share/plasma/look-and-feel/*/contents/layouts/*.js; do
             node --check "$f"
           done
+      - name: Générateur de thème
+        run: python3 shell/tools/gen_theme.py branding/tokens.toml "$(mktemp)"
       - name: Génération des images
         run: |
           sudo apt-get update && sudo apt-get install -y librsvg2-bin

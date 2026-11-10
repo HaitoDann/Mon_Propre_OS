@@ -1,0 +1,67 @@
+# Design tokens VinX OS — source unique du style.
+# Consommé par : shell/tools/gen_theme.py (→ Theme.qml). Les couleurs s'écrivent
+# #RRGGBB ou #RRGGBBAA (convention CSS) ; le générateur les convertit pour QML.
+# Valeurs identiques à prototype/css/tokens.css (maquette de référence).
+
+[brand]
+accent = "#A855F7"
+accent_light = "#7C3AED"   # accent en thème clair (contraste)
+accent_2 = "#6366F1"
+accent_text = "#FFFFFF"
+gradient_start = "#C084FC"
+gradient_end = "#6366F1"
+
+[state]
+success = "#22C55E"
+warning = "#F59E0B"
+danger = "#EF4444"
+
+[font]
+family = "Inter"
+xs = 11
+sm = 12
+md = 13
+lg = 15
+xl = 20
+display = 56
+
+[space]
+s1 = 4
+s2 = 8
+s3 = 12
+s4 = 16
+s5 = 24
+s6 = 32
+
+[radius]
+xs = 5
+sm = 7
+md = 10
+lg = 14
+xl = 20
+
+[shell]
+topbar_height = 34
+dock_icon = 48
+dock_icon_max = 70
+
+[motion]
+fast = 120
+normal = 220
+slow = 360
+
+# Couleurs dépendant du thème : [sombre, clair]
+[themed]
+background = ["#0D0B1A", "#F7F5FF"]
+surface_glass = ["#161822A0", "#FFFFFFA0"]
+surface_glass_strong = ["#181624F0", "#FAF9FFF2"]
+surface_window = ["#1B1D27", "#FFFFFF"]
+surface_sunken = ["#15171F", "#F4F5F8"]
+surface_hover = ["#FFFFFF14", "#0000000D"]
+surface_active = ["#FFFFFF24", "#00000017"]
+text = ["#EEF0F6", "#1B1D24"]
+text_secondary = ["#A3A9B8", "#5D6372"]
+text_tertiary = ["#6C7282", "#9097A5"]
+border = ["#FFFFFF14", "#00000014"]
+border_strong = ["#FFFFFF24", "#00000024"]
+shadow = ["#00000080", "#14193240"]

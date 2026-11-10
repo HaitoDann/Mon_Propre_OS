@@ -34,6 +34,15 @@ rsync -a --delete "$DISTRO/live/auto/" "$WORK/auto/"
 rsync -a --delete "$DISTRO/live/config/" "$WORK/config/"
 echo "VINX_VERSION=\"$VERSION\"" > "$WORK/config/includes.chroot/etc/vinx-release"
 
+# Paquets maison (vinx-shell…) construits puis installés dans l'image.
+if [ -d "$ROOT/shell/debian" ]; then
+	echo "==> Construction du paquet vinx-shell"
+	(cd "$ROOT/shell" && dpkg-buildpackage -us -uc -b)
+	mkdir -p "$WORK/config/packages.chroot"
+	mv "$ROOT"/vinx-shell_*.deb "$WORK/config/packages.chroot/"
+	rm -f "$ROOT"/vinx-shell_*.buildinfo "$ROOT"/vinx-shell_*.changes
+fi
+
 echo "==> Génération des images"
 "$DISTRO/scripts/render-assets.sh" "$WORK/config/includes.chroot" "$WORK/boot-assets"
 

@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+# Les tests QML s'exécutent sans écran.
+export QT_QPA_PLATFORM = offscreen
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DBUILD_TESTING=ON

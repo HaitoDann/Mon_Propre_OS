@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=VinX Design System
+Comment=Galerie des composants de l'interface VinX OS
+Exec=vinx-gallery
+Icon=vinx-logo
+Categories=Development;

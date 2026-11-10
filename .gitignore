@@ -1,2 +1,6 @@
 distro/build/
 distro/out/
+shell/obj-*/
+/*.deb
+/*.buildinfo
+/*.changes

@@ -7,6 +7,7 @@ on:
     paths:
       - "distro/**"
       - "branding/**"
+      - "shell/**"
       - ".github/workflows/iso.yml"
     tags: ["v*"]
 

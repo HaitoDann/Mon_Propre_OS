@@ -1,0 +1,39 @@
+name: vinx-shell
+
+on:
+  push:
+    paths: ["shell/**", "branding/tokens.toml", "branding/icons/**", ".github/workflows/shell.yml"]
+  pull_request:
+    paths: ["shell/**", "branding/tokens.toml", "branding/icons/**"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Paquet Debian, tests et captures
+    runs-on: ubuntu-24.04
+    container: debian:trixie
+    steps:
+      - name: Dépendances
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git ca-certificates dpkg-dev debhelper cmake python3 \
+            qt6-base-dev qt6-declarative-dev qt6-svg-dev qml6-module-qtquick qml6-module-qtquick-window \
+            qml6-module-qtqml-workerscript qml6-module-qttest fonts-inter
+      - uses: actions/checkout@v4
+      - name: Construire le paquet (tests QML inclus)
+        run: cd shell && dpkg-buildpackage -us -uc -b
+      - name: Captures de la galerie
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          dpkg -i vinx-shell_*.deb || apt-get install -f -y
+          mkdir -p captures
+          vinx-gallery --screenshot captures/galerie-sombre.png
+          vinx-gallery --open cc --screenshot captures/centre-de-controle.png
+          vinx-gallery --light --open menu --screenshot captures/galerie-claire.png
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vinx-shell
+          path: |
+            vinx-shell_*.deb
+            captures/*.png

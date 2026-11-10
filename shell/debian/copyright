@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: vinx-shell
+Source: https://github.com/haitodann/mon_propre_os
+
+Files: *
+Copyright: 2026 VinX OS
+License: TODO
+ La licence du projet n'est pas encore choisie (décision en attente).
