@@ -14,7 +14,7 @@ r() { rsvg-convert "$@"; }
 mkdir -p "$BOOT"
 
 # Fonds d'écran (paquets de fonds d'écran Plasma)
-for w in VinX:vinx-nebula VinX-Minimal:vinx-nebula-minimal; do
+for w in VinX-Graphite:vinx-graphite VinX:vinx-nebula VinX-Minimal:vinx-nebula-minimal; do
 	dir="$CHROOT/usr/share/wallpapers/${w%%:*}/contents"
 	src="$B/wallpaper/${w##*:}.svg"
 	mkdir -p "$dir/images"

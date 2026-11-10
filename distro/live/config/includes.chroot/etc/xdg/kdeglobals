@@ -3,7 +3,7 @@ LookAndFeelPackage=org.vinx.desktop
 
 [General]
 ColorScheme=VinXDark
-AccentColor=168,85,247
+AccentColor=91,101,201
 font=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 menuFont=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 toolBarFont=Inter,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1

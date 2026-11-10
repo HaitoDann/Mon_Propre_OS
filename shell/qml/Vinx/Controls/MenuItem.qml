@@ -28,7 +28,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Theme.radiusXs
-        color: root.interactive && mouse.containsMouse ? Theme.accent : "transparent"
+        color: root.interactive && mouse.containsMouse ? Theme.surfaceActive : "transparent"
     }
 
     Row {
@@ -38,7 +38,7 @@ Item {
         spacing: Theme.space2
         readonly property color fg: root.header ? Theme.textTertiary
                                   : !root.enabled ? Theme.textTertiary
-                                  : mouse.containsMouse ? Theme.accentText : Theme.text
+                                  : Theme.text
         Item {
             visible: root.checked !== undefined
             width: 14; height: 14
@@ -67,7 +67,7 @@ Item {
         anchors { right: parent.right; rightMargin: Theme.space2; verticalCenter: parent.verticalCenter }
         text: root.shortcut
         font.pixelSize: Theme.fsSm
-        color: root.interactive && mouse.containsMouse ? Theme.accentText : Theme.textTertiary
+        color: Theme.textTertiary
     }
 
     MouseArea {

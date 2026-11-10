@@ -30,7 +30,7 @@ Item {
         radius: height / 2
         color: Theme.surfaceHover
         border.width: root.activeFocus ? 2 : 0
-        border.color: Theme.accent
+        border.color: Theme.accentForeground
 
         Rectangle {
             width: knob.x + knob.width

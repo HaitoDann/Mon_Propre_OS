@@ -10,8 +10,8 @@ window.Shell = {
   // État global (futur : services D-Bus et fichiers de configuration utilisateur)
   state: {
     theme: "dark",
-    accent: "#A855F7",
-    wallpaper: "nebula",
+    accent: "#5B65C9",
+    wallpaper: "graphite",
     widgets: { clock: true, agenda: true, note: false },
     widgetPos: {},
     note: "",
@@ -31,15 +31,15 @@ window.Shell = {
 
   // Préférences conservées dans le navigateur (équivalent : ~/.config/vinx/shell.toml).
   save() {
-    try { localStorage.setItem("vinx-state", JSON.stringify(Object.fromEntries(PERSISTED.map((k) => [k, this.state[k]])))); } catch {}
+    try { localStorage.setItem("vinx-state-v2", JSON.stringify(Object.fromEntries(PERSISTED.map((k) => [k, this.state[k]])))); } catch {}
   },
   load() {
     try {
-      const saved = JSON.parse(localStorage.getItem("vinx-state") || "{}");
+      const saved = JSON.parse(localStorage.getItem("vinx-state-v2") || "{}");
       PERSISTED.forEach((k) => { if (k in saved) this.state[k] = saved[k]; });
     } catch {}
   },
-  reset() { try { localStorage.removeItem("vinx-state"); } catch {} location.reload(); },
+  reset() { try { localStorage.removeItem("vinx-state-v2"); } catch {} location.reload(); },
 };
 Shell.load();
 

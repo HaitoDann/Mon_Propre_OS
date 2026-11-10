@@ -1,0 +1,8 @@
+{
+    "KPlugin": {
+        "Id": "VinX-Graphite",
+        "Name": "VinX Graphite",
+        "Authors": [ { "Name": "VinX OS" } ],
+        "License": "CC-BY-SA-4.0"
+    }
+}

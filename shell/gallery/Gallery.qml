@@ -22,36 +22,30 @@ Window {
         onTriggered: win.startOpen === "cc" ? cc.show(ccBtn) : menu.show(menuBtn)
     }
 
+    // Teintes d'applications : désaturées, de luminosité proche, pour un dock calme.
     readonly property var apps: [
-        ["folder", "#4F8BFF", "#2F5BEA", "Fichiers"], ["globe", "#FF9A3C", "#E8492F", "Firefox"],
-        ["doc", "#5B8DEF", "#3753C9", "Documents"], ["table", "#34C47C", "#14915A", "Tableur"],
-        ["mail", "#3EC5F2", "#1D8FD6", "Courrier"], ["calendar", "#FF6B6B", "#D83A4F", "Calendrier"],
-        ["bag", "#C084FC", "#7C3AED", "Store"], ["sliders", "#8A93A6", "#565E70", "Paramètres"]
+        ["folder", "#4C6FA8", "Fichiers"], ["globe", "#B8693F", "Firefox"],
+        ["doc", "#4F60A3", "Documents"], ["table", "#3E8460", "Tableur"],
+        ["mail", "#3F7896", "Courrier"], ["calendar", "#A8514F", "Calendrier"],
+        ["bag", "#5B65C9", "Store"], ["sliders", "#5F6270", "Paramètres"]
     ]
     readonly property var icons: ["search", "wifi", "wifi-off", "bluetooth", "volume", "volume-off", "brightness",
         "battery", "bell", "bell-off", "moon", "sun", "power", "lock", "restart", "logout", "info", "grid", "plus",
         "check", "close", "minus", "expand", "fullscreen", "split-l", "split-r", "chevron-l", "chevron-r", "bolt",
         "equals", "folder", "globe", "doc", "table", "mail", "calendar", "bag", "sliders", "terminal", "note", "image", "music"]
 
-    // Fond d'écran simplifié (dégradés de marque)
-    Rectangle {
-        anchors.fill: parent
-        gradient: Gradient {
-            GradientStop { position: 0; color: Theme.dark ? "#1d1238" : "#ECE3FF" }
-            GradientStop { position: 1; color: Theme.background }
-        }
-    }
 
     // ---------- En-tête : thème et accent ----------
     Surface {
         id: header
         anchors { left: parent.left; right: parent.right; top: parent.top; margins: Theme.space4 }
         height: 56
-        kind: Surface.Glass
+        kind: Surface.Window
+        elevation: 0
         Row {
             anchors { left: parent.left; leftMargin: Theme.space4; verticalCenter: parent.verticalCenter }
             spacing: Theme.space3
-            Label { text: "VinX OS"; font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold }
+            Label { text: "VinX OS"; font.pixelSize: Theme.fsLg; font.weight: Font.DemiBold }
             Label { text: "Design system · Vinx.Controls"; level: Label.Secondary; anchors.verticalCenter: parent.verticalCenter }
         }
         Row {
@@ -61,10 +55,10 @@ Window {
                 spacing: Theme.space2
                 anchors.verticalCenter: parent.verticalCenter
                 Repeater {
-                    model: ["transparent", "#6366F1", "#EC4899", "#F97316", "#16A34A", "#0EA5E9"]
+                    model: ["transparent", "#3B82C4", "#3E8460", "#B8693F", "#A8514F", "#6B6E76"]
                     Rectangle {
                         width: 20; height: 20; radius: 10
-                        color: index === 0 ? (Theme.dark ? "#A855F7" : "#7C3AED") : modelData
+                        color: index === 0 ? (Theme.dark ? "#5B65C9" : "#4E58BE") : modelData
                         border.width: Qt.colorEqual(Theme.accentOverride, modelData) ? 2 : 0
                         border.color: Theme.text
                         MouseArea { anchors.fill: parent; onClicked: Theme.accentOverride = modelData }
@@ -145,8 +139,8 @@ Window {
                         model: win.apps
                         Column {
                             spacing: Theme.space2
-                            AppIcon { iconName: modelData[0]; colorTop: modelData[1]; colorBottom: modelData[2]; anchors.horizontalCenter: parent.horizontalCenter }
-                            Label { text: modelData[3]; font.pixelSize: Theme.fsSm; anchors.horizontalCenter: parent.horizontalCenter }
+                            AppIcon { iconName: modelData[0]; tint: modelData[1]; anchors.horizontalCenter: parent.horizontalCenter }
+                            Label { text: modelData[2]; font.pixelSize: Theme.fsSm; anchors.horizontalCenter: parent.horizontalCenter }
                         }
                     }
                 }
@@ -184,7 +178,7 @@ Window {
                     Grid {
                         columns: 4; spacing: Theme.space3
                         Repeater {
-                            model: [["Accent", Theme.accent], ["Indigo", Theme.accent2], ["Succès", Theme.success], ["Alerte", Theme.warning],
+                            model: [["Accent", Theme.accent], ["Accent (texte)", Theme.accentForeground], ["Succès", Theme.success], ["Alerte", Theme.warning],
                                     ["Danger", Theme.danger], ["Fenêtre", Theme.surfaceWindow], ["Creux", Theme.surfaceSunken], ["Fond", Theme.background]]
                             Column {
                                 spacing: Theme.space1
@@ -261,7 +255,7 @@ Window {
         Row {
             anchors { left: parent.left; leftMargin: Theme.space3; verticalCenter: parent.verticalCenter }
             spacing: Theme.space3
-            AppIcon { size: 30; iconName: "sliders"; colorTop: "#8A93A6"; colorBottom: "#565E70" }
+            AppIcon { size: 30; iconName: "sliders"; tint: "#5F6270" }
             Column {
                 anchors.verticalCenter: parent.verticalCenter
                 Label { text: "Action"; font.weight: Font.DemiBold }

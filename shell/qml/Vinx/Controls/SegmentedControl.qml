@@ -25,7 +25,7 @@ Item {
         radius: Theme.radiusSm
         color: Theme.surfaceHover
         border.width: root.activeFocus ? 2 : 0
-        border.color: Theme.accent
+        border.color: Theme.accentForeground
     }
     Row {
         id: row

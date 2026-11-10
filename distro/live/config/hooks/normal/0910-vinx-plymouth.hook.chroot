@@ -11,8 +11,8 @@ done
 sed \
 	-e 's/^Name=.*/Name=VinX OS/' \
 	-e "s#^ImageDir=.*#ImageDir=$DST#" \
-	-e 's/^BackgroundStartColor=.*/BackgroundStartColor=0x0d0b1a/' \
-	-e 's/^BackgroundEndColor=.*/BackgroundEndColor=0x0d0b1a/' \
+	-e 's/^BackgroundStartColor=.*/BackgroundStartColor=0x141517/' \
+	-e 's/^BackgroundEndColor=.*/BackgroundEndColor=0x141517/' \
 	-e 's/^WatermarkVerticalAlignment=.*/WatermarkVerticalAlignment=.42/' \
 	"$SRC/spinner.plymouth" > "$DST/vinx.plymouth"
 

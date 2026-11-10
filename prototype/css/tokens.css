@@ -5,10 +5,10 @@
    ===================================================================== */
 :root {
   /* Marque */
-  --accent: #A855F7;      /* violet du logo VinX */
-  --accent-2: #6366F1;    /* indigo */
+  --accent: #5B65C9;      /* indigo désaturé (cf. branding/tokens.toml) */
+  --accent-2: #7C86E0;    /* accent pour texte/icônes */
   --accent-text: #ffffff;
-  --gradient-brand: linear-gradient(135deg, #C084FC, #6366F1);
+  --gradient-brand: linear-gradient(160deg, #2A2B30, #1B1C1F);
   --wallpaper: url("../../branding/wallpaper/vinx-nebula.svg");
 
   /* États */
@@ -64,21 +64,21 @@
 
 /* ---------- Thème sombre (par défaut) ---------- */
 :root, [data-theme="dark"] {
-  --wall-1: #0D0B1A;
-  --wall-2: #1d1238;
-  --wall-glow-1: rgba(91, 124, 255, .45);
-  --wall-glow-2: rgba(139, 92, 246, .40);
+  --wall-1: #141517;
+  --wall-2: #0F1012;
+  --wall-glow-1: rgba(255, 255, 255, .04);
+  --wall-glow-2: rgba(91, 101, 201, .08);
 
-  --surface-glass: rgba(22, 24, 34, .62);
-  --surface-glass-strong: rgba(24, 22, 36, .94);
-  --surface-window: #1b1d27;
-  --surface-sunken: #15171f;
+  --surface-glass: rgba(28, 29, 32, .88);
+  --surface-glass-strong: #232427;
+  --surface-window: #1B1C1F;
+  --surface-sunken: #17181A;
   --surface-hover: rgba(255, 255, 255, .08);
   --surface-active: rgba(255, 255, 255, .14);
 
-  --text: #eef0f6;
-  --text-secondary: #a3a9b8;
-  --text-tertiary: #6c7282;
+  --text: #ECECEE;
+  --text-secondary: #A1A1A8;
+  --text-tertiary: #76767E;
 
   --border: rgba(255, 255, 255, .08);
   --border-strong: rgba(255, 255, 255, .14);
@@ -91,14 +91,14 @@
 
 /* ---------- Thème clair ---------- */
 [data-theme="light"] {
-  --accent: #7C3AED;
-  --wall-1: #e9e2ff;
-  --wall-2: #ece3ff;
+  --accent: #4E58BE;
+  --wall-1: #F5F5F7;
+  --wall-2: #ECECEF;
   --wall-glow-1: rgba(91, 124, 255, .35);
   --wall-glow-2: rgba(139, 92, 246, .30);
 
   --surface-glass: rgba(255, 255, 255, .62);
-  --surface-glass-strong: rgba(250, 249, 255, .95);
+  --surface-glass-strong: #FFFFFF;
   --surface-window: #ffffff;
   --surface-sunken: #f4f5f8;
   --surface-hover: rgba(0, 0, 0, .05);

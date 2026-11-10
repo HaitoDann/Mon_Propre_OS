@@ -19,7 +19,7 @@ Item {
             color: "transparent"
             border.width: 2
             border.color: Theme.shadow
-            opacity: 0.18 * (1 - index / (4 * root.level))
+            opacity: 0.12 * (1 - index / (4 * root.level))
         }
     }
 }

@@ -38,7 +38,7 @@ Item {
             color: mouse.pressed ? "#26000000" : mouse.containsMouse ? "#18FFFFFF" : "transparent"
         }
         border.width: root.activeFocus ? 2 : 0
-        border.color: Theme.accent
+        border.color: Theme.accentForeground
     }
 
     Row {

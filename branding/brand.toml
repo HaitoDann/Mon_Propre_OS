@@ -9,14 +9,15 @@ tagline = "Simple. Ergonomique. Stable."
 svg = "logo/vinx-logo.svg"
 white = "logo/vinx-logo-white.svg"
 gradient = "logo/vinx-logo-gradient.svg"
-wallpaper = "wallpaper/vinx-nebula.svg"
+wallpaper = "wallpaper/vinx-graphite.svg"
 
 [colors]
-accent = "#A855F7"          # violet du logo
-accent_light_theme = "#7C3AED"
-gradient = ["#6366F1", "#A855F7"]
-background_dark = "#0D0B1A"
-background_light = "#F7F5FF"
+logo = "#A855F7"            # violet du logo — réservé au logo (voir docs/DESIGN.md)
+accent = "#5B65C9"          # accent de l'interface (indigo désaturé)
+accent_light_theme = "#4E58BE"
+logo_gradient = ["#6366F1", "#A855F7"]
+background_dark = "#141517"
+background_light = "#F5F5F7"
 success = "#22C55E"
 warning = "#F59E0B"
 danger = "#EF4444"

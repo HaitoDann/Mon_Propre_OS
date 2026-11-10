@@ -23,7 +23,7 @@ Item {
         radius: Theme.radiusMd
         color: mouse.containsMouse ? Theme.surfaceActive : Theme.surfaceHover
         border.width: root.activeFocus ? 2 : 0
-        border.color: Theme.accent
+        border.color: Theme.accentForeground
         Behavior on color { ColorAnimation { duration: Theme.durFast } }
     }
     Row {

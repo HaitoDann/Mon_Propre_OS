@@ -25,7 +25,7 @@ Item {
              : mouse.containsMouse ? Theme.surfaceHover
              : root.flat ? "transparent" : Theme.surfaceHover
         border.width: root.activeFocus ? 2 : 0
-        border.color: Theme.accent
+        border.color: Theme.accentForeground
         Behavior on color { ColorAnimation { duration: Theme.durFast } }
     }
     Icon {

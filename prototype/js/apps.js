@@ -1,18 +1,18 @@
 // Registre des applications (futur : fichiers .desktop + métadonnées AppStream).
 const APPS = [
-  { id: "files",    name: "Fichiers",   glyph: "folder",   colors: ["#4F8BFF", "#2F5BEA"] },
-  { id: "firefox",  name: "Firefox",    glyph: "globe",    colors: ["#FF9A3C", "#E8492F"] },
-  { id: "writer",   name: "Documents",  glyph: "doc",      colors: ["#5B8DEF", "#3753C9"] },
-  { id: "calc",     name: "Tableur",    glyph: "table",    colors: ["#34C47C", "#14915A"] },
-  { id: "mail",     name: "Courrier",   glyph: "mail",     colors: ["#3EC5F2", "#1D8FD6"] },
-  { id: "calendar", name: "Calendrier", glyph: "calendar", colors: ["#FF6B6B", "#D83A4F"] },
-  { id: "store",    name: "Store",      glyph: "bag",      colors: ["#C084FC", "#7C3AED"] },
-  { id: "settings", name: "Paramètres", glyph: "sliders",  colors: ["#8A93A6", "#565E70"] },
-  { id: "terminal", name: "Terminal",   glyph: "terminal", colors: ["#3A3F4E", "#1C1F28"] },
-  { id: "notes",    name: "Notes",      glyph: "note",     colors: ["#FFD15C", "#F0A62A"] },
-  { id: "photos",   name: "Photos",     glyph: "image",    colors: ["#F77FB8", "#D9468F"] },
-  { id: "music",    name: "Musique",    glyph: "music",    colors: ["#FF6F8E", "#E03A62"] },
-  { id: "help",     name: "Aide",       glyph: "info",     colors: ["#8B9BB4", "#5A6782"] },
+  { id: "files",    name: "Fichiers",   glyph: "folder",   colors: ["#5075B2", "#4C6FA8"] },
+  { id: "firefox",  name: "Firefox",    glyph: "globe",    colors: ["#C36F42", "#B8693F"] },
+  { id: "writer",   name: "Documents",  glyph: "doc",      colors: ["#5365AC", "#4F60A3"] },
+  { id: "calc",     name: "Tableur",    glyph: "table",    colors: ["#418B65", "#3E8460"] },
+  { id: "mail",     name: "Courrier",   glyph: "mail",     colors: ["#427F9F", "#3F7896"] },
+  { id: "calendar", name: "Calendrier", glyph: "calendar", colors: ["#B25553", "#A8514F"] },
+  { id: "store",    name: "Store",      glyph: "bag",      colors: ["#606BD5", "#5B65C9"] },
+  { id: "settings", name: "Paramètres", glyph: "sliders",  colors: ["#646776", "#5F6270"] },
+  { id: "terminal", name: "Terminal",   glyph: "terminal", colors: ["#303239", "#2E3036"] },
+  { id: "notes",    name: "Notes",      glyph: "note",     colors: ["#B29241", "#A88A3E"] },
+  { id: "photos",   name: "Photos",     glyph: "image",    colors: ["#A55A7E", "#9C5577"] },
+  { id: "music",    name: "Musique",    glyph: "music",    colors: ["#AC5267", "#A34E62"] },
+  { id: "help",     name: "Aide",       glyph: "info",     colors: ["#646776", "#5F6270"] },
 ];
 const appById = (id) => APPS.find((a) => a.id === id);
 
@@ -45,10 +45,11 @@ const FILES = [
 ];
 
 const WALLPAPERS = {
+  graphite: { name: "Graphite", file: "../branding/wallpaper/vinx-graphite.svg" },
   nebula: { name: "Nebula", file: "../branding/wallpaper/vinx-nebula.svg" },
   minimal: { name: "Nebula épuré", file: "../branding/wallpaper/vinx-nebula-minimal.svg" },
 };
-const wallpaperUrl = (key) => new URL((WALLPAPERS[key] || WALLPAPERS.nebula).file, location.href).href;
+const wallpaperUrl = (key) => new URL((WALLPAPERS[key] || WALLPAPERS.graphite).file, location.href).href;
 
 const sw = (attr, on) => `<label class="switch"><input type="checkbox" ${attr} ${on ? "checked" : ""}><span></span></label>`;
 
@@ -63,12 +64,12 @@ function appContent(app) {
         .map(([g, n]) => `<div class="file">${icon(g)}${n}</div>`).join("")}</div>`;
     case "store": {
       const items = [
-        ["Pack Développement", "terminal", ["#3A3F4E", "#1C1F28"], "Codium, Git, Docker"],
-        ["Pack Gaming", "globe", ["#34C47C", "#14915A"], "Steam, Lutris, Heroic"],
-        ["Pack Multimédia", "music", ["#F77FB8", "#D9468F"], "VLC, Kdenlive, OBS"],
-        ["Pack Graphisme", "image", ["#FF9A3C", "#E8492F"], "GIMP, Inkscape, Krita"],
-        ["LibreOffice", "doc", ["#5B8DEF", "#3753C9"], "Suite bureautique"],
-        ["Thunderbird", "mail", ["#3EC5F2", "#1D8FD6"], "Messagerie"],
+        ["Pack Développement", "terminal", ["#33353B", "#2E3036"], "Codium, Git, Docker"],
+        ["Pack Gaming", "globe", ["#42895F", "#3E8460"], "Steam, Lutris, Heroic"],
+        ["Pack Multimédia", "music", ["#A55A7E", "#9C5577"], "VLC, Kdenlive, OBS"],
+        ["Pack Graphisme", "image", ["#C36F43", "#B8693F"], "GIMP, Inkscape, Krita"],
+        ["LibreOffice", "doc", ["#5465AD", "#4F60A3"], "Suite bureautique"],
+        ["Thunderbird", "mail", ["#437F9F", "#3F7896"], "Messagerie"],
       ];
       return `<div class="store-cats">${["À la une", "Packs", "Bureautique", "Développement", "Jeux", "Multimédia"].map((c, i) => `<button class="chip ${i ? "" : "on"}" data-chip>${c}</button>`).join("")}</div>
         <div class="store-grid">${items.map(([n, g, c, d]) => `<div class="card">${appIcon({ glyph: g, colors: c })}<div><b>${n}</b><small>${d}</small></div><button class="btn primary" data-install="${n}">Obtenir</button></div>`).join("")}</div>`;
@@ -78,7 +79,7 @@ function appContent(app) {
       return `<div class="settings">
         <section><h4>Apparence</h4>
           <div class="settings-row"><span>Thème</span><div class="seg" data-theme-seg><button data-v="light">Clair</button><button data-v="dark">Sombre</button></div></div>
-          <div class="settings-row"><span>Couleur d'accent</span><div class="swatches">${["#A855F7", "#6366F1", "#EC4899", "#F97316", "#16A34A", "#0EA5E9"].map((c) => `<button class="sw" style="background:${c}" data-accent="${c}" aria-label="${c}"></button>`).join("")}</div></div>
+          <div class="settings-row"><span>Couleur d'accent</span><div class="swatches">${["#5B65C9", "#3B82C4", "#3E8460", "#B8693F", "#A8514F", "#6B6E76"].map((c) => `<button class="sw" style="background:${c}" data-accent="${c}" aria-label="${c}"></button>`).join("")}</div></div>
         </section>
         <section><h4>Fond d'écran</h4>
           <div class="wall-choices">${Object.entries(WALLPAPERS).map(([k, w]) => `<button class="wall" data-wallpaper="${k}"><span style="background-image:url('${wallpaperUrl(k)}')"></span>${w.name}</button>`).join("")}</div>

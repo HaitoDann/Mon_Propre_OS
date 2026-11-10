@@ -40,12 +40,13 @@ def main() -> None:
         "    // Couleur d'accent choisie par l'utilisateur (transparent = accent de marque).",
         '    property color accentOverride: "transparent"',
         "",
-        "    // Marque",
-        f"    readonly property color accent: accentOverride.a > 0 ? accentOverride : (dark ? {qml_color(t['brand']['accent'])} : {qml_color(t['brand']['accent_light'])})",
+        "    // Accent (sobre, réservé aux états et à l'action principale)",
+        f"    readonly property color accent: accentOverride.a > 0 ? accentOverride : (dark ? {qml_color(t['brand']['accent_fill'][0])} : {qml_color(t['brand']['accent_fill'][1])})",
+        f"    readonly property color accentForeground: accentOverride.a > 0 ? accentOverride : (dark ? {qml_color(t['brand']['accent_foreground'][0])} : {qml_color(t['brand']['accent_foreground'][1])})",
+        f"    readonly property color accentText: {qml_color(t['brand']['accent_text'])}",
+        "    // Couleur du logo (marque) — ne pas utiliser pour l'interface",
+        f"    readonly property color logo: {qml_color(t['brand']['logo'])}",
     ]
-    for key in ("accent_2", "accent_text", "gradient_start", "gradient_end"):
-        out.append(f"    readonly property color {camel(key)}: {qml_color(t['brand'][key])}")
-
     out += ["", "    // États"]
     for key, val in t["state"].items():
         out.append(f"    readonly property color {camel(key)}: {qml_color(val)}")

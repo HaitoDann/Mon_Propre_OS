@@ -41,5 +41,5 @@ var all = desktops();
 for (var i = 0; i < all.length; i++) {
     all[i].wallpaperPlugin = "org.kde.image";
     all[i].currentConfigGroup = ["Wallpaper", "org.kde.image", "General"];
-    all[i].writeConfig("Image", "file:///usr/share/wallpapers/VinX/");
+    all[i].writeConfig("Image", "file:///usr/share/wallpapers/VinX-Graphite/");
 }

@@ -15,7 +15,7 @@ function applyAppearance() {
   const root = document.documentElement;
   root.dataset.theme = Shell.state.theme;
   // L'accent choisi s'applique aux deux thèmes ; le violet de marque garde sa variante claire.
-  if (Shell.state.accent === "#A855F7") root.style.removeProperty("--accent");
+  if (Shell.state.accent === "#5B65C9") root.style.removeProperty("--accent");
   else root.style.setProperty("--accent", Shell.state.accent);
 }
 Shell.on("state", ({ key }) => {
