@@ -11,6 +11,11 @@ QtObject {
     property var pinned: AppStyle.asList(Preferences.value("dock/pinned"), AppStyle.defaultPinned)
     readonly property int pinnedCount: pinned.length
     property string activeAppName: ""
+    // Bureaux virtuels simulés.
+    property int desktopCount: 3
+    property int currentDesktopIndex: 0
+    function activateDesktop(i) { if (i >= 0 && i < desktopCount) currentDesktopIndex = i }
+
     // false : fenêtres purement simulées (démonstration, tests) — aucune application n'est lancée.
     property bool launchApps: true
 

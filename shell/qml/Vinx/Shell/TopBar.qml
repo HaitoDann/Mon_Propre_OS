@@ -53,6 +53,8 @@ Rectangle {
         anchors { right: parent.right; rightMargin: Theme.space2; verticalCenter: parent.verticalCenter }
         spacing: 2
 
+        WorkspaceIndicator { anchors.verticalCenter: parent.verticalCenter }
+
         TopBarButton {
             id: searchButton
             panel: "search"

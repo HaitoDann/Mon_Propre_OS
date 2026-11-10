@@ -58,6 +58,15 @@ Item {
             compare(backend.model.count, before)
         }
 
+        function test_workspaces() {
+            compare(backend.desktopCount, 3)
+            backend.activateDesktop(2)
+            compare(backend.currentDesktopIndex, 2)
+            backend.activateDesktop(7)                 // hors limites : ignoré
+            compare(backend.currentDesktopIndex, 2)
+            backend.activateDesktop(0)
+        }
+
         function test_magnification_grows_hovered_icon() {
             const it = dock.itemAt(3)
             mouseMove(it, it.width / 2, it.height / 2)

@@ -1,0 +1,28 @@
+# Configuration KWin propre à la session VinX OS (prioritaire sur /etc/xdg via XDG_CONFIG_DIRS).
+
+# Touche Méta seule : recherche globale de VinX (au lieu du lanceur Plasma).
+[ModifierOnlyShortcuts]
+Meta=org.vinx.Shell,/Shell,org.vinx.Shell,toggleSearch
+
+[Desktops]
+Number=3
+Rows=1
+
+# Magnétisme : bord gauche/droit = moitié d'écran, coins = quart, haut = agrandir.
+[Windows]
+ElectricBorderMaximize=true
+ElectricBorderTiling=true
+ElectricBorderCornerRatio=0.25
+BorderSnapZone=10
+WindowSnapZone=10
+CenterSnapZone=0
+
+# Animations sobres et rapides.
+[Compositing]
+AnimationSpeed=2
+
+[org.kde.kdecoration2]
+library=org.kde.breeze
+theme=Breeze
+ButtonsOnLeft=XIA
+ButtonsOnRight=

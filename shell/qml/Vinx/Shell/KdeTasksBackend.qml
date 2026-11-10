@@ -14,6 +14,11 @@ Item {
     readonly property string activeAppName: tasks.activeTask.valid
         ? (tasks.data(tasks.activeTask, TaskManager.AbstractTasksModel.AppName) || "") : ""
 
+    // Bureaux virtuels de KWin.
+    readonly property int desktopCount: desktops.numberOfDesktops
+    readonly property int currentDesktopIndex: Math.max(0, desktops.desktopIds.indexOf(desktops.currentDesktop))
+    function activateDesktop(i) { if (i >= 0 && i < desktops.desktopIds.length) desktops.requestActivate(desktops.desktopIds[i]) }
+
     function _launcherUrls(ids) { return ids.map(id => "applications:" + id + ".desktop") }
 
     TaskManager.VirtualDesktopInfo { id: desktops }

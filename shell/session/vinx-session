@@ -2,4 +2,6 @@
 # Session VinX OS : infrastructure Plasma (KWin, services, portails) avec le shell VinX
 # à la place de plasmashell (cf. docs/adr/0009-session-vinx.md).
 export VINX_SESSION=1
+# Réglages propres à la session (KWin…), prioritaires sur ceux du système.
+export XDG_CONFIG_DIRS="/usr/share/vinx/xdg:${XDG_CONFIG_DIRS:-/etc/xdg}"
 exec /usr/bin/startplasma-wayland "$@"
