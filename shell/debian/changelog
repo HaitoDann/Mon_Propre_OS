@@ -1,3 +1,13 @@
+vinx-shell (0.2.0) unstable; urgency=medium
+
+  * Palette neutre et sobre (docs/DESIGN.md).
+  * vinx-shell : barre supérieure, centre de contrôle (réseau, Bluetooth,
+    son, batterie, apparence, Ne pas déranger), calendrier, menu système
+    avec confirmation des actions d'alimentation.
+  * Module Vinx.System : UPower, NetworkManager, BlueZ, WirePlumber, logind.
+
+ -- VinX OS <maintainers@vinx-os.invalid>  Tue, 10 Nov 2026 15:00:00 +0000
+
 vinx-shell (0.1.0) unstable; urgency=medium
 
   * Socle du shell : thème généré depuis les design tokens, design system

@@ -11,6 +11,8 @@ Item {
 
     property bool open: false
     property Item anchorItem
+    // Zone d'ancrage en coordonnées du popover, si l'ancre est dans une autre fenêtre (shell).
+    property rect anchorRect
     property int edge: Popover.Below
     property int align: Popover.Start
     property int padding: Theme.space1
@@ -29,12 +31,17 @@ Item {
     function toggle(item) { open ? close() : show(item) }
 
     function reposition() {
-        if (!anchorItem) return
-        const p = anchorItem.mapToItem(root, 0, 0)
-        let x = align === Popover.End ? p.x + anchorItem.width - panel.width
-              : align === Popover.Center ? p.x + (anchorItem.width - panel.width) / 2 : p.x
+        let a
+        if (anchorItem) {
+            const p = anchorItem.mapToItem(root, 0, 0)
+            a = Qt.rect(p.x, p.y, anchorItem.width, anchorItem.height)
+        } else if (anchorRect.width > 0) {
+            a = anchorRect
+        } else return
+        let x = align === Popover.End ? a.x + a.width - panel.width
+              : align === Popover.Center ? a.x + (a.width - panel.width) / 2 : a.x
         panel.x = Math.max(8, Math.min(x, width - panel.width - 8))
-        panel.y = edge === Popover.Above ? p.y - panel.height - 6 : p.y + anchorItem.height + 6
+        panel.y = edge === Popover.Above ? a.y - panel.height - 6 : a.y + a.height + 6
     }
 
     anchors.fill: parent

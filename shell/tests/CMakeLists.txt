@@ -7,3 +7,10 @@ if(QMLTESTRUNNER)
 else()
     message(WARNING "qmltestrunner introuvable : tests QML désactivés")
 endif()
+
+# Tests C++ (analyse des sorties des outils système).
+find_package(Qt6 REQUIRED COMPONENTS Test)
+qt_add_executable(tst_wpctl tst_wpctl.cpp)
+target_include_directories(tst_wpctl PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
+target_link_libraries(tst_wpctl PRIVATE Qt6::Test)
+add_test(NAME wpctl-parsing COMMAND tst_wpctl)

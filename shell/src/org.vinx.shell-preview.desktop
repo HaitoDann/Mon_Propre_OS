@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=VinX Shell (aperçu)
+Comment=Aperçu fenêtré de la barre supérieure de VinX OS
+Exec=vinx-shell --preview
+Icon=vinx-logo
+Categories=Development;

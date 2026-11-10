@@ -17,9 +17,11 @@ jobs:
         run: |
           apt-get update
           apt-get install -y --no-install-recommends git ca-certificates dpkg-dev debhelper cmake python3 \
-            qt6-base-dev qt6-declarative-dev qt6-svg-dev qml6-module-qtquick qml6-module-qtquick-window \
+            qt6-base-dev qt6-declarative-dev qt6-svg-dev liblayershellqtinterface-dev qml6-module-qtquick qml6-module-qtquick-window \
             qml6-module-qtqml-workerscript qml6-module-qttest fonts-inter
       - uses: actions/checkout@v4
+      - name: Vérifier la prise en charge de layer-shell
+        run: test -n "$(find /usr -name 'LayerShellQtConfig.cmake' 2>/dev/null)"
       - name: Construire le paquet (tests QML inclus)
         run: cd shell && dpkg-buildpackage -us -uc -b
       - name: Captures de la galerie
@@ -31,6 +33,8 @@ jobs:
           vinx-gallery --screenshot captures/galerie-sombre.png
           vinx-gallery --open cc --screenshot captures/centre-de-controle.png
           vinx-gallery --light --open menu --screenshot captures/galerie-claire.png
+          LANG=fr_FR.UTF-8 vinx-shell --open control --screenshot captures/barre-centre-de-controle.png
+          LANG=fr_FR.UTF-8 vinx-shell --open calendar --screenshot captures/barre-calendrier.png
       - uses: actions/upload-artifact@v4
         with:
           name: vinx-shell
