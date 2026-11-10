@@ -1,14 +1,10 @@
 name: ISO VinX OS
 
+# Construction longue (30–40 min) : uniquement à la demande (onglet Actions → Run workflow)
+# ou sur une version étiquetée (v*), pour économiser les minutes GitHub Actions.
 on:
   workflow_dispatch:
   push:
-    branches: ["**"]
-    paths:
-      - "distro/**"
-      - "branding/**"
-      - "shell/**"
-      - ".github/workflows/iso.yml"
     tags: ["v*"]
 
 concurrency:
