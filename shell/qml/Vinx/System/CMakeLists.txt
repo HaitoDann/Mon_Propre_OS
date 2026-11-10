@@ -14,6 +14,7 @@ qt_add_qml_module(vinxsystem
         desktopentry.h
         applications.h applications.cpp
         preferences.h preferences.cpp
+        notifications.h notifications.cpp
 )
 target_link_libraries(vinxsystem PRIVATE Qt6::Qml Qt6::DBus)
 

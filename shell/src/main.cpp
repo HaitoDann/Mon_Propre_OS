@@ -21,10 +21,9 @@ public:
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requested) override
     {
         const QSize s = requested.isValid() ? requested : QSize(64, 64);
-        QIcon icon = QIcon::fromTheme(id);
-        if (icon.isNull())
-            icon = QIcon::fromTheme(QStringLiteral("application-x-executable"));
-        const QPixmap pm = icon.pixmap(s);
+        const QIcon icon = QIcon::fromTheme(id);
+        // Pixmap vide si l'icône est absente : le QML affiche alors un pictogramme VinX.
+        const QPixmap pm = icon.isNull() ? QPixmap() : icon.pixmap(s);
         if (size)
             *size = pm.size();
         return pm;
@@ -110,11 +109,14 @@ int main(int argc, char *argv[])
 
 #ifdef VINX_HAVE_LAYERSHELL
     using LSW = LayerShellQt::Window;
+    // Ce processus est le serveur de notifications de la session (org.freedesktop.Notifications).
+    qputenv("VINX_NOTIFICATION_SERVER", "1");
     QWindow *background = create("BackgroundWindow");
+    QWindow *toasts = create("ToastWindow");
     QWindow *dock = create("DockWindow");
     QWindow *bar = create("TopBarWindow");
     QWindow *panels = create("PopupWindow");
-    if (!background || !dock || !bar || !panels)
+    if (!background || !toasts || !dock || !bar || !panels)
         return 1;
     const auto all = LSW::Anchors(LSW::AnchorTop | LSW::AnchorBottom | LSW::AnchorLeft | LSW::AnchorRight);
 
@@ -128,7 +130,11 @@ int main(int argc, char *argv[])
                    bar->height(), LSW::KeyboardInteractivityOnDemand, QStringLiteral("vinx-topbar"));
     // Panneaux : couche plein écran au-dessus de tout, clavier exclusif tant qu'elle est visible.
     configureLayer(panels, LSW::LayerOverlay, all, -1, LSW::KeyboardInteractivityExclusive, QStringLiteral("vinx-panels"));
+    // Bulles de notification : en haut à droite, sous la barre.
+    configureLayer(toasts, LSW::LayerTop, LSW::Anchors(LSW::AnchorTop | LSW::AnchorRight), 0,
+                   LSW::KeyboardInteractivityNone, QStringLiteral("vinx-notifications"));
     background->show();
+    toasts->show();
     dock->show();
     bar->show();
 #endif

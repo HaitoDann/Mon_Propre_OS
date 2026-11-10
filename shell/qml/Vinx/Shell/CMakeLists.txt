@@ -25,6 +25,8 @@ qt_add_qml_module(vinxshell
         DockWindow.qml
         Background.qml
         BackgroundWindow.qml
+        Toasts.qml
+        ToastWindow.qml
     # Chargé dynamiquement (dépend de org.kde.taskmanager, absent à la compilation) :
     RESOURCES KdeTasksBackend.qml
 )

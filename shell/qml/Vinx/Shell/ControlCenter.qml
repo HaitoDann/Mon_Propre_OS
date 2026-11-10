@@ -33,11 +33,11 @@ Column {
         }
         Tile {
             width: 162
-            iconName: ShellState.doNotDisturb ? "bell-off" : "bell"
+            iconName: Notifications.doNotDisturb ? "bell-off" : "bell"
             title: qsTr("Ne pas déranger")
-            subtitle: ShellState.doNotDisturb ? qsTr("Activé") : qsTr("Désactivé")
-            checked: ShellState.doNotDisturb
-            onClicked: ShellState.doNotDisturb = !ShellState.doNotDisturb
+            subtitle: Notifications.doNotDisturb ? qsTr("Activé") : qsTr("Désactivé")
+            checked: Notifications.doNotDisturb
+            onClicked: Notifications.doNotDisturb = !Notifications.doNotDisturb
         }
         Tile {
             width: 162

@@ -16,6 +16,7 @@ Item {
         when: windowShown
         readonly property var backend: Tasks.backend
 
+        function initTestCase() { backend.launchApps = false }
         function cleanup() { ShellState.close() }
 
         function test_preview_backend_and_pinned_items() {

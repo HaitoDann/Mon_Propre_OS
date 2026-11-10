@@ -11,6 +11,8 @@ QtObject {
     property var pinned: AppStyle.asList(Preferences.value("dock/pinned"), AppStyle.defaultPinned)
     readonly property int pinnedCount: pinned.length
     property string activeAppName: ""
+    // false : fenêtres purement simulées (démonstration, tests) — aucune application n'est lancée.
+    property bool launchApps: true
 
     Component.onCompleted: rebuild()
 
@@ -69,7 +71,7 @@ QtObject {
     function activate(i) {
         const e = model.get(i)
         if (!e.IsWindow) {
-            Applications.launch(e.AppId)
+            if (launchApps) Applications.launch(e.AppId)
             model.setProperty(i, "IsWindow", true)
             model.setProperty(i, "IsLauncher", false)
             model.setProperty(i, "ChildCount", 1)
@@ -83,7 +85,7 @@ QtObject {
     }
     function newInstance(i) {
         const e = model.get(i)
-        Applications.launch(e.AppId)
+        if (launchApps) Applications.launch(e.AppId)
         model.setProperty(i, "IsWindow", true)
         model.setProperty(i, "ChildCount", e.ChildCount + 1)
         _setActive(i)

@@ -70,7 +70,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
             }
             Icon {
-                visible: ShellState.doNotDisturb
+                visible: Notifications.doNotDisturb
                 name: "bell-off"
                 color: Theme.text
                 anchors.verticalCenter: parent.verticalCenter

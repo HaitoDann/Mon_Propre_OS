@@ -3,6 +3,7 @@ import QtTest
 import Vinx.Theme
 import Vinx.Controls
 import Vinx.Shell
+import Vinx.System
 
 Item {
     id: root
@@ -15,7 +16,26 @@ Item {
         name: "VinxShell"
         when: windowShown
 
-        function cleanup() { ShellState.close(); Theme.dark = true; ShellState.doNotDisturb = false }
+        function cleanup() { ShellState.close(); Theme.dark = true; Notifications.doNotDisturb = false }
+
+        SignalSpy { id: popupSpy; target: Notifications; signalName: "popup" }
+
+        function test_notifications_history_and_dnd() {
+            Notifications.clear()
+            popupSpy.clear()
+            const id = Notifications.notify("Test", "Bonjour", "<b>Corps</b> du message")
+            compare(Notifications.count, 1)
+            compare(popupSpy.count, 1)
+            compare(popupSpy.signalArguments[0][3], "Corps du message")   // balisage retiré
+            Notifications.doNotDisturb = true
+            Notifications.notify("Test", "Silencieuse")
+            compare(Notifications.count, 2)
+            compare(popupSpy.count, 1)                                     // pas de bulle
+            Notifications.dismiss(id)
+            compare(Notifications.count, 1)
+            Notifications.clear()
+            compare(Notifications.count, 0)
+        }
 
         function test_bar_height() { compare(bar.height, Theme.topbarHeight) }
 

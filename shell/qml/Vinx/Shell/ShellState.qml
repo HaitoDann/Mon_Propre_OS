@@ -8,7 +8,6 @@ QtObject {
     property rect anchorRect
     // Action en attente de confirmation : "poweroff" | "reboot" | "logout"
     property string pendingAction: ""
-    property bool doNotDisturb: false
     // Menu contextuel du dock : { index, name, running, pinned }
     property var dockMenu: ({})
 
