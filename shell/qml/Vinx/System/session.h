@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QVariantList>
 #include <QtQml/qqmlregistration.h>
 
 // Actions de session (systemd-logind) et lancement d'applications.
@@ -27,6 +28,10 @@ public:
     Q_INVOKABLE bool fileExists(const QString &path) const;
     // Déclenche un raccourci global de KWin (ex. « Overview », « Window Close »).
     Q_INVOKABLE void invokeKWinShortcut(const QString &name);
+    // Fonds d'écran installés : [{ name, path, preview }] (paquets /usr/share/wallpapers/*).
+    Q_INVOKABLE QVariantList wallpapers() const;
+    Q_INVOKABLE QString kernelVersion() const;
+    Q_INVOKABLE QString hostName() const;
 
 private:
     void callManager(const QString &method);

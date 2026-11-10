@@ -1,3 +1,15 @@
+vinx-shell (0.4.0) unstable; urgency=medium
+
+  * Notifications : serveur org.freedesktop.Notifications, bulles, historique,
+    Ne pas déranger.
+  * Recherche globale (touche Méta) : applications, réglages, fichiers, calcul, web.
+  * Espaces de travail dans la barre ; réglages KWin de la session VinX ;
+    palettes KDE VinX claire et sombre.
+  * Widgets du bureau (horloge, calendrier, note) et choix du fond d'écran.
+  * Applications : Paramètres, Store (packs Flathub), assistant de bienvenue.
+
+ -- VinX OS <maintainers@vinx-os.invalid>  Tue, 10 Nov 2026 18:00:00 +0000
+
 vinx-shell (0.3.0) unstable; urgency=medium
 
   * Dock : épinglées et ouvertes, agrandissement, indicateurs, infobulles,

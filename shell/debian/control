@@ -25,12 +25,14 @@ Depends: ${shlibs:Depends},
          qml6-module-qtqml-workerscript,
          fonts-inter
 Recommends: plasma-workspace,
+            flatpak,
             wireplumber,
             network-manager,
             bluez,
             upower
-Description: Shell de bureau de VinX OS
+Description: Shell de bureau et applications de VinX OS
  vinx-shell : barre supérieure (menu système, centre de contrôle, calendrier)
  ancrée via layer-shell sous KWin, ou fenêtre d'aperçu (--preview).
  Modules QML Vinx.Theme, Vinx.Controls, Vinx.System et Vinx.Shell,
- et la galerie du design system vinx-gallery.
+ les applications vinx-settings (Paramètres), vinx-store (Store, packs
+ Flathub), vinx-welcome (premier démarrage) et la galerie vinx-gallery.

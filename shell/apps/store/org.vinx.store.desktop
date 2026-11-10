@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Store
+GenericName=Logithèque
+Comment=Ajouter des applications et des packs (développement, jeux, multimédia…)
+Exec=vinx-store
+Icon=system-software-install
+Keywords=store;logiciels;applications;installer;flatpak;packs;
+Categories=System;PackageManager;

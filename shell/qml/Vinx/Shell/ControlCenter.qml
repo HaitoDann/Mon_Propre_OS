@@ -37,7 +37,7 @@ Column {
             title: qsTr("Ne pas déranger")
             subtitle: Notifications.doNotDisturb ? qsTr("Activé") : qsTr("Désactivé")
             checked: Notifications.doNotDisturb
-            onClicked: Notifications.doNotDisturb = !Notifications.doNotDisturb
+            onClicked: Preferences.setValue("notifications/dnd", !Notifications.doNotDisturb)
         }
         Tile {
             width: 162
@@ -95,7 +95,7 @@ Column {
             IconButton {
                 iconName: "sliders"
                 toolTip: qsTr("Paramètres")
-                onClicked: { ShellState.close(); Session.launch("systemsettings") }
+                onClicked: { ShellState.close(); Session.launch("vinx-settings") }
             }
             IconButton {
                 iconName: "power"

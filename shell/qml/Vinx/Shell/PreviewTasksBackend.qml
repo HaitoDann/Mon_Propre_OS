@@ -28,8 +28,8 @@ QtObject {
     }
     function _names() {
         const n = { "org.kde.dolphin": "Fichiers", "firefox-esr": "Firefox", "libreoffice-writer": "Documents",
-                    "libreoffice-calc": "Tableur", "thunderbird": "Courrier", "org.kde.discover": "Store",
-                    "systemsettings": "Paramètres", "org.kde.konsole": "Terminal" }
+                    "libreoffice-calc": "Tableur", "thunderbird": "Courrier", "org.vinx.store": "Store",
+                    "org.vinx.settings": "Paramètres", "org.kde.konsole": "Terminal" }
         return n
     }
     function rebuild() {

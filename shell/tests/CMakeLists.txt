@@ -19,3 +19,9 @@ qt_add_executable(tst_desktopentry tst_desktopentry.cpp)
 target_include_directories(tst_desktopentry PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
 target_link_libraries(tst_desktopentry PRIVATE Qt6::Test)
 add_test(NAME desktop-entry COMMAND tst_desktopentry)
+
+qt_add_executable(tst_flatpak tst_flatpak.cpp "${PROJECT_SOURCE_DIR}/qml/Vinx/System/flatpak.cpp")
+target_include_directories(tst_flatpak PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
+target_link_libraries(tst_flatpak PRIVATE Qt6::Test Qt6::DBus Qt6::Qml)
+add_test(NAME flatpak-progress COMMAND tst_flatpak)
+# Les tests QML de tests/store/ sont exécutés par qml-controls (parcours récursif).

@@ -1,16 +1,20 @@
 import QtQuick
 import Vinx.Theme
 import Vinx.Controls
+import Vinx.System
 
 // Dock centré en bas : applications épinglées | séparateur | applications ouvertes non épinglées.
 // Remplit sa fenêtre ; le plateau est ancré en bas. screenOffset convertit vers les coordonnées écran.
 Item {
     id: dock
     property var backend: Tasks.backend
-    property bool magnify: true
+    readonly property int rev: Preferences.revision
+    // Réglages (Paramètres → Dock) : taille des icônes 40–64 px, agrandissement au survol.
+    readonly property int iconSize: { rev; return Math.max(40, Math.min(64, Number(Preferences.value("dock/iconSize", Theme.dockIcon)))) }
+    readonly property bool magnify: { rev; const v = Preferences.value("dock/magnify", true); return v === true || v === "true" }
     property point screenOffset: Qt.point(0, 0)
     readonly property real margin: Theme.space2
-    readonly property real plateHeight: Theme.dockIcon + Theme.space3 + 2
+    readonly property real plateHeight: iconSize + Theme.space3 + 2
     // Hauteur réservée en bas de l'écran (zone que les fenêtres agrandies ne recouvrent pas).
     readonly property int reservedHeight: plateHeight + margin * 2
 
@@ -53,7 +57,7 @@ Item {
                 // Séparateur avant la première application ouverte non épinglée.
                 Rectangle {
                     visible: cell.index === dock.backend.pinnedCount && cell.index > 0
-                    width: 1; height: Theme.dockIcon - 8
+                    width: 1; height: dock.iconSize - 8
                     anchors.verticalCenter: icon.verticalCenter
                     color: Theme.borderStrong
                 }
@@ -65,6 +69,7 @@ Item {
                     active: !!cell.model.IsActive
                     windows: cell.model.ChildCount > 0 ? cell.model.ChildCount : (cell.model.IsWindow ? 1 : 0)
                     magnify: dock.magnify
+                    base: dock.iconSize
                     coordItem: row
                     pointerX: hover.hovered ? row.mapFromItem(dock, hover.point.position.x, 0).x : -1
                     onClicked: { ShellState.close(); dock.backend.activate(cell.index) }
@@ -87,7 +92,7 @@ Item {
         width: tipLabel.implicitWidth + Theme.space3 * 2
         height: 26
         x: target ? target.mapToItem(dock, target.width / 2, 0).x - width / 2 : 0
-        y: plate.y - height - Theme.space3 - (Theme.dockIconMax - Theme.dockIcon)
+        y: plate.y - height - Theme.space3 - (dock.magnify ? dock.iconSize * 0.33 : 0)
         Label { id: tipLabel; anchors.centerIn: parent; text: tip.target ? tip.target.appName : ""; font.pixelSize: Theme.fsSm }
     }
 }

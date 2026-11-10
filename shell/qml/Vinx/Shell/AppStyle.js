@@ -16,7 +16,10 @@ const known = {
     "org.kde.gwenview":  { glyph: "image",    tint: "#9C5577" },
     "org.kde.okular":    { glyph: "doc",      tint: "#A88A3E" },
     "org.kde.kcalc":     { glyph: "equals",   tint: "#5F6270" },
-    "org.vinx.gallery":  { glyph: "grid",     tint: "#5B65C9" }
+    "org.vinx.gallery":  { glyph: "grid",     tint: "#5B65C9" },
+    "org.vinx.settings": { glyph: "sliders",  tint: "#5F6270" },
+    "org.vinx.store":    { glyph: "bag",      tint: "#5B65C9" },
+    "org.vinx.welcome":  { glyph: "info",     tint: "#5B65C9" }
 };
 
 function forApp(appId) {
@@ -25,7 +28,7 @@ function forApp(appId) {
 
 // Applications épinglées par défaut (identifiants .desktop).
 const defaultPinned = ["org.kde.dolphin", "firefox-esr", "libreoffice-writer", "libreoffice-calc",
-                       "thunderbird", "org.kde.discover", "systemsettings"];
+                       "thunderbird", "org.vinx.store", "org.vinx.settings"];
 
 // Préférence « liste » : QSettings peut renvoyer une chaîne seule pour une liste d'un élément.
 function asList(v, fallback) {

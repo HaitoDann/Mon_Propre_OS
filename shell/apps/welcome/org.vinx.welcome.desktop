@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Bienvenue dans VinX OS
+Comment=Premiers pas : apparence, applications, raccourcis
+Exec=vinx-welcome
+Icon=vinx-logo
+Categories=System;

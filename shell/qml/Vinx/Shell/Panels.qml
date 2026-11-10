@@ -44,9 +44,9 @@ Item {
         onTriggered: (i) => {
             ShellState.close()
             switch (i) {
-            case 0: Session.launch("kinfocenter"); break
-            case 2: Session.launch("systemsettings"); break
-            case 3: Session.launch("plasma-discover"); break
+            case 0: Session.launch("vinx-settings", ["--page", "about"]); break
+            case 2: Session.launch("vinx-settings"); break
+            case 3: Session.launch("vinx-store"); break
             case 5: Session.lock(); break
             case 6: Session.suspend(); break
             case 7: ShellState.confirm("logout"); break

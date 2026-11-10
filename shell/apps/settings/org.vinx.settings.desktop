@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Paramètres
+GenericName=Réglages du système
+Comment=Apparence, fond d'écran, bureau, dock et notifications
+Exec=vinx-settings
+Icon=preferences-system
+Keywords=paramètres;réglages;préférences;apparence;fond;thème;
+Categories=Settings;

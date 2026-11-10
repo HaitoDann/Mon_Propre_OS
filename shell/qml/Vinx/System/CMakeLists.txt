@@ -17,6 +17,7 @@ qt_add_qml_module(vinxsystem
         notifications.h notifications.cpp
         filesearch.h filesearch.cpp
         shellservice.h shellservice.cpp
+        flatpak.h flatpak.cpp
 )
 target_link_libraries(vinxsystem PRIVATE Qt6::Qml Qt6::Gui Qt6::DBus)
 

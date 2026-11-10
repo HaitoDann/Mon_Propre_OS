@@ -16,4 +16,14 @@ Window {
         function onDarkChanged() { Session.launch("plasma-apply-colorscheme", [Theme.dark ? "VinXDark" : "VinXLight"]) }
     }
     TopBar { anchors.fill: parent }
+
+    // Premier démarrage : assistant de bienvenue (une seule fois).
+    Timer {
+        interval: 2500
+        running: true
+        onTriggered: {
+            const done = Preferences.value("welcome/done", false)
+            if (done !== true && done !== "true") Session.launch("vinx-welcome")
+        }
+    }
 }

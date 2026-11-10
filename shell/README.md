@@ -12,6 +12,11 @@ Référence UX : la [maquette](../prototype/) et le [guide UX](../docs/UX.md).
 | 3. Barre supérieure | `vinx-shell` : barre, centre de contrôle, calendrier, menu système | ✅ |
 | 4. Dock | Épinglées / ouvertes, agrandissement, indicateurs, menu contextuel, tâches KWin | ✅ |
 | 5. Session « VinX » | `vinx.desktop` : KWin + services Plasma, `vinx-shell` à la place de plasmashell ([ADR 0009](../docs/adr/0009-session-vinx.md)) | ✅ |
+| 6. Notifications | Serveur `org.freedesktop.Notifications`, bulles, historique, Ne pas déranger | ✅ |
+| 7. Recherche globale | Touche Méta : applications, réglages, fichiers, calcul, web | ✅ |
+| 8. Fenêtres et espaces | Indicateur de bureaux, vue d'ensemble, réglages KWin de session, palettes claire/sombre | ✅ |
+| 9. Bureau | Widgets Horloge / Calendrier / Note, fond d'écran au choix | ✅ |
+| 10. Applications | `vinx-settings`, `vinx-store` (packs Flathub), `vinx-welcome` ([ADR 0010](../docs/adr/0010-applications-store.md)) | ✅ |
 
 ## Architecture
 
@@ -83,10 +88,11 @@ Le paquet est aussi intégré à l'ISO : *VinX Design System* apparaît dans le 
 2. Sur l'écran de connexion, choisir la session **« VinX OS (expérimental) »** (en bas à gauche), utilisateur `vinx`, mot de passe `live`.
 3. Pour revenir à Plasma, se déconnecter et choisir « Plasma (Wayland) ».
 
-## Limites connues (v0.3)
+## Limites connues (v0.4)
 
-- Pas encore de serveur de notifications en session VinX (étape 6) ; barre et dock sur l'écran principal seulement.
-- Menus d'application dans la barre : plus tard (menu global).
+- Barre et dock sur l'écran principal seulement ; menus d'application dans la barre : plus tard (menu global).
+- Notifications : pas encore de boutons d'action ; Store : applications Flathub uniquement.
+- Widget Calendrier sans événements (pas encore de source d'agenda).
 - Le son passe par l'outil `wpctl` (interrogé toutes les 4 s) ; une liaison PipeWire native suivra.
 - Luminosité, notifications et recherche : étapes 6 et 7.
 - Le mode layer-shell n'est compilé qu'avec LayerShellQt 6 (Debian 13) ; validation sur l'ISO.

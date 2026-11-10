@@ -1,0 +1,15 @@
+# Applications VinX : Paramètres, Store, Bienvenue (premier démarrage).
+function(vinx_add_app target uri)
+    cmake_parse_arguments(ARG "" "DESKTOP" "QML_FILES" ${ARGN})
+    qt_add_executable(${target} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+    qt_add_qml_module(${target} URI ${uri} VERSION 1.0 RESOURCE_PREFIX /qt/qml NO_PLUGIN QML_FILES ${ARG_QML_FILES})
+    target_include_directories(${target} PRIVATE "${PROJECT_SOURCE_DIR}/apps")
+    target_link_libraries(${target} PRIVATE Qt6::Gui Qt6::Quick)
+    target_compile_definitions(${target} PRIVATE VINX_BUILD_QML_DIR="${QT_QML_OUTPUT_DIRECTORY}" VINX_VERSION="${PROJECT_VERSION}")
+    install(TARGETS ${target} RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+    install(FILES ${ARG_DESKTOP} DESTINATION "${CMAKE_INSTALL_DATADIR}/applications")
+endfunction()
+
+add_subdirectory(settings)
+add_subdirectory(store)
+add_subdirectory(welcome)

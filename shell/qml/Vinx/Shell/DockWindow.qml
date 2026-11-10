@@ -7,7 +7,7 @@ Window {
     id: win
     readonly property alias reservedHeight: dock.reservedHeight
     width: Math.min(Screen.width, Math.max(400, dock.childrenRect.width + Theme.dockIconMax * 2))
-    height: dock.reservedHeight + (Theme.dockIconMax - Theme.dockIcon) + 40
+    height: dock.reservedHeight + dock.iconSize * 0.33 + 40
     color: "transparent"
     visible: false
     title: "vinx-dock"

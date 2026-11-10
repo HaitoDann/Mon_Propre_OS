@@ -18,14 +18,14 @@ Item {
     signal contextRequested()
 
     readonly property var style: AppStyle.forApp(appId)
-    readonly property real base: Theme.dockIcon
+    property real base: Theme.dockIcon
     readonly property real size: {
         if (!magnify || pointerX < 0) return base
         const c = mapToItem(coordItem, width / 2, 0).x
         const d = Math.abs(pointerX - c)
         const range = base * 3
         const k = d > range ? 0 : (Math.cos(d / range * Math.PI) + 1) / 2
-        return base + (Theme.dockIconMax - base) * k
+        return base + base * 0.33 * k
     }
 
     width: size

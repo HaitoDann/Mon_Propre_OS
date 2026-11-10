@@ -30,7 +30,7 @@ Column {
             { title: Theme.dark ? qsTr("Passer en apparence claire") : qsTr("Passer en apparence sombre"), glyph: Theme.dark ? "sun" : "moon",
               keys: "theme apparence sombre clair mode", run: () => Preferences.setValue("appearance/dark", !Theme.dark) },
             { title: Notifications.doNotDisturb ? qsTr("Désactiver Ne pas déranger") : qsTr("Activer Ne pas déranger"), glyph: "bell-off",
-              keys: "ne pas deranger notifications concentration", run: () => Notifications.doNotDisturb = !Notifications.doNotDisturb },
+              keys: "ne pas deranger notifications concentration", run: () => Preferences.setValue("notifications/dnd", !Notifications.doNotDisturb) },
             { title: Network.wirelessEnabled ? qsTr("Désactiver le Wi-Fi") : qsTr("Activer le Wi-Fi"), glyph: "wifi",
               keys: "wifi reseau internet sans fil", available: Network.available, run: () => Network.wirelessEnabled = !Network.wirelessEnabled },
             { title: Bluetooth.powered ? qsTr("Désactiver le Bluetooth") : qsTr("Activer le Bluetooth"), glyph: "bluetooth",

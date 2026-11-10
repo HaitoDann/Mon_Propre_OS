@@ -2,7 +2,11 @@
 
 #include <QDBusConnection>
 #include <QDBusInterface>
+#include <QDir>
 #include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QSysInfo>
 #include <QProcess>
 #include <QStandardPaths>
 
@@ -70,3 +74,34 @@ void Session::invokeKWinShortcut(const QString &name)
                         QStringLiteral("org.kde.kglobalaccel.Component"), QDBusConnection::sessionBus());
     kwin.asyncCall(QStringLiteral("invokeShortcut"), name);
 }
+
+QVariantList Session::wallpapers() const
+{
+    QVariantList out;
+    const QDir root(QStringLiteral("/usr/share/wallpapers"));
+    for (const QString &pkg : root.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
+        const QDir images(root.filePath(pkg + QStringLiteral("/contents/images")));
+        QStringList files = images.entryList({QStringLiteral("*.png"), QStringLiteral("*.jpg"), QStringLiteral("*.jpeg")}, QDir::Files);
+        if (files.isEmpty())
+            continue;
+        // Préfère la plus grande définition (noms « LARGEURxHAUTEUR.ext »).
+        std::sort(files.begin(), files.end(), [](const QString &a, const QString &b) {
+            return a.section(QLatin1Char('x'), 0, 0).toInt() > b.section(QLatin1Char('x'), 0, 0).toInt();
+        });
+        QString name = pkg;
+        QFile meta(root.filePath(pkg + QStringLiteral("/metadata.json")));
+        if (meta.open(QIODevice::ReadOnly)) {
+            const QString n = QJsonDocument::fromJson(meta.readAll()).object().value(QStringLiteral("KPlugin")).toObject()
+                                  .value(QStringLiteral("Name")).toString();
+            if (!n.isEmpty())
+                name = n;
+        }
+        const QString preview = root.filePath(pkg + QStringLiteral("/contents/screenshot.png"));
+        out.append(QVariantMap{{QStringLiteral("name"), name}, {QStringLiteral("path"), images.filePath(files.first())},
+                               {QStringLiteral("preview"), QFile::exists(preview) ? preview : images.filePath(files.last())}});
+    }
+    return out;
+}
+
+QString Session::kernelVersion() const { return QSysInfo::kernelVersion(); }
+QString Session::hostName() const { return QSysInfo::machineHostName(); }
