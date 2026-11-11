@@ -1,3 +1,11 @@
+vinx-shell (0.5.1) unstable; urgency=medium
+
+  * Écran de verrouillage VinX (interface de kscreenlocker) : heure, date,
+    utilisateur, mot de passe, mise en veille ; sécurité KDE inchangée.
+  * Session : pas d'écran de chargement KDE avant le bureau VinX.
+
+ -- VinX OS <maintainers@vinx-os.invalid>  Wed, 11 Nov 2026 14:00:00 +0000
+
 vinx-shell (0.5.0) unstable; urgency=medium
 
   * Multi-écran : fond, barre et couche de panneaux sur chaque écran ;

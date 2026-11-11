@@ -10,6 +10,9 @@ export XDG_CONFIG_DIRS="/usr/share/vinx/xdg:${XDG_CONFIG_DIRS:-/etc/xdg}"
 KWC=$(command -v kwriteconfig6 || true)
 if [ -n "$KWC" ]; then
 	"$KWC" --file kwinrc --group ModifierOnlyShortcuts --key Meta "org.vinx.Shell,/Shell,org.vinx.Shell,toggleSearch"
+	# Pas d'écran de chargement KDE entre l'écran de connexion et le bureau VinX.
+	"$KWC" --file ksplashrc --group KSplash --key Engine none
+	"$KWC" --file ksplashrc --group KSplash --key Theme None
 fi
 
 /usr/bin/startplasma-wayland "$@"
@@ -17,5 +20,7 @@ status=$?
 
 if [ -n "$KWC" ]; then
 	"$KWC" --file kwinrc --group ModifierOnlyShortcuts --key Meta --delete
+	"$KWC" --file ksplashrc --group KSplash --key Engine --delete
+	"$KWC" --file ksplashrc --group KSplash --key Theme --delete
 fi
 exit $status

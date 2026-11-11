@@ -17,3 +17,7 @@ sed \
 	"$SRC/spinner.plymouth" > "$DST/vinx.plymouth"
 
 plymouth-set-default-theme vinx
+
+# Le thème doit être intégré à l'image de démarrage (initramfs), sinon c'est celui de Debian
+# qui s'affiche au démarrage.
+update-initramfs -u -k all

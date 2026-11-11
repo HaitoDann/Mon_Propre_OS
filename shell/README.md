@@ -16,6 +16,7 @@ Référence UX : la [maquette](../prototype/) et le [guide UX](../docs/UX.md).
 | 7. Recherche globale | Touche Méta : applications, réglages, fichiers, calcul, web | ✅ |
 | 8. Fenêtres et espaces | Indicateur de bureaux, vue d'ensemble, réglages KWin de session, palettes claire/sombre | ✅ |
 | 9. Bureau | Widgets Horloge / Calendrier / Note, fond d'écran au choix | ✅ |
+| 11. Écran de verrouillage | Interface VinX sur kscreenlocker (sécurité KDE inchangée) — [ADR 0011](../docs/adr/0011-ecran-de-verrouillage.md) | ✅ |
 | 10. Applications | `vinx-settings`, `vinx-store` (packs Flathub), `vinx-welcome` ([ADR 0010](../docs/adr/0010-applications-store.md)) | ✅ |
 
 ## Architecture

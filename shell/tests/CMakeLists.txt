@@ -25,3 +25,12 @@ target_include_directories(tst_flatpak PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/S
 target_link_libraries(tst_flatpak PRIVATE Qt6::Test Qt6::DBus Qt6::Qml)
 add_test(NAME flatpak-progress COMMAND tst_flatpak)
 # Les tests QML de tests/store/ sont exécutés par qml-controls (parcours récursif).
+
+# Écran de verrouillage (kscreenlocker) avec un faux authentificateur.
+qt_add_executable(tst_lockscreen tst_lockscreen.cpp)
+target_link_libraries(tst_lockscreen PRIVATE Qt6::Test Qt6::Quick)
+target_compile_definitions(tst_lockscreen PRIVATE
+    VINX_BUILD_QML_DIR="${QT_QML_OUTPUT_DIRECTORY}"
+    LOCKSCREEN_QML="${PROJECT_SOURCE_DIR}/lockscreen/LockScreen.qml")
+add_test(NAME lockscreen COMMAND tst_lockscreen)
+set_tests_properties(lockscreen PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
