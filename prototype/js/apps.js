@@ -6,7 +6,7 @@ const APPS = [
   { id: "calc",     name: "Tableur",    glyph: "table",    colors: ["#418B65", "#3E8460"] },
   { id: "mail",     name: "Courrier",   glyph: "mail",     colors: ["#427F9F", "#3F7896"] },
   { id: "calendar", name: "Calendrier", glyph: "calendar", colors: ["#B25553", "#A8514F"] },
-  { id: "store",    name: "Store",      glyph: "bag",      colors: ["#606BD5", "#5B65C9"] },
+  { id: "store",    name: "Store",      glyph: "bag",      colors: ["#7A60C6", "#7358BD"] },
   { id: "settings", name: "Paramètres", glyph: "sliders",  colors: ["#646776", "#5F6270"] },
   { id: "terminal", name: "Terminal",   glyph: "terminal", colors: ["#303239", "#2E3036"] },
   { id: "notes",    name: "Notes",      glyph: "note",     colors: ["#B29241", "#A88A3E"] },
@@ -79,7 +79,7 @@ function appContent(app) {
       return `<div class="settings">
         <section><h4>Apparence</h4>
           <div class="settings-row"><span>Thème</span><div class="seg" data-theme-seg><button data-v="light">Clair</button><button data-v="dark">Sombre</button></div></div>
-          <div class="settings-row"><span>Couleur d'accent</span><div class="swatches">${["#5B65C9", "#3B82C4", "#3E8460", "#B8693F", "#A8514F", "#6B6E76"].map((c) => `<button class="sw" style="background:${c}" data-accent="${c}" aria-label="${c}"></button>`).join("")}</div></div>
+          <div class="settings-row"><span>Couleur d'accent</span><div class="swatches">${["#7358BD", "#3B82C4", "#3E8460", "#B8693F", "#A8514F", "#6B6E76"].map((c) => `<button class="sw" style="background:${c}" data-accent="${c}" aria-label="${c}"></button>`).join("")}</div></div>
         </section>
         <section><h4>Fond d'écran</h4>
           <div class="wall-choices">${Object.entries(WALLPAPERS).map(([k, w]) => `<button class="wall" data-wallpaper="${k}"><span style="background-image:url('${wallpaperUrl(k)}')"></span>${w.name}</button>`).join("")}</div>

@@ -9,7 +9,7 @@ GNOME HIG) et des critères d'accessibilité WCAG. Les valeurs sont dans [`brand
 | Règle | Application |
 |---|---|
 | **Base neutre** pour 90 % de la surface : fonds, fenêtres, barres, menus. | Gris légèrement froids (`#141517` → `#232427` en sombre). Jamais de fond teinté de couleur. |
-| **Un seul accent**, sobre, réservé à : action principale, état actif (interrupteur, tuile), sélection, focus clavier. | Indigo désaturé `#5B65C9` (clair : `#4E58BE`). Pas de dégradé d'accent. |
+| **Un seul accent**, sobre, réservé à : action principale, état actif (interrupteur, tuile), sélection, focus clavier. | Violet du logo atténué `#7358BD` (clair : `#6548AE`). Pas de dégradé d'accent. |
 | **Pas de noir pur** en thème sombre (éblouissement, halo autour du texte). | Fond `#141517`, texte `#ECECEE`. |
 | **Profondeur par la luminosité**, pas par la couleur : plus une surface est élevée, plus elle est claire (sombre) ou blanche et ombrée (clair). | Fond < fenêtre < menu/panneau. |
 | **Couleurs d'état** réservées à leur sens (succès, alerte, danger), désaturées. | `#3FA66B`, `#D4A13C`, `#E5484D`. |
@@ -52,8 +52,10 @@ GNOME HIG) et des critères d'accessibilité WCAG. Les valeurs sont dans [`brand
 - **Calme visuel** : rien ne clignote ni ne bouge sans action de l'utilisateur ; notifications discrètes,
   regroupées, désactivables (Ne pas déranger).
 - **Lisibilité des états** : un état ne repose jamais sur la seule couleur (icône ou texte en plus).
-- **Icônes** : un seul style au trait, grille 24 px ; icônes d'applications en teintes unies désaturées
-  de luminosité proche, pour un dock homogène.
+- **Icônes** : pictogrammes au trait, grille 24 px. Icônes d'applications et de fichiers : silhouette
+  de l'objet (dossier, page, enveloppe, globe…) en teinte unie désaturée de luminosité proche,
+  pictogramme blanc au trait (ADR 0015).
+- **Barre minimale** : un indicateur n'apparaît que s'il apporte une information.
 
 ## Sources
 

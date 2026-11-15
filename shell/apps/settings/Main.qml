@@ -104,7 +104,7 @@ Window {
                                 required property string modelData
                                 readonly property bool current: String(win.pref("appearance/accent", "")) === modelData
                                 width: 22; height: 22; radius: 11
-                                color: modelData === "" ? (Theme.dark ? "#5B65C9" : "#4E58BE") : modelData
+                                color: modelData === "" ? (Theme.dark ? "#7358BD" : "#6548AE") : modelData
                                 border.width: current ? 2 : 0
                                 border.color: Theme.text
                                 Accessible.role: Accessible.RadioButton
@@ -177,6 +177,24 @@ Window {
                     }
                 }
                 SettingsRow { title: qsTr("Agrandissement au survol"); Switch { checked: win.on("dock/magnify", true); onToggled: (c) => Preferences.setValue("dock/magnify", c) } }
+                SettingsRow {
+                    title: qsTr("Masquer automatiquement")
+                    description: qsTr("Le dock réapparaît quand le pointeur touche le bas de l'écran.")
+                    Switch { checked: win.on("dock/autohide", false); onToggled: (c) => Preferences.setValue("dock/autohide", c) }
+                }
+            }
+
+            // Barre supérieure (page Bureau)
+            Column {
+                visible: win.page === "desktop"
+                width: parent.width
+                Label { text: qsTr("BARRE SUPÉRIEURE"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 32; verticalAlignment: Text.AlignBottom }
+                SettingsRow { title: qsTr("Afficher la date"); Switch { checked: win.on("topbar/showDate", true); onToggled: (c) => Preferences.setValue("topbar/showDate", c) } }
+                SettingsRow {
+                    title: qsTr("Pourcentage de batterie")
+                    description: qsTr("Sinon, affiché seulement sous 20 %.")
+                    Switch { checked: win.on("topbar/batteryPercent", false); onToggled: (c) => Preferences.setValue("topbar/batteryPercent", c) }
+                }
             }
 
             // Notifications

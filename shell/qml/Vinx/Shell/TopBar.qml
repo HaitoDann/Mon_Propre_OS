@@ -73,34 +73,44 @@ Rectangle {
             id: statusButton
             panel: "control"
             Accessible.name: qsTr("Centre de contrôle")
+            // Barre minimale : un indicateur n'apparaît que s'il apporte une information
+            // (Wi-Fi, réseau coupé, son coupé, Ne pas déranger, batterie).
             Icon {
-                visible: Network.available
+                id: netIcon
+                visible: Network.available && (!Network.connected || Network.wireless)
                 name: Network.connected ? "wifi" : "wifi-off"
                 color: Theme.text
                 anchors.verticalCenter: parent.verticalCenter
             }
             Icon {
-                visible: Audio.available
-                name: Audio.muted || Audio.volume === 0 ? "volume-off" : "volume"
+                id: muteIcon
+                visible: Audio.available && (Audio.muted || Audio.volume === 0)
+                name: "volume-off"
                 color: Theme.text
                 anchors.verticalCenter: parent.verticalCenter
             }
             Icon {
+                id: dndIcon
                 visible: Notifications.doNotDisturb
                 name: "bell-off"
                 color: Theme.text
                 anchors.verticalCenter: parent.verticalCenter
             }
             Row {
+                id: batteryRow
                 visible: Battery.present
                 spacing: 4
                 anchors.verticalCenter: parent.verticalCenter
-                Icon { name: Battery.charging ? "bolt" : "battery"; color: Theme.text; anchors.verticalCenter: parent.verticalCenter }
-                Label { text: Battery.percentage + " %"; level: Label.Secondary; font.pixelSize: Theme.fsSm }
+                Icon { name: Battery.charging ? "bolt" : "battery"; color: Battery.percentage <= 10 && !Battery.charging ? Theme.danger : Theme.text; anchors.verticalCenter: parent.verticalCenter }
+                // Pourcentage : seulement quand il devient utile (batterie faible) ou si demandé.
+                Label {
+                    visible: Battery.percentage <= 20 || (Preferences.revision, String(Preferences.value("topbar/batteryPercent", false)) === "true")
+                    text: Battery.percentage + " %"; level: Label.Secondary; font.pixelSize: Theme.fsSm
+                }
             }
-            // Sans aucun indicateur disponible, une icône d'accès reste visible.
+            // Rien à signaler : une icône discrète donne accès au centre de contrôle.
             Icon {
-                visible: !Network.available && !Audio.available && !Battery.present
+                visible: !netIcon.visible && !muteIcon.visible && !dndIcon.visible && !batteryRow.visible
                 name: "sliders"
                 color: Theme.text
                 anchors.verticalCenter: parent.verticalCenter
@@ -112,7 +122,8 @@ Rectangle {
             panel: "calendar"
             Accessible.name: qsTr("Calendrier et notifications")
             Label {
-                text: bar.now.toLocaleString(Qt.locale(), (Preferences.revision, String(Preferences.value("clock/24h", true)) === "false") ? "ddd d MMM  h:mm AP" : "ddd d MMM  HH:mm")
+                text: bar.now.toLocaleString(Qt.locale(), (Preferences.revision, (String(Preferences.value("topbar/showDate", true)) === "false" ? "" : "ddd d MMM  ")
+                      + (String(Preferences.value("clock/24h", true)) === "false" ? "h:mm AP" : "HH:mm")))
                 font.weight: Font.Medium
             }
         }

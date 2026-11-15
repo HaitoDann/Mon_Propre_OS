@@ -22,3 +22,6 @@ libkf6config-bin
 # Mises à jour système depuis le Store (PackageKit + polkit)
 packagekit
 packagekit-tools
+# Thème unifié : applications GTK aux couleurs de VinX (synchronisées par kde-gtk-config)
+kde-gtk-config
+breeze-gtk-theme

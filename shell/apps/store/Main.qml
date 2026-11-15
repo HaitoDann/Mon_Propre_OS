@@ -130,7 +130,7 @@ Window {
                 appId: modelData.id; name: modelData.name
                 summary: modelData.summary + " · " + modelData.id
                 glyph: win.selected ? win.selected.glyph : "bag"
-                tint: win.selected ? win.selected.tint : "#5B65C9"
+                tint: win.selected ? win.selected.tint : "#7358BD"
             }
         }
     }
@@ -230,7 +230,7 @@ Window {
                 required property var modelData
                 width: ListView.view.width
                 name: modelData.title; summary: modelData.detail; glyph: modelData.glyph
-                tint: modelData.glyph === "bag" ? "#5B65C9" : "#5F6270"
+                tint: modelData.glyph === "bag" ? "#7358BD" : "#5F6270"
                 showActions: false
             }
         }

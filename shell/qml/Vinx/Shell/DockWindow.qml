@@ -6,6 +6,8 @@ import Vinx.Theme
 Window {
     id: win
     readonly property alias reservedHeight: dock.reservedHeight
+    readonly property alias exclusiveZone: dock.exclusiveZone
+    readonly property alias inputRect: dock.inputRect
     // Largeur FIXE (taille normale des icônes + marge d'agrandissement) : la surface ne doit jamais
     // se redimensionner au survol, sinon elle se recentre sous le pointeur (sélection décalée, boucle).
     readonly property int itemCount: dock.backend && dock.backend.model ? dock.backend.model.count : 8

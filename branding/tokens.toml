@@ -6,9 +6,9 @@
 # (texte ≥ 4,5:1, éléments d'interface ≥ 3:1). Le violet de la marque est réservé au logo.
 
 [brand]
-# Indigo désaturé, dérivé de l'indigo du logo, utilisé avec parcimonie.
-accent_fill = ["#5B65C9", "#4E58BE"]        # fonds de bouton principal, interrupteurs actifs
-accent_foreground = ["#7C86E0", "#4E58BE"]  # texte, icônes et anneaux de focus colorés
+# Violet du logo atténué (contraste AA avec le texte blanc), utilisé avec parcimonie.
+accent_fill = ["#7358BD", "#6548AE"]        # fonds de bouton principal, interrupteurs actifs
+accent_foreground = ["#A58FE0", "#6548AE"]  # texte, icônes et anneaux de focus colorés
 accent_text = "#FFFFFF"                     # texte posé sur l'accent
 logo = "#A855F7"                            # couleur du logo (marque) — pas pour l'interface
 

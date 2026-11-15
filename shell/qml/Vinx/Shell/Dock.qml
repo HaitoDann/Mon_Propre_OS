@@ -19,6 +19,20 @@ Item {
     // Hauteur réservée en bas de l'écran (zone que les fenêtres agrandies ne recouvrent pas).
     readonly property int reservedHeight: plateHeight + margin * 2
 
+    // Masquage automatique (Paramètres → Dock) : le dock glisse sous le bord de l'écran et
+    // revient quand le pointeur touche le bas de l'écran. Il ne réserve alors plus de place.
+    readonly property bool autohide: { rev; const v = Preferences.value("dock/autohide", false); return v === true || v === "true" }
+    property bool shown: true
+    readonly property bool wantShown: !autohide || hover.hovered || ShellState.openPanel === "dock"
+    onWantShownChanged: if (wantShown) { hideDelay.stop(); shown = true } else hideDelay.restart()
+    onAutohideChanged: shown = wantShown
+    Timer { id: hideDelay; interval: 700; onTriggered: dock.shown = dock.wantShown }
+    property real hideOffset: shown ? 0 : reservedHeight + 8
+    Behavior on hideOffset { NumberAnimation { duration: Theme.durNormal; easing.type: Easing.OutCubic } }
+    // Lus par vinx-shell (main.cpp) : zone réservée et zone qui reçoit le pointeur.
+    readonly property int exclusiveZone: autohide ? 0 : reservedHeight
+    readonly property rect inputRect: shown ? Qt.rect(0, 0, width, height) : Qt.rect(0, height - 4, width, 4)
+
     // Icône à la position i (tests, aperçu).
     function itemAt(i) { const c = rep.itemAt(i); return c ? c.children[1] : null }
 
@@ -35,6 +49,7 @@ Item {
         height: dock.plateHeight
         width: row.width + Theme.space3 * 2
         anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: dock.margin }
+        transform: Translate { y: dock.hideOffset }
     }
 
     // Position du pointeur dans le dock (coordonnées du Dock), pour l'agrandissement.
@@ -44,6 +59,7 @@ Item {
         id: row
         spacing: Theme.space2
         anchors { horizontalCenter: plate.horizontalCenter; bottom: plate.bottom; bottomMargin: Theme.space2 + 2 }
+        transform: Translate { y: dock.hideOffset }
 
         Repeater {
             id: rep

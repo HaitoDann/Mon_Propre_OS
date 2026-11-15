@@ -10,7 +10,7 @@ window.Shell = {
   // État global (futur : services D-Bus et fichiers de configuration utilisateur)
   state: {
     theme: "dark",
-    accent: "#5B65C9",
+    accent: "#7358BD",
     wallpaper: "graphite",
     widgets: { clock: true, agenda: true, note: false },
     widgetPos: {},

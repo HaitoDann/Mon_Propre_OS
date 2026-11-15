@@ -10,7 +10,7 @@ Item {
     property string name
     property string summary
     property string glyph: "bag"
-    property color tint: "#5B65C9"
+    property color tint: "#7358BD"
     property bool showActions: true
     readonly property bool isInstalled: Flatpak.installed.indexOf(appId) >= 0
     width: parent ? parent.width : 400

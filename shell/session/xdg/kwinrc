@@ -26,3 +26,6 @@ library=org.kde.breeze
 theme=Breeze
 ButtonsOnLeft=XIA
 ButtonsOnRight=
+# Pas de bordure épaisse : seule une ombre douce délimite les fenêtres.
+BorderSize=None
+BorderSizeAuto=false

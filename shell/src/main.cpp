@@ -8,6 +8,8 @@
 #include <QHash>
 #include <QPointer>
 #include <QScreen>
+#include <QQmlProperty>
+#include <QRegion>
 #include <QApplication>
 #include <QGuiApplication>
 #include <QIcon>
@@ -171,8 +173,22 @@ int main(int argc, char *argv[])
         if (!dock || !toasts)
             return;
         // Dock : en bas au centre ; réserve la hauteur de son plateau.
-        configureLayer(dock, LSW::LayerTop, LSW::Anchors(LSW::AnchorBottom), dock->property("reservedHeight").toInt(),
+        configureLayer(dock, LSW::LayerTop, LSW::Anchors(LSW::AnchorBottom), dock->property("exclusiveZone").toInt(),
                        LSW::KeyboardInteractivityNone, QStringLiteral("vinx-dock"));
+        // Masquage automatique : zone réservée et zone sensible suivent l'état du dock.
+        QWindow *dockWindow = dock;
+        const auto syncDock = [dockWindow] {
+            if (auto *layer = LayerShellQt::Window::get(dockWindow))
+                layer->setExclusiveZone(dockWindow->property("exclusiveZone").toInt());
+            dockWindow->setMask(QRegion(dockWindow->property("inputRect").toRectF().toRect()));
+        };
+        auto *syncTimer = new QTimer(dock);   // regroupe les changements d'une même passe
+        syncTimer->setSingleShot(true);
+        syncTimer->setInterval(0);
+        QObject::connect(syncTimer, &QTimer::timeout, dock, syncDock);
+        QQmlProperty(dock, QStringLiteral("exclusiveZone")).connectNotifySignal(syncTimer, SLOT(start()));
+        QQmlProperty(dock, QStringLiteral("inputRect")).connectNotifySignal(syncTimer, SLOT(start()));
+        syncDock();
         // Bulles : en haut à droite, sous la barre, sans zone réservée.
         configureLayer(toasts, LSW::LayerTop, LSW::Anchors(LSW::AnchorTop | LSW::AnchorRight), 0,
                        LSW::KeyboardInteractivityNone, QStringLiteral("vinx-notifications"));

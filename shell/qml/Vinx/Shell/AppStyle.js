@@ -10,17 +10,17 @@ const known = {
     "libreoffice-calc":  { glyph: "table",    tint: "#3E8460" },
     "libreoffice-impress":{ glyph: "image",   tint: "#A8603F" },
     "thunderbird":       { glyph: "mail",     tint: "#3F7896" },
-    "org.kde.discover":  { glyph: "bag",      tint: "#5B65C9" },
+    "org.kde.discover":  { glyph: "bag",      tint: "#7358BD" },
     "systemsettings":    { glyph: "sliders",  tint: "#5F6270" },
     "org.kde.konsole":   { glyph: "terminal", tint: "#2E3036" },
     "vlc":               { glyph: "music",    tint: "#A34E62" },
     "org.kde.gwenview":  { glyph: "image",    tint: "#9C5577" },
     "org.kde.okular":    { glyph: "doc",      tint: "#A88A3E" },
     "org.kde.kcalc":     { glyph: "equals",   tint: "#5F6270" },
-    "org.vinx.gallery":  { glyph: "grid",     tint: "#5B65C9" },
+    "org.vinx.gallery":  { glyph: "grid",     tint: "#7358BD" },
     "org.vinx.settings": { glyph: "sliders",  tint: "#5F6270" },
-    "org.vinx.store":    { glyph: "bag",      tint: "#5B65C9" },
-    "org.vinx.welcome":  { glyph: "info",     tint: "#5B65C9" }
+    "org.vinx.store":    { glyph: "bag",      tint: "#7358BD" },
+    "org.vinx.welcome":  { glyph: "info",     tint: "#7358BD" }
 };
 
 function forApp(appId) {

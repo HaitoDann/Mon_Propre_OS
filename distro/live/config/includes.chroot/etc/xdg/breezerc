@@ -1,0 +1,13 @@
+# Décorations de fenêtres VinX (Breeze réglé) : barre de titre fine et calme.
+[Common]
+OutlineCloseButton=false
+ShadowSize=ShadowMedium
+ShadowStrength=90
+
+[Windeco]
+ButtonSize=ButtonSmall
+TitleAlignment=AlignCenterFullWidth
+DrawBorderOnMaximizedWindows=false
+DrawTitleBarSeparator=false
+DrawBackgroundGradient=false
+OutlineActiveWindow=false

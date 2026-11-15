@@ -5,8 +5,8 @@
    ===================================================================== */
 :root {
   /* Marque */
-  --accent: #5B65C9;      /* indigo désaturé (cf. branding/tokens.toml) */
-  --accent-2: #7C86E0;    /* accent pour texte/icônes */
+  --accent: #7358BD;      /* indigo désaturé (cf. branding/tokens.toml) */
+  --accent-2: #A58FE0;    /* accent pour texte/icônes */
   --accent-text: #ffffff;
   --gradient-brand: linear-gradient(160deg, #2A2B30, #1B1C1F);
   --wallpaper: url("../../branding/wallpaper/vinx-nebula.svg");
@@ -91,7 +91,7 @@
 
 /* ---------- Thème clair ---------- */
 [data-theme="light"] {
-  --accent: #4E58BE;
+  --accent: #6548AE;
   --wall-1: #F5F5F7;
   --wall-2: #ECECEF;
   --wall-glow-1: rgba(91, 124, 255, .35);

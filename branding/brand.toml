@@ -13,8 +13,8 @@ wallpaper = "wallpaper/vinx-graphite.svg"
 
 [colors]
 logo = "#A855F7"            # violet du logo — réservé au logo (voir docs/DESIGN.md)
-accent = "#5B65C9"          # accent de l'interface (indigo désaturé)
-accent_light_theme = "#4E58BE"
+accent = "#7358BD"          # accent de l'interface (violet du logo atténué)
+accent_light_theme = "#6548AE"
 logo_gradient = ["#6366F1", "#A855F7"]
 background_dark = "#141517"
 background_light = "#F5F5F7"

@@ -27,7 +27,7 @@ Window {
         ["folder", "#4C6FA8", "Fichiers"], ["globe", "#B8693F", "Firefox"],
         ["doc", "#4F60A3", "Documents"], ["table", "#3E8460", "Tableur"],
         ["mail", "#3F7896", "Courrier"], ["calendar", "#A8514F", "Calendrier"],
-        ["bag", "#5B65C9", "Store"], ["sliders", "#5F6270", "Paramètres"]
+        ["bag", "#7358BD", "Store"], ["sliders", "#5F6270", "Paramètres"]
     ]
     readonly property var icons: ["search", "wifi", "wifi-off", "bluetooth", "volume", "volume-off", "brightness",
         "battery", "bell", "bell-off", "moon", "sun", "power", "lock", "restart", "logout", "info", "grid", "plus",
@@ -58,7 +58,7 @@ Window {
                     model: ["transparent", "#3B82C4", "#3E8460", "#B8693F", "#A8514F", "#6B6E76"]
                     Rectangle {
                         width: 20; height: 20; radius: 10
-                        color: index === 0 ? (Theme.dark ? "#5B65C9" : "#4E58BE") : modelData
+                        color: index === 0 ? (Theme.dark ? "#7358BD" : "#6548AE") : modelData
                         border.width: Qt.colorEqual(Theme.accentOverride, modelData) ? 2 : 0
                         border.color: Theme.text
                         MouseArea { anchors.fill: parent; onClicked: Theme.accentOverride = modelData }
