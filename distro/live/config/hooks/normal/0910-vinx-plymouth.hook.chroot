@@ -16,7 +16,13 @@ sed \
 	-e 's/^WatermarkVerticalAlignment=.*/WatermarkVerticalAlignment=.42/' \
 	"$SRC/spinner.plymouth" > "$DST/vinx.plymouth"
 
+# Debian (desktop-base) déclare son propre thème « Debian 13 » via les alternatives,
+# prioritaire sur plymouthd.conf : on y enregistre le thème VinX avec une priorité supérieure.
+update-alternatives --install /usr/share/plymouth/themes/default.plymouth default.plymouth "$DST/vinx.plymouth" 300
+update-alternatives --set default.plymouth "$DST/vinx.plymouth"
 plymouth-set-default-theme vinx
+mkdir -p /etc/plymouth
+printf '[Daemon]\nTheme=vinx\n' > /etc/plymouth/plymouthd.conf
 
 # Le thème doit être intégré à l'image de démarrage (initramfs), sinon c'est celui de Debian
 # qui s'affiche au démarrage.

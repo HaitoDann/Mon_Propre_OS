@@ -60,6 +60,10 @@ cp -r /usr/share/live/build/bootloaders config/
 cp boot-assets/grub-splash.png config/bootloaders/grub-pc/splash.png
 cp boot-assets/isolinux-splash.png config/bootloaders/isolinux/splash.png
 cp boot-assets/isolinux-splash.svg config/bootloaders/isolinux/splash.svg
+# Entrées du menu de démarrage : « VinX OS » au lieu de « Debian GNU/Linux » / « Live system ».
+grep -rlE "Debian GNU/Linux|Live system" config/bootloaders | xargs -r sed -i \
+	-e 's#Debian GNU/Linux#VinX OS#g' -e 's#Live system#VinX OS (live)#g'
+
 
 echo "==> Construction (plusieurs dizaines de minutes)"
 lb build
