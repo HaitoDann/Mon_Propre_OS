@@ -1,9 +1,44 @@
 #!/bin/sh
-# Installateur : charte VinX et libellés.
+# Installateur Calamares : charte VinX, partitionnement, comptes, session par défaut.
+# On modifie les fichiers de calamares-settings-debian clé par clé (sans les remplacer),
+# pour rester compatible avec ses évolutions.
 set -e
+M=/etc/calamares/modules
+
+# set_key FICHIER CLÉ VALEUR : remplace « clé: … » au premier niveau, ou l'ajoute.
+set_key() {
+	[ -f "$1" ] || return 0
+	if grep -q "^$2:" "$1"; then
+		sed -i "s|^$2:.*|$2: $3|" "$1"
+	else
+		printf '%s: %s\n' "$2" "$3" >> "$1"
+	fi
+}
+
 if [ -f /etc/calamares/settings.conf ]; then
 	sed -i 's/^branding:.*/branding: vinx/' /etc/calamares/settings.conf
 fi
+
+# Partitionnement : ext4, partition EFI de 512 Mio, chiffrement proposé, fichier d'échange.
+set_key $M/partition.conf defaultFileSystemType '"ext4"'
+set_key $M/partition.conf availableFileSystemTypes '["ext4", "btrfs", "xfs"]'
+set_key $M/partition.conf enableLuksAutomatedPartitioning true
+set_key $M/partition.conf userSwapChoices '[none, file]'
+set_key $M/partition.conf initialSwapChoice file
+set_key $M/partition.conf efiSystemPartitionSize 512M
+
+# Comptes : l'utilisateur créé est administrateur (sudo), pas de mot de passe root séparé.
+set_key $M/users.conf setRootPassword false
+set_key $M/users.conf doAutologin false
+set_key $M/users.conf sudoersGroup sudo
+
+
+# Session VinX par défaut sur le système installé.
+if [ -f $M/displaymanager.conf ]; then
+	sed -i '/^defaultDesktopEnvironment:/,/^[^ ]/{/^defaultDesktopEnvironment:/d;/^ /d}' $M/displaymanager.conf
+	printf 'defaultDesktopEnvironment:\n    executable: "vinx-session"\n    desktopFile: "vinx"\n' >> $M/displaymanager.conf
+fi
+
 # Renomme le raccourci « Install Debian » fourni par calamares-settings-debian.
 for f in /usr/share/applications/*.desktop /etc/skel/Desktop/*.desktop; do
 	[ -f "$f" ] && grep -q "Install Debian" "$f" && sed -i \

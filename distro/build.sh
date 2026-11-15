@@ -10,7 +10,7 @@ OUT="$DISTRO/out"
 VERSION="$(sed -n 's/^version *= *"\(.*\)"/\1/p' "$ROOT/branding/brand.toml")"
 
 [ "$(id -u)" -eq 0 ] || { echo "Ce script doit être lancé en root." >&2; exit 1; }
-for cmd in lb debootstrap rsvg-convert rsync dpkg-buildpackage; do
+for cmd in lb debootstrap rsvg-convert rsync dpkg-buildpackage gpg; do
 	command -v "$cmd" >/dev/null || {
 		echo "Commande manquante : $cmd" >&2
 		echo "Installez : sudo apt install live-build debootstrap librsvg2-bin rsync dpkg-dev debhelper" >&2
@@ -47,6 +47,23 @@ if [ -d "$ROOT/shell/debian" ]; then
 	# Symboles de débogage : inutiles dans l'image.
 	rm -f "$WORK"/config/packages.chroot/vinx-shell-dbgsym_*.deb
 	rm -f "$ROOT"/vinx-shell_*.buildinfo "$ROOT"/vinx-shell_*.changes
+fi
+
+# Dépôt APT VinX (mises à jour du shell sans réinstaller) : actif dès que la clé publique existe.
+KEYRING="$DISTRO/keys/vinx-archive-keyring.asc"
+if [ -f "$KEYRING" ]; then
+	echo "==> Ajout du dépôt APT VinX"
+	mkdir -p "$WORK/config/includes.chroot/usr/share/keyrings" "$WORK/config/includes.chroot/etc/apt/sources.list.d"
+	gpg --dearmor < "$KEYRING" > "$WORK/config/includes.chroot/usr/share/keyrings/vinx-archive-keyring.gpg"
+	cat > "$WORK/config/includes.chroot/etc/apt/sources.list.d/vinx.sources" <<SRC
+Types: deb
+URIs: ${VINX_APT_URL:-https://haitodann.github.io/mon_propre_os/apt}
+Suites: trixie
+Components: main
+Signed-By: /usr/share/keyrings/vinx-archive-keyring.gpg
+SRC
+else
+	echo "!! Pas de clé distro/keys/vinx-archive-keyring.asc : dépôt APT VinX non configuré (voir docs/APT.md)"
 fi
 
 echo "==> Génération des images"

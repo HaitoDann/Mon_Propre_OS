@@ -4,3 +4,4 @@ shell/obj-*/
 /*.deb
 /*.buildinfo
 /*.changes
+vinx-apt-signing-key.SECRET.asc

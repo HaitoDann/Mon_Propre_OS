@@ -1,3 +1,11 @@
 # Installateur graphique
 calamares
 calamares-settings-debian
+# Démarrage UEFI avec Secure Boot sur le système installé
+grub-efi-amd64-signed
+shim-signed
+efibootmgr
+# Outils utiles pour l'installation sur du matériel réel
+cryptsetup
+btrfs-progs
+dosfstools

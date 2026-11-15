@@ -1,0 +1,57 @@
+name: Dépôt APT
+
+# Publie vinx-shell dans le dépôt APT (GitHub Pages) : uniquement sur une étiquette
+# « shell-v* » (ex. shell-v0.8.0) ou à la demande, pour ne pas consommer de minutes inutilement.
+on:
+  push:
+    tags: ["shell-v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: apt-repo
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    container: debian:trixie
+    steps:
+      - name: Dépendances
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git ca-certificates build-essential dpkg-dev debhelper cmake python3 \
+            qt6-base-dev qt6-declarative-dev qt6-svg-dev liblayershellqtinterface-dev qml6-module-qtquick qml6-module-qtquick-window \
+            qml6-module-qtqml-workerscript qml6-module-qttest fonts-inter apt-utils gnupg
+      - uses: actions/checkout@v4
+      - name: Paquet
+        run: |
+          cd shell && dpkg-buildpackage -us -uc -b
+          mkdir -p ../debs && mv ../vinx-shell_*.deb ../debs/ && rm -f ../debs/*dbgsym*
+      - name: Dépôt signé
+        env:
+          APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
+        run: |
+          test -n "$APT_SIGNING_KEY" || { echo "Secret APT_SIGNING_KEY manquant (voir docs/APT.md)"; exit 1; }
+          export GNUPGHOME=$(mktemp -d)
+          printf '%s\n' "$APT_SIGNING_KEY" | gpg --batch --import
+          KEY=$(gpg --list-secret-keys --with-colons | awk -F: '/^fpr/ {print $10; exit}')
+          distro/scripts/make-apt-repo.sh debs site/apt "$KEY"
+          cp distro/keys/vinx-archive-keyring.asc site/apt/
+          printf '<!doctype html><meta charset="utf-8"><title>VinX OS</title><p>Dépôt APT de VinX OS : <a href="apt/">apt/</a></p>\n' > site/index.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
