@@ -1,3 +1,11 @@
+vinx-shell (0.7.0) trixie; urgency=medium
+
+  * Accessibilité : réduire les animations, taille du texte (Paramètres).
+  * Raccourcis globaux Méta+Espace, Méta+A, Méta+N (vinx-shellctl) ; page Clavier.
+  * Relance automatique du shell après un plantage (5 fois max en 2 minutes).
+
+ -- VinX OS <vinx@localhost>  Sun, 15 Nov 2026 18:14:44 +0000
+
 vinx-shell (0.6.0) trixie; urgency=medium
 
   * Notifications : actions (Répondre, Ouvrir), regroupement par application,

@@ -13,6 +13,10 @@ if [ -n "$KWC" ]; then
 	# Pas d'écran de chargement KDE entre l'écran de connexion et le bureau VinX.
 	"$KWC" --file ksplashrc --group KSplash --key Engine none
 	"$KWC" --file ksplashrc --group KSplash --key Theme None
+	# Raccourcis globaux du shell (kglobalaccel lit les .desktop listés dans [services]).
+	for p in search:Meta+Space control:Meta+A calendar:Meta+N; do
+		"$KWC" --file kglobalshortcutsrc --group services --group "org.vinx.shellctl.${p%%:*}.desktop" --key _launch "${p#*:}"
+	done
 fi
 
 /usr/bin/startplasma-wayland "$@"
@@ -22,5 +26,8 @@ if [ -n "$KWC" ]; then
 	"$KWC" --file kwinrc --group ModifierOnlyShortcuts --key Meta --delete
 	"$KWC" --file ksplashrc --group KSplash --key Engine --delete
 	"$KWC" --file ksplashrc --group KSplash --key Theme --delete
+	for n in search control calendar; do
+		"$KWC" --file kglobalshortcutsrc --group services --group "org.vinx.shellctl.$n.desktop" --key _launch --delete
+	done
 fi
 exit $status

@@ -1,0 +1,8 @@
+#!/bin/sh
+# Pilote le shell VinX par D-Bus (raccourcis globaux, scripts).
+# Usage : vinx-shellctl search|control|calendar|system
+case "${1:-}" in
+	search|control|calendar|system) ;;
+	*) echo "usage : vinx-shellctl search|control|calendar|system" >&2; exit 2 ;;
+esac
+exec busctl --user call org.vinx.Shell /Shell org.vinx.Shell togglePanel s "$1"

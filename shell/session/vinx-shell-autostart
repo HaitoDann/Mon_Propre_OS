@@ -1,4 +1,28 @@
 #!/bin/sh
-# Démarre vinx-shell uniquement dans la session VinX OS.
+# Démarre vinx-shell uniquement dans la session VinX OS, et le relance s'il s'arrête
+# anormalement (plantage). Au-delà de 5 plantages en 2 minutes, on abandonne pour ne pas
+# boucler, avec un message dans le journal (journalctl --user -t vinx-shell).
 [ "${VINX_SESSION:-0}" = 1 ] || exit 0
-exec /usr/bin/vinx-shell
+
+BIN=${VINX_SHELL_BIN:-/usr/bin/vinx-shell}
+MAX=${VINX_SHELL_MAX_CRASHES:-5}
+WINDOW=${VINX_SHELL_CRASH_WINDOW:-120}
+log() { logger -t vinx-shell "$*" 2>/dev/null || echo "vinx-shell: $*" >&2; }
+
+crashes=0
+first=$(date +%s)
+while :; do
+	"$BIN" "$@"
+	status=$?
+	# Sortie normale (fin de session) ou arrêt demandé : on ne relance pas.
+	case $status in 0|143) exit 0 ;; esac
+	now=$(date +%s)
+	if [ $((now - first)) -gt "$WINDOW" ]; then crashes=0; first=$now; fi
+	crashes=$((crashes + 1))
+	log "arrêt anormal (code $status), relance $crashes/$MAX"
+	if [ "$crashes" -ge "$MAX" ]; then
+		log "trop de plantages, abandon"
+		exit "$status"
+	fi
+	sleep 1
+done

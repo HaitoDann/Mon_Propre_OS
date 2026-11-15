@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Recherche VinX
+Exec=vinx-shellctl search
+NoDisplay=true
+OnlyShowIn=KDE;
+X-KDE-Shortcuts=Meta+Space

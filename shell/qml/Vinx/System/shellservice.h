@@ -19,11 +19,14 @@ public:
 
 public Q_SLOTS:
     Q_SCRIPTABLE void toggleSearch() { Q_EMIT searchRequested(); }
+    // name : « search », « control », « calendar », « system ».
+    Q_SCRIPTABLE void togglePanel(const QString &name) { Q_EMIT panelRequested(name); }
     Q_SCRIPTABLE void reloadPreferences() { Q_EMIT preferencesReloadRequested(); }
 
 Q_SIGNALS:
     void searchRequested();
     void preferencesReloadRequested();
+    void panelRequested(const QString &name);
 
 private:
     bool m_registered = false;

@@ -24,6 +24,16 @@ Item {
     Connections { target: ShellState; function onOpenPanelChanged() { layer.sync() } }
     // Touche Méta (KWin) ou autre programme : org.vinx.Shell.toggleSearch
     Connections { target: ShellService; function onSearchRequested() { ShellState.toggle("search", Qt.rect(0, 0, 0, 0)) } }
+    // Raccourcis globaux (vinx-shellctl) : panneaux ancrés comme depuis la barre.
+    Connections {
+        target: ShellService
+        function onPanelRequested(name) {
+            const w = layer.width, h = Theme.topbarHeight
+            const rects = { control: Qt.rect(w - 48, 0, 32, h), calendar: Qt.rect(w / 2 - 60, 0, 120, h),
+                            system: Qt.rect(8, 0, 32, h), search: Qt.rect(0, 0, 0, 0) }
+            if (rects[name] !== undefined) ShellState.toggle(name, rects[name])
+        }
+    }
     Component.onCompleted: sync()
 
     Menu {

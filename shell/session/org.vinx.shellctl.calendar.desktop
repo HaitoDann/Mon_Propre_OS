@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Calendrier VinX
+Exec=vinx-shellctl calendar
+NoDisplay=true
+OnlyShowIn=KDE;
+X-KDE-Shortcuts=Meta+N

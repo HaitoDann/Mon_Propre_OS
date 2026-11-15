@@ -27,6 +27,8 @@ Window {
         { id: "desktop", title: qsTr("Bureau"), icon: "grid" },
         { id: "dock", title: qsTr("Dock"), icon: "folder" },
         { id: "notifications", title: qsTr("Notifications"), icon: "bell" },
+        { id: "accessibility", title: qsTr("Accessibilité"), icon: "eye" },
+        { id: "keyboard", title: qsTr("Clavier"), icon: "keyboard" },
         { id: "about", title: qsTr("À propos"), icon: "info" }
     ]
     property string page: pages.some(p => p.id === startPage) ? startPage : "appearance"
@@ -181,6 +183,52 @@ Window {
                     title: qsTr("Ne pas déranger")
                     description: qsTr("Masque les bulles ; les notifications restent dans le calendrier.")
                     Switch { checked: win.on("notifications/dnd", false); onToggled: (c) => Preferences.setValue("notifications/dnd", c) }
+                }
+            }
+
+            // Accessibilité
+            Column {
+                visible: win.page === "accessibility"
+                width: parent.width
+                SettingsRow {
+                    title: qsTr("Réduire les animations")
+                    description: qsTr("Ouvre panneaux et menus sans transition.")
+                    Switch { checked: win.on("accessibility/reduceMotion", false); onToggled: (c) => Preferences.setValue("accessibility/reduceMotion", c) }
+                }
+                SettingsRow {
+                    title: qsTr("Taille du texte")
+                    SegmentedControl {
+                        readonly property var scales: [1.0, 1.15, 1.3]
+                        model: [qsTr("Normale"), qsTr("Grande"), qsTr("Très grande")]
+                        currentIndex: Math.max(0, scales.indexOf(Number(win.pref("accessibility/textScale", 1.0))))
+                        onActivated: (i) => Preferences.setValue("accessibility/textScale", scales[i])
+                    }
+                }
+            }
+
+            // Clavier : raccourcis (source unique : Shortcuts.js)
+            Column {
+                visible: win.page === "keyboard"
+                width: parent.width
+                Repeater {
+                    model: [
+                        ["Méta", qsTr("Recherche")],
+                        ["Méta + Espace", qsTr("Recherche")],
+                        ["Méta + A", qsTr("Centre de contrôle")],
+                        ["Méta + N", qsTr("Calendrier et notifications")],
+                        ["Méta + L", qsTr("Verrouiller la session")],
+                        ["Méta + W", qsTr("Vue d'ensemble des fenêtres")],
+                        ["Méta + Tab", qsTr("Changer de fenêtre")],
+                        ["Méta + ← / →", qsTr("Placer la fenêtre à gauche / à droite")],
+                        ["Méta + ↑", qsTr("Agrandir la fenêtre")],
+                        ["Ctrl + Méta + ← / →", qsTr("Espace de travail précédent / suivant")],
+                        ["Échap", qsTr("Fermer le panneau ou le menu ouvert")]
+                    ]
+                    delegate: SettingsRow {
+                        required property var modelData
+                        title: modelData[1]
+                        Label { text: modelData[0]; level: Label.Secondary }
+                    }
                 }
             }
 

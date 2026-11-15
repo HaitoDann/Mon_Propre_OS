@@ -10,6 +10,8 @@ QtObject {
         Theme.dark = truthy(Preferences.value("appearance/dark"), true)
         const accent = Preferences.value("appearance/accent", "")
         Theme.accentOverride = accent ? accent : "transparent"
+        Theme.reduceMotion = truthy(Preferences.value("accessibility/reduceMotion"), false)
+        Theme.textScale = Number(Preferences.value("accessibility/textScale", 1.0)) || 1.0
         Notifications.doNotDisturb = truthy(Preferences.value("notifications/dnd"), false)
     }
     property int revision: Preferences.revision

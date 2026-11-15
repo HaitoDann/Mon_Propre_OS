@@ -55,16 +55,20 @@ def main() -> None:
     for key, (dark, light) in t["themed"].items():
         out.append(f"    readonly property color {camel(key)}: dark ? {qml_color(dark)} : {qml_color(light)}")
 
+    out += ["", "    // Accessibilité (réglées par AppearanceSync depuis les préférences)",
+            "    property bool reduceMotion: false",
+            "    property real textScale: 1.0"]
     out += ["", "    // Typographie", f'    readonly property string fontFamily: "{t["font"]["family"]}"']
     for key, val in t["font"].items():
         if key != "family":
-            out.append(f"    readonly property int {camel('fs', key)}: {val}")
+            out.append(f"    readonly property int {camel('fs', key)}: Math.round({val} * textScale)")
 
     for section, prefix in (("space", "space"), ("radius", "radius"), ("shell", ""), ("motion", "dur")):
         out += ["", f"    // {section}"]
         for key, val in t[section].items():
             name = camel(prefix, key.lstrip("s") if section == "space" else key) if prefix else camel(key)
-            out.append(f"    readonly property int {name}: {val}")
+            v = f"reduceMotion ? 0 : {val}" if section == "motion" else val
+            out.append(f"    readonly property int {name}: {v}")
 
     out += ["}", ""]
     with open(dst, "w", encoding="utf-8") as f:

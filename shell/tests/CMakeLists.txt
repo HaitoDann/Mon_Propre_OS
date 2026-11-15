@@ -40,3 +40,8 @@ set_tests_properties(lockscreen PROPERTIES ENVIRONMENT
 
 # Repartir de préférences vierges à chaque exécution des tests.
 file(REMOVE_RECURSE "${CMAKE_CURRENT_BINARY_DIR}/config-qml" "${CMAKE_CURRENT_BINARY_DIR}/config-lockscreen")
+
+# Relance automatique : 3 plantages simulés → abandon avec le code du shell.
+add_test(NAME shell-autostart-restart
+    COMMAND sh -c "printf '#!/bin/sh\\necho x >> \"$0.count\"\\nexit 3\\n' > crash.sh && chmod +x crash.sh && rm -f crash.sh.count && VINX_SESSION=1 VINX_SHELL_BIN=./crash.sh VINX_SHELL_MAX_CRASHES=3 sh ${CMAKE_SOURCE_DIR}/session/vinx-shell-autostart; [ $? -eq 3 ] && [ $(wc -l < crash.sh.count) -eq 3 ]"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")

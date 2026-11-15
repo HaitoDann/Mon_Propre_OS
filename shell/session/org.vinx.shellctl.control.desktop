@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Centre de contrôle VinX
+Exec=vinx-shellctl control
+NoDisplay=true
+OnlyShowIn=KDE;
+X-KDE-Shortcuts=Meta+A
