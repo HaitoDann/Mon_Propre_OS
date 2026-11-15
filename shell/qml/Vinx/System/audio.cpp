@@ -60,3 +60,28 @@ void Audio::setMuted(bool muted)
     run({QStringLiteral("set-mute"), kSink, muted ? QStringLiteral("1") : QStringLiteral("0")});
     Q_EMIT changed();
 }
+
+void Audio::refreshSinks()
+{
+    auto *p = new QProcess(this);
+    connect(p, &QProcess::finished, this, [this, p] {
+        const QVariantList sinks = parseWpctlSinks(QString::fromUtf8(p->readAllStandardOutput()));
+        p->deleteLater();
+        if (sinks != m_sinks) {
+            m_sinks = sinks;
+            Q_EMIT sinksChanged();
+        }
+    });
+    p->start(QStringLiteral("wpctl"), {QStringLiteral("status")});
+}
+
+void Audio::setDefaultSink(int id)
+{
+    auto *p = new QProcess(this);
+    connect(p, &QProcess::finished, this, [this, p] {
+        p->deleteLater();
+        refreshSinks();
+        refresh();   // le volume affiché est celui de la nouvelle sortie
+    });
+    p->start(QStringLiteral("wpctl"), {QStringLiteral("set-default"), QString::number(id)});
+}

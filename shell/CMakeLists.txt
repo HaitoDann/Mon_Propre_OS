@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(vinx-shell VERSION 0.5.1 LANGUAGES CXX)
+project(vinx-shell VERSION 0.6.0 LANGUAGES CXX)
 
 # Shell de bureau VinX OS — Qt 6 / QML, au-dessus de KWin.
 # Modules : Vinx.Theme, Vinx.Controls, Vinx.System, Vinx.Shell ; programmes vinx-shell et vinx-gallery.
@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Core Gui Qml Quick Svg DBus)
+find_package(Qt6 6.4 REQUIRED COMPONENTS Core Gui Widgets Qml Quick Svg DBus)
 find_package(Python3 3.11 REQUIRED COMPONENTS Interpreter)
 qt_standard_project_setup()
 

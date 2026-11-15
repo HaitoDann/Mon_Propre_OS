@@ -8,6 +8,7 @@
 #include <QHash>
 #include <QPointer>
 #include <QScreen>
+#include <QApplication>
 #include <QGuiApplication>
 #include <QIcon>
 #include <QQuickImageProvider>
@@ -50,7 +51,9 @@ static void configureLayer(QWindow *window, LayerShellQt::Window::Layer level, L
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    // QApplication (et non QGuiApplication) : les menus d'application importés en DBusMenu
+    // (menu global) sont des QMenu, qui exigent une application « widgets ».
+    QApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("vinx-shell"));
     app.setApplicationVersion(QStringLiteral(VINX_VERSION));
     app.setDesktopFileName(QStringLiteral("org.vinx.shell"));

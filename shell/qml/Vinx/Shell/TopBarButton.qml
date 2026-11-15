@@ -9,6 +9,7 @@ Item {
     property alias spacing: row.spacing
     default property alias content: row.data
     readonly property bool active: ShellState.openPanel === panel
+    property var menuAction: null      // menu global : QAction racine à ouvrir
     signal activated()
 
     implicitWidth: row.implicitWidth + Theme.space2 * 2
@@ -21,6 +22,7 @@ Item {
     function open() {
         const p = mapToItem(null, 0, 0)
         const scr = Window.window && Window.window.screen ? Window.window.screen.name : ""
+        if (menuAction) { ShellState.openAppMenu(Qt.rect(p.x, p.y, width, height + (Theme.topbarHeight - height) / 2), menuAction, scr); activated(); return }
         ShellState.toggle(panel, Qt.rect(p.x, p.y, width, height + (Theme.topbarHeight - height) / 2), scr)
         activated()
     }

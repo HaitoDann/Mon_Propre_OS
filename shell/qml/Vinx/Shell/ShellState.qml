@@ -19,6 +19,12 @@ QtObject {
         screenName = screen || ""
         openPanel = name
     }
+    // Menu global : action racine (QAction) du menu ouvert.
+    property var appMenuAction: null
+    function openAppMenu(rect, action, screen) {
+        anchorRect = rect; screenName = screen || ""; appMenuAction = action
+        openPanel = ""; openPanel = "appmenu"
+    }
     function close() { openPanel = ""; pendingAction = "" }
     function confirm(action) { pendingAction = action; openPanel = "confirm" }
     function openDesktopMenu(rect, screen) { anchorRect = rect; screenName = screen || ""; openPanel = "desktop" }

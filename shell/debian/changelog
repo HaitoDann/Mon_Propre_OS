@@ -1,3 +1,12 @@
+vinx-shell (0.6.0) trixie; urgency=medium
+
+  * Notifications : actions (Répondre, Ouvrir), regroupement par application,
+    notifications critiques persistantes.
+  * Barre supérieure : menu global de l'application active (DBusMenu).
+  * Centre de contrôle : choix de la sortie audio.
+
+ -- VinX OS <vinx@localhost>  Sun, 15 Nov 2026 18:04:07 +0000
+
 vinx-shell (0.5.1) unstable; urgency=medium
 
   * Écran de verrouillage VinX (interface de kscreenlocker) : heure, date,

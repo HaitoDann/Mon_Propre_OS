@@ -11,7 +11,7 @@ Item {
 
     function sync() {
         const name = ShellState.openPanel
-        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, search: searchPanel, desktop: desktopMenu }
+        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, search: searchPanel, desktop: desktopMenu, appmenu: appMenu }
         if (name === "search") ShellState.anchorRect = Qt.rect(layer.width / 2 - 1, layer.height * 0.12, 2, 1)
         for (const k in all) {
             const p = all[k]
@@ -99,6 +99,30 @@ Item {
             if (i >= 1 && i <= 3) Preferences.setValue("widgets/" + keys[i][0], !on(keys[i][0], keys[i][1]))
             else if (i === 5) Session.launch("vinx-settings", ["--page", "wallpaper"])
             else if (i === 6) Session.launch("vinx-settings")
+        }
+    }
+
+    // Menu global de l'application active ; les sous-menus se rouvrent à la place.
+    Menu {
+        id: appMenu
+        property var entries: []
+        onClosed: if (ShellState.openPanel === "appmenu") ShellState.close()
+        function load(action) {
+            entries = MenuBridge.items(action)
+            // DBusMenu est asynchrone : relecture une fois le menu mis à jour.
+            reload.action = action; reload.restart()
+        }
+        Timer { id: reload; property var action; interval: 150; onTriggered: appMenu.entries = MenuBridge.items(action) }
+        Connections { target: ShellState; function onAppMenuActionChanged() { if (ShellState.appMenuAction) appMenu.load(ShellState.appMenuAction) } }
+        model: entries.map(e => e.separator ? { separator: true }
+                                            : { text: e.text + (e.submenu ? "  ›" : ""), enabled: e.enabled,
+                                                checked: e.checkable ? e.checked : undefined, shortcut: e.shortcut })
+        onTriggered: (i) => {
+            const e = entries[i]
+            if (!e) return
+            if (e.submenu) { ShellState.openAppMenu(ShellState.anchorRect, e.action, ShellState.screenName); return }
+            ShellState.close()
+            MenuBridge.trigger(e.action)
         }
     }
 

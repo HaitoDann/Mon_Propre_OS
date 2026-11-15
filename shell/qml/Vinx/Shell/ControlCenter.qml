@@ -71,6 +71,31 @@ Column {
                 anchors.verticalCenter: parent.verticalCenter
             }
         }
+        // Choix de la sortie audio, quand il y en a plusieurs.
+        Column {
+            id: sinkList
+            property bool expanded: false
+            visible: Audio.sinks.length > 1
+            width: parent.width
+            spacing: 2
+            Component.onCompleted: Audio.refreshSinks()
+            MenuItem {
+                width: parent.width
+                text: qsTr("Sortie : %1").arg((Audio.sinks.find(s => s.isDefault) || { name: "—" }).name)
+                iconName: "volume"
+                onTriggered: sinkList.expanded = !sinkList.expanded
+            }
+            Repeater {
+                model: sinkList.expanded ? Audio.sinks : []
+                delegate: MenuItem {
+                    required property var modelData
+                    width: sinkList.width
+                    text: modelData.name
+                    checked: modelData.isDefault
+                    onTriggered: Audio.setDefaultSink(modelData.id)
+                }
+            }
+        }
     }
 
     Rectangle { width: parent.width; height: 1; color: Theme.border }

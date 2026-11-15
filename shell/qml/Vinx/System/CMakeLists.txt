@@ -18,8 +18,9 @@ qt_add_qml_module(vinxsystem
         filesearch.h filesearch.cpp
         shellservice.h shellservice.cpp
         flatpak.h flatpak.cpp
+        menubridge.h menubridge.cpp
 )
-target_link_libraries(vinxsystem PRIVATE Qt6::Qml Qt6::Gui Qt6::DBus)
+target_link_libraries(vinxsystem PRIVATE Qt6::Qml Qt6::Gui Qt6::Widgets Qt6::DBus)
 
 install(TARGETS vinxsystem LIBRARY DESTINATION "${VINX_QML_INSTALL_DIR}/Vinx/System")
 install(FILES

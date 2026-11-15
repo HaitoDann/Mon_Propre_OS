@@ -35,7 +35,7 @@ qt_add_qml_module(vinxshell
         DesktopWidgets.qml
         CalendarGrid.qml
     # Chargé dynamiquement (dépend de org.kde.taskmanager, absent à la compilation) :
-    RESOURCES KdeTasksBackend.qml
+    RESOURCES KdeTasksBackend.qml KdeAppMenu.qml
 )
 
 install(TARGETS vinxshell LIBRARY DESTINATION "${VINX_QML_INSTALL_DIR}/Vinx/Shell")

@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QVariantList>
 #include <QtQml/qqmlregistration.h>
 
 // Volume de la sortie audio par défaut (PipeWire), via l'outil wpctl de WirePlumber.
@@ -14,6 +15,8 @@ class Audio : public QObject
     Q_PROPERTY(bool available READ available NOTIFY changed)
     Q_PROPERTY(double volume READ volume WRITE setVolume NOTIFY changed)
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY changed)
+    // Sorties disponibles : [{ id, name, isDefault }] (mises à jour par refreshSinks()).
+    Q_PROPERTY(QVariantList sinks READ sinks NOTIFY sinksChanged)
 
 public:
     explicit Audio(QObject *parent = nullptr);
@@ -22,12 +25,16 @@ public:
     bool muted() const { return m_muted; }
     void setVolume(double volume);
     void setMuted(bool muted);
+    QVariantList sinks() const { return m_sinks; }
+    Q_INVOKABLE void refreshSinks();
+    Q_INVOKABLE void setDefaultSink(int id);
 
 public Q_SLOTS:
     void refresh();
 
 Q_SIGNALS:
     void changed();
+    void sinksChanged();
 
 private:
     void run(const QStringList &args);
@@ -36,4 +43,5 @@ private:
     double m_volume = 0;
     bool m_muted = false;
     QTimer m_poll;
+    QVariantList m_sinks;
 };

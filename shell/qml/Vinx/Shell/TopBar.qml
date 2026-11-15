@@ -45,6 +45,13 @@ Rectangle {
             font.weight: Font.DemiBold
             height: 24
             leftPadding: Theme.space2
+            rightPadding: Theme.space2
+        }
+        // Menu global (si le module appmenu de KDE est disponible, hors mode démo).
+        Loader {
+            active: true
+            source: "KdeAppMenu.qml"
+            onStatusChanged: if (status === Loader.Error) active = false
         }
     }
 

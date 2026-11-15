@@ -1,6 +1,6 @@
 # vinx-shell : processus du shell (barre supérieure pour l'instant).
 qt_add_executable(vinx-shell main.cpp)
-target_link_libraries(vinx-shell PRIVATE Qt6::Gui Qt6::Quick)
+target_link_libraries(vinx-shell PRIVATE Qt6::Gui Qt6::Widgets Qt6::Quick)
 target_compile_definitions(vinx-shell PRIVATE
     VINX_BUILD_QML_DIR="${QT_QML_OUTPUT_DIRECTORY}"
     VINX_VERSION="${PROJECT_VERSION}")
