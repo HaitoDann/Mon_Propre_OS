@@ -18,12 +18,13 @@ Rules-Requires-Root: no
 
 Package: vinx-shell
 Architecture: any
-Depends: ${shlibs:Depends},, packagekit-tools
+Depends: ${shlibs:Depends},
          ${misc:Depends},
          qml6-module-qtquick,
          qml6-module-qtquick-window,
          qml6-module-qtqml-workerscript,
-         fonts-inter
+         fonts-inter,
+         packagekit-tools
 Recommends: plasma-workspace,
             libkf6config-bin,
             flatpak,
