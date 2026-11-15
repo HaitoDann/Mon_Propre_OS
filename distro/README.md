@@ -18,7 +18,7 @@ sudo ./distro/docker-build.sh
 **Option 3 — directement sur Debian 13 :**
 
 ```bash
-sudo apt install live-build librsvg2-bin rsync
+sudo apt install live-build debootstrap librsvg2-bin rsync
 sudo ./distro/build.sh
 ```
 

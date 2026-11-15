@@ -10,8 +10,12 @@ OUT="$DISTRO/out"
 VERSION="$(sed -n 's/^version *= *"\(.*\)"/\1/p' "$ROOT/branding/brand.toml")"
 
 [ "$(id -u)" -eq 0 ] || { echo "Ce script doit être lancé en root." >&2; exit 1; }
-for cmd in lb rsvg-convert rsync; do
-	command -v "$cmd" >/dev/null || { echo "Commande manquante : $cmd (apt install live-build librsvg2-bin rsync)" >&2; exit 1; }
+for cmd in lb debootstrap rsvg-convert rsync dpkg-buildpackage; do
+	command -v "$cmd" >/dev/null || {
+		echo "Commande manquante : $cmd" >&2
+		echo "Installez : sudo apt install live-build debootstrap librsvg2-bin rsync dpkg-dev debhelper" >&2
+		exit 1
+	}
 done
 
 # Vérifie que tous les paquets demandés existent (échec rapide, liste complète).
@@ -40,6 +44,8 @@ if [ -d "$ROOT/shell/debian" ]; then
 	(cd "$ROOT/shell" && dpkg-buildpackage -us -uc -b)
 	mkdir -p "$WORK/config/packages.chroot"
 	mv "$ROOT"/vinx-shell_*.deb "$WORK/config/packages.chroot/"
+	# Symboles de débogage : inutiles dans l'image.
+	rm -f "$WORK"/config/packages.chroot/vinx-shell-dbgsym_*.deb
 	rm -f "$ROOT"/vinx-shell_*.buildinfo "$ROOT"/vinx-shell_*.changes
 fi
 
@@ -59,6 +65,10 @@ echo "==> Construction (plusieurs dizaines de minutes)"
 lb build
 
 ISO="$OUT/vinx-os-$VERSION-amd64.iso"
+if ! ls ./*.iso >/dev/null 2>&1; then
+	echo "Échec : aucune image ISO produite. Voir le journal : $WORK/build.log" >&2
+	exit 1
+fi
 mv -f ./*.iso "$ISO"
 (cd "$OUT" && sha256sum "$(basename "$ISO")" > "$(basename "$ISO").sha256")
 echo "==> Terminé : $ISO"
