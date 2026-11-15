@@ -41,6 +41,12 @@ echo "VINX_VERSION=\"$VERSION\"" > "$WORK/config/includes.chroot/etc/vinx-releas
 # Paquets maison (vinx-shell…) construits puis installés dans l'image.
 if [ -d "$ROOT/shell/debian" ]; then
 	echo "==> Construction du paquet vinx-shell"
+	# Dépendances de construction manquantes (nouvelle version du shell) : installées automatiquement.
+	if ! (cd "$ROOT/shell" && dpkg-checkbuilddeps >/dev/null 2>&1); then
+		echo "==> Installation des dépendances de construction de vinx-shell"
+		apt-get update -qq
+		apt-get build-dep -y "$ROOT/shell"
+	fi
 	(cd "$ROOT/shell" && dpkg-buildpackage -us -uc -b)
 	mkdir -p "$WORK/config/packages.chroot"
 	mv "$ROOT"/vinx-shell_*.deb "$WORK/config/packages.chroot/"
