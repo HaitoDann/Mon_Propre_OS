@@ -3,7 +3,9 @@ find_program(QMLTESTRUNNER qmltestrunner HINTS "${QT6_INSTALL_PREFIX}/${QT6_INST
 if(QMLTESTRUNNER)
     add_test(NAME qml-controls
         COMMAND "${QMLTESTRUNNER}" -input "${CMAKE_CURRENT_SOURCE_DIR}" -import "${QT_QML_OUTPUT_DIRECTORY}")
-    set_tests_properties(qml-controls PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+    # Préférences isolées : les tests ne lisent jamais la configuration de l'utilisateur qui construit.
+    set_tests_properties(qml-controls PROPERTIES ENVIRONMENT
+        "QT_QPA_PLATFORM=offscreen;XDG_CONFIG_HOME=${CMAKE_CURRENT_BINARY_DIR}/config-qml;LANG=C.UTF-8")
 else()
     message(WARNING "qmltestrunner introuvable : tests QML désactivés")
 endif()
@@ -33,4 +35,8 @@ target_compile_definitions(tst_lockscreen PRIVATE
     VINX_BUILD_QML_DIR="${QT_QML_OUTPUT_DIRECTORY}"
     LOCKSCREEN_QML="${PROJECT_SOURCE_DIR}/lockscreen/LockScreen.qml")
 add_test(NAME lockscreen COMMAND tst_lockscreen)
-set_tests_properties(lockscreen PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+set_tests_properties(lockscreen PROPERTIES ENVIRONMENT
+    "QT_QPA_PLATFORM=offscreen;XDG_CONFIG_HOME=${CMAKE_CURRENT_BINARY_DIR}/config-lockscreen;LANG=C.UTF-8")
+
+# Repartir de préférences vierges à chaque exécution des tests.
+file(REMOVE_RECURSE "${CMAKE_CURRENT_BINARY_DIR}/config-qml" "${CMAKE_CURRENT_BINARY_DIR}/config-lockscreen")
