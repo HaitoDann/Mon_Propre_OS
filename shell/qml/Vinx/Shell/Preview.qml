@@ -23,7 +23,9 @@ Window {
             Tasks.backend.activate(2)          // Documents
             Tasks.backend.openApp("org.kde.konsole", "Terminal")
             Tasks.backend.activate(2)
-            Notifications.notify("Thunderbird", qsTr("Nouveau message"), qsTr("Réunion d'équipe : l'ordre du jour est disponible."), "thunderbird")
+            Notifications.notifyFull("Thunderbird", qsTr("Nouveau message"), qsTr("Réunion d'équipe : l'ordre du jour est disponible."),
+                                     ["default", qsTr("Ouvrir"), "reply", qsTr("Répondre"), "read", qsTr("Marquer comme lu")], {})
+            Notifications.notify("Thunderbird", qsTr("Nouveau message"), qsTr("Facture de novembre"))
             Notifications.notify("Store", qsTr("Installation terminée"), qsTr("Le pack Graphisme est prêt."), "")
         }
     }

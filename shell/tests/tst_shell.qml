@@ -27,7 +27,7 @@ Item {
             const id = Notifications.notify("Test", "Bonjour", "<b>Corps</b> du message")
             compare(Notifications.count, 1)
             compare(popupSpy.count, 1)
-            compare(popupSpy.signalArguments[0][3], "Corps du message")   // balisage retiré
+            compare(Notifications.get(id).body, "Corps du message")       // balisage retiré
             Notifications.doNotDisturb = true
             Notifications.notify("Test", "Silencieuse")
             compare(Notifications.count, 2)
@@ -51,6 +51,52 @@ Item {
             compare(ShellState.screenName, "DP-2")
             ShellState.toggle("calendar", Qt.rect(10, 0, 20, 20), "DP-2")     // même écran : fermeture
             compare(ShellState.openPanel, "")
+        }
+
+        SignalSpy { id: actionSpy; target: Notifications; signalName: "actionInvoked" }
+
+        function test_notification_actions_and_default() {
+            Notifications.clear()
+            actionSpy.clear()
+            const id = Notifications.notifyFull("Courrier", "Nouveau message", "Bonjour",
+                                                ["default", "Ouvrir", "reply", "Répondre", "read", "Marquer comme lu"], {})
+            const n = Notifications.get(id)
+            compare(n.actions.length, 2)                 // « default » n'est pas un bouton
+            compare(n.actions[0].label, "Répondre")
+            verify(n.hasDefault)
+            Notifications.invokeAction(id, "reply")
+            compare(actionSpy.count, 1)
+            compare(actionSpy.signalArguments[0][1], "reply")
+            compare(Notifications.count, 0)              // une action retire la notification
+            const id2 = Notifications.notifyFull("Courrier", "Autre", "", ["default", "Ouvrir"], {})
+            Notifications.activate(id2)                   // clic = action par défaut
+            compare(actionSpy.signalArguments[1][1], "default")
+        }
+
+        function test_notifications_grouped_by_app() {
+            Notifications.clear()
+            Notifications.notify("Firefox", "Téléchargement terminé")
+            Notifications.notify("Courrier", "Message 1")
+            Notifications.notify("Courrier", "Message 2")
+            const g = Notifications.groups()
+            compare(g.length, 2)
+            compare(g[0].appName, "Courrier")             // groupe le plus récent d'abord
+            compare(g[0].count, 2)
+            compare(g[0].items[0].summary, "Message 2")
+            Notifications.dismissApp("Courrier")
+            compare(Notifications.count, 1)
+            Notifications.clear()
+        }
+
+        function test_critical_notification_bypasses_dnd() {
+            Notifications.clear()
+            popupSpy.clear()
+            Notifications.doNotDisturb = true
+            Notifications.notifyFull("Énergie", "Batterie faible", "5 %", [], { urgency: 2 })
+            compare(popupSpy.count, 1)
+            compare(Notifications.get(popupSpy.signalArguments[0][0]).urgency, 2)
+            Notifications.doNotDisturb = false
+            Notifications.clear()
         }
 
         function test_bar_height() { compare(bar.height, Theme.topbarHeight) }

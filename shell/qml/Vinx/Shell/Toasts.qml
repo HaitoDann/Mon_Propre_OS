@@ -16,13 +16,18 @@ Column {
 
     Connections {
         target: Notifications
-        function onPopup(id, appName, summary, body, appIcon) {
+        function onPopup(id) {
+            const n = Notifications.get(id)
+            const entry = { nid: id, appName: n.appName || "", summary: n.summary, body: n.body, appIcon: n.appIcon || "",
+                            critical: n.urgency === 2, actionsJson: JSON.stringify(n.actions || []) }
             for (let i = 0; i < live.count; i++)
-                if (live.get(i).nid === id) { live.set(i, { summary: summary, body: body }); return }
-            live.insert(0, { nid: id, appName: appName, summary: summary, body: body, appIcon: appIcon })
+                if (live.get(i).nid === id) { live.set(i, entry); return }
+            live.insert(0, entry)
             if (live.count > 3) live.remove(3)
         }
         function onClosed(id) { toasts.remove(id) }
+        // Notification sans action par défaut : on ouvre l'application qui l'a envoyée.
+        function onLaunchRequested(desktopEntry) { Applications.launch(desktopEntry) }
     }
     function remove(id) {
         for (let i = 0; i < live.count; i++)
@@ -38,16 +43,21 @@ Column {
             required property string summary
             required property string body
             required property string appIcon
+            required property bool critical
+            required property string actionsJson
+            readonly property var actions: JSON.parse(actionsJson)
             kind: Surface.Strong
             elevation: 2
             width: toasts.width
-            height: content.implicitHeight + Theme.space3 * 2
+            height: content.implicitHeight + Theme.space3 * 2 + (actionRow.visible ? actionRow.height + Theme.space2 : 0)
+            border.color: critical ? Theme.danger : Theme.borderStrong
 
             opacity: 0
             Component.onCompleted: opacity = 1
             Behavior on opacity { NumberAnimation { duration: Theme.durNormal } }
 
-            Timer { interval: 6000; running: !hover.containsMouse; onTriggered: toasts.remove(toast.nid) }
+            // Les notifications critiques restent affichées jusqu'à ce qu'on les ferme.
+            Timer { interval: 6000; running: !toast.critical && !hover.containsMouse; onTriggered: toasts.remove(toast.nid) }
 
             Row {
                 id: content
@@ -85,7 +95,37 @@ Column {
                     }
                 }
             }
-            MouseArea { id: hover; anchors.fill: parent; hoverEnabled: true; onClicked: toasts.remove(toast.nid) }
+            // Clic : action par défaut de l'application (ou ouverture de l'application).
+            MouseArea {
+                id: hover
+                anchors.fill: parent
+                hoverEnabled: true
+                onClicked: { toasts.remove(toast.nid); Notifications.activate(toast.nid) }
+            }
+            IconButton {
+                anchors { right: parent.right; top: parent.top; margins: 6 }
+                width: 22; height: 22
+                flat: true
+                iconName: "close"
+                toolTip: qsTr("Fermer")
+                visible: hover.containsMouse || toast.critical
+                onClicked: toasts.remove(toast.nid)
+            }
+            // Boutons d'action (« Répondre », « Ouvrir »…).
+            Row {
+                id: actionRow
+                visible: toast.actions.length > 0
+                anchors { left: parent.left; right: parent.right; bottom: parent.bottom; margins: Theme.space3 }
+                spacing: Theme.space2
+                Repeater {
+                    model: toast.actions
+                    Button {
+                        required property var modelData
+                        text: modelData.label
+                        onClicked: { toasts.remove(toast.nid); Notifications.invokeAction(toast.nid, modelData.key) }
+                    }
+                }
+            }
         }
     }
 }
