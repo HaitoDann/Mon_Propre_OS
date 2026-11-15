@@ -12,6 +12,7 @@
 
 #ifdef VINX_HAVE_KIO
 #include <KIO/CopyJob>
+#include <KIO/Job>
 #include <KIO/DeleteJob>
 #include <KIO/RestoreJob>
 #include <KIO/EmptyTrashJob>

@@ -8,6 +8,7 @@
 
 #ifdef VINX_HAVE_KIO
 #include <KCoreDirLister>
+#include <KIO/Job>
 #include <KFileItem>
 #endif
 
