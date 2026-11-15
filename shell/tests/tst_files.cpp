@@ -93,6 +93,37 @@ private Q_SLOTS:
         QVERIFY(!QFile::exists(path("dossier/renommé.txt")));
     }
 
+    void conflictModes()
+    {
+        QTemporaryDir src, dst;
+        auto write = [](const QString &path, const QByteArray &data) { QFile f(path); f.open(QIODevice::WriteOnly); f.write(data); };
+        write(src.filePath("a.txt"), "nouveau");
+        write(src.filePath("b.txt"), "b");
+        write(dst.filePath("a.txt"), "ancien");
+        FileOps ops;
+        QSignalSpy done(&ops, &FileOps::done);
+        const QList<QUrl> urls{QUrl::fromLocalFile(src.filePath("a.txt")), QUrl::fromLocalFile(src.filePath("b.txt"))};
+        const QUrl dest = QUrl::fromLocalFile(dst.path());
+        QCOMPARE(ops.conflicts(urls, dest), QStringList({"a.txt"}));
+
+        ops.copy(urls, dest, FileOps::Skip);
+        QVERIFY(done.wait());
+        QFile a(dst.filePath("a.txt")); a.open(QIODevice::ReadOnly);
+        QCOMPARE(a.readAll(), QByteArray("ancien"));
+        a.close();
+        QVERIFY(QFile::exists(dst.filePath("b.txt")));
+
+        ops.copy({urls[0]}, dest, FileOps::Replace);
+        QVERIFY(done.wait());
+        a.open(QIODevice::ReadOnly);
+        QCOMPARE(a.readAll(), QByteArray("nouveau"));
+        a.close();
+
+        ops.copy({urls[0]}, dest, FileOps::KeepBoth);
+        QVERIFY(done.wait());
+        QVERIFY(QFile::exists(dst.filePath("a (2).txt")));
+    }
+
     void sizes()
     {
         QVERIFY(FolderModel::formatSize(512).contains("512"));

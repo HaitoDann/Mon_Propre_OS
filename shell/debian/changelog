@@ -1,3 +1,12 @@
+vinx-shell (0.11.0) trixie; urgency=medium
+
+  * Paramètres : Écrans, Énergie, Imprimantes, Utilisateurs, Sauvegarde ; barre latérale par sections.
+  * Instantanés du système (Timeshift) quotidiens et avant les mises à jour.
+  * Premier démarrage : réseau, comptes en ligne, instantanés.
+  * Fichiers : onglets, glisser-déposer, conflits de noms au style VinX.
+
+ -- VinX OS <vinx@localhost>  Sun, 15 Nov 2026 21:55:12 +0000
+
 vinx-shell (0.10.0) trixie; urgency=medium
 
   * Identité graphique : thème d'icônes VinX (silhouettes + pictogrammes), accent violet atténué.

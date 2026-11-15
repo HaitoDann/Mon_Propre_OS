@@ -25,3 +25,9 @@ packagekit-tools
 # Thème unifié : applications GTK aux couleurs de VinX (synchronisées par kde-config-gtk-style)
 kde-config-gtk-style
 breeze-gtk-theme
+# Compléments du quotidien (pages Paramètres) : instantanés, impression, profils d'énergie
+timeshift
+rsync
+cups
+print-manager
+power-profiles-daemon

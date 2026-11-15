@@ -85,14 +85,45 @@ ListView {
             text: row.isDir ? "—" : row.sizeText
             level: Label.Secondary; font.pixelSize: Theme.fsSm
         }
+        // Glisser : la sélection part comme liste d'URL (vers Fichiers ou une autre application).
+        Item {
+            id: dragProxy
+            Drag.active: ma.drag.active
+            Drag.dragType: Drag.Automatic
+            Drag.supportedActions: Qt.MoveAction | Qt.CopyAction
+            Drag.proposedAction: Qt.MoveAction
+            Drag.mimeData: ({ "text/uri-list": (list.host.selected, list.host.selectedUrls().map(u => u.toString()).join("\r\n")) })
+        }
+        // Déposer sur un dossier : y déplacer (ou copier avec Ctrl).
+        DropArea {
+            id: folderDrop
+            anchors.fill: parent
+            enabled: row.isDir
+            keys: ["text/uri-list"]
+            onDropped: (d) => { list.host.dropUrls(d.urls, row.url, d.proposedAction === Qt.CopyAction || (d.modifiers & Qt.ControlModifier)); d.accept() }
+        }
+        Rectangle {
+            visible: folderDrop.containsDrag
+            anchors { fill: parent; margins: 3 }
+            radius: Theme.radiusMd
+            color: "transparent"
+            border.width: 2; border.color: Theme.accentForeground
+        }
         MouseArea {
             id: ma
             anchors.fill: parent
             enabled: list.host.renaming !== row.name
             hoverEnabled: true
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
-            onPressed: (m) => { list.forceActiveFocus(); if (m.button !== Qt.RightButton) list.host.select(row.index, m.modifiers) }
+            acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+            drag.target: dragProxy
+            drag.threshold: 8
+            onPressed: (m) => {
+                list.forceActiveFocus()
+                if (m.button === Qt.MiddleButton) { if (row.isDir) list.host.newTab(row.url); return }
+                if (m.button !== Qt.RightButton) list.host.select(row.index, m.modifiers)
+            }
             onClicked: (m) => { if (m.button === Qt.RightButton) list.contextMenu(row.index, m.x, row.y + m.y - list.contentY) }
+            onReleased: dragProxy.x = dragProxy.y = 0
             onDoubleClicked: (m) => { if (m.button === Qt.LeftButton) list.host.activate(row.index) }
         }
     }

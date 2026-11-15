@@ -1,0 +1,70 @@
+#!/bin/sh
+# Instantanés du système VinX (Timeshift) : retour arrière après une mise à jour ratée.
+#   enable      configure Timeshift (rsync, ou btrfs si la racine l'est) et prend un premier instantané
+#   disable     arrête les instantanés automatiques (les instantanés existants sont conservés)
+#   pre-update  appelé par APT avant une mise à jour : un instantané par jour au plus
+#   status      affiche « enabled » ou « disabled »
+# Les dossiers personnels ne sont jamais inclus : ce n'est pas une sauvegarde des documents.
+set -eu
+CONF=/etc/timeshift/timeshift.json
+STAMP=/var/lib/vinx/last-snapshot
+log() { logger -t vinx-snapshots "$*" 2>/dev/null || true; echo "$*"; }
+
+case "${1:-status}" in
+status)
+	[ -f "$CONF" ] && echo enabled || echo disabled ;;
+enable)
+	[ "$(id -u)" = 0 ] || { echo "À lancer en administrateur (pkexec)." >&2; exit 1; }
+	command -v timeshift >/dev/null || { echo "Timeshift n'est pas installé." >&2; exit 1; }
+	ROOTDEV=$(findmnt -no SOURCE / | sed 's/\[.*//')
+	UUID=$(blkid -s UUID -o value "$ROOTDEV" 2>/dev/null || true)
+	[ -n "$UUID" ] || { echo "Disque système introuvable." >&2; exit 1; }
+	BTRFS=false
+	[ "$(findmnt -no FSTYPE /)" = btrfs ] && BTRFS=true
+	mkdir -p /etc/timeshift "$(dirname "$STAMP")"
+	cat > "$CONF" <<JSON
+{
+  "backup_device_uuid" : "$UUID",
+  "parent_device_uuid" : "",
+  "do_first_run" : "false",
+  "btrfs_mode" : "$BTRFS",
+  "include_btrfs_home_for_backup" : "false",
+  "include_btrfs_home_for_restore" : "false",
+  "stop_cron_emails" : "true",
+  "schedule_monthly" : "false",
+  "schedule_weekly" : "true",
+  "schedule_daily" : "true",
+  "schedule_hourly" : "false",
+  "schedule_boot" : "false",
+  "count_monthly" : "2",
+  "count_weekly" : "2",
+  "count_daily" : "5",
+  "count_hourly" : "6",
+  "count_boot" : "5",
+  "date_format" : "%Y-%m-%d %H:%M:%S",
+  "exclude" : ["/home/**", "/root/**"],
+  "exclude-apps" : []
+}
+JSON
+	log "Instantanés activés (disque $UUID, btrfs : $BTRFS)"
+	# Premier instantané en arrière-plan (plusieurs minutes en mode rsync).
+	(timeshift --create --comments "Premier instantané VinX" --tags D --scripted >/dev/null 2>&1 && date +%F > "$STAMP") &
+	;;
+disable)
+	[ "$(id -u)" = 0 ] || { echo "À lancer en administrateur (pkexec)." >&2; exit 1; }
+	rm -f "$CONF"
+	log "Instantanés automatiques désactivés"
+	;;
+pre-update)
+	[ -f "$CONF" ] && command -v timeshift >/dev/null || exit 0
+	[ "$(cat "$STAMP" 2>/dev/null || true)" = "$(date +%F)" ] && exit 0
+	log "Instantané avant mise à jour"
+	if timeshift --create --comments "Avant mise à jour" --tags O --scripted >/dev/null 2>&1; then
+		date +%F > "$STAMP"
+	else
+		log "Échec de l'instantané (mise à jour poursuivie)"
+	fi
+	;;
+*)
+	echo "usage : vinx-snapshots enable|disable|pre-update|status" >&2; exit 2 ;;
+esac

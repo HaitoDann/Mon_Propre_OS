@@ -17,6 +17,7 @@ qt_add_qml_module(vinx-files
         PathBar.qml
         FileIcon.qml
         RenameField.qml
+        ConflictDialog.qml
 )
 target_include_directories(vinx-files PRIVATE "${PROJECT_SOURCE_DIR}/apps" "${CMAKE_CURRENT_SOURCE_DIR}")
 target_link_libraries(vinx-files PRIVATE Qt6::Gui Qt6::Widgets Qt6::Quick)

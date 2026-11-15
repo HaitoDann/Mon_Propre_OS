@@ -8,7 +8,7 @@ import Vinx.Shell
 // le shell les applique immédiatement.
 Window {
     id: win
-    width: 920; height: 640
+    width: 940; height: 680
     minimumWidth: 760; minimumHeight: 480
     visible: true
     title: qsTr("Paramètres")
@@ -18,22 +18,40 @@ Window {
     AppearanceSync {}
 
     readonly property int rev: Preferences.revision
+    // Réglages KDE (kreadconfig6 / kwriteconfig6) : groupes imbriqués « A/B ».
+    function kread(file, groups, key, def) {
+        const args = ["--file", file]
+        groups.split("/").forEach(g => { args.push("--group"); args.push(g) })
+        args.push("--key"); args.push(key); args.push("--default"); args.push(String(def))
+        return Session.capture("kreadconfig6", args).trim() || String(def)
+    }
+    function kwrite(file, groups, key, value) {
+        const args = ["--file", file]
+        groups.split("/").forEach(g => { args.push("--group"); args.push(g) })
+        args.push("--key"); args.push(key); args.push(String(value))
+        Session.capture("kwriteconfig6", args)
+    }
     function pref(key, def) { rev; return Preferences.value(key, def) }
     function on(key, def) { const v = pref(key, def); return v === true || v === "true" }
 
     readonly property var pages: [
-        { id: "appearance", title: qsTr("Apparence"), icon: "sun" },
-        { id: "wallpaper", title: qsTr("Fond d'écran"), icon: "image" },
-        { id: "desktop", title: qsTr("Bureau"), icon: "grid" },
-        { id: "dock", title: qsTr("Dock"), icon: "folder" },
-        { id: "network", title: qsTr("Réseau"), icon: "globe" },
-        { id: "sound", title: qsTr("Son"), icon: "volume" },
-        { id: "notifications", title: qsTr("Notifications"), icon: "bell" },
-        { id: "accessibility", title: qsTr("Accessibilité"), icon: "eye" },
-        { id: "keyboard", title: qsTr("Clavier"), icon: "keyboard" },
-        { id: "datetime", title: qsTr("Date et heure"), icon: "calendar" },
-        { id: "updates", title: qsTr("Mises à jour"), icon: "restart" },
-        { id: "about", title: qsTr("À propos"), icon: "info" }
+        { id: "appearance", title: qsTr("Apparence"), icon: "sun", section: qsTr("Personnalisation") },
+        { id: "wallpaper", title: qsTr("Fond d'écran"), icon: "image", section: qsTr("Personnalisation") },
+        { id: "desktop", title: qsTr("Bureau"), icon: "grid", section: qsTr("Personnalisation") },
+        { id: "dock", title: qsTr("Dock"), icon: "folder", section: qsTr("Personnalisation") },
+        { id: "notifications", title: qsTr("Notifications"), icon: "bell", section: qsTr("Personnalisation") },
+        { id: "displays", title: qsTr("Écrans"), icon: "grid", section: qsTr("Matériel") },
+        { id: "sound", title: qsTr("Son"), icon: "volume", section: qsTr("Matériel") },
+        { id: "power", title: qsTr("Énergie"), icon: "bolt", section: qsTr("Matériel") },
+        { id: "network", title: qsTr("Réseau"), icon: "globe", section: qsTr("Matériel") },
+        { id: "printers", title: qsTr("Imprimantes"), icon: "doc", section: qsTr("Matériel") },
+        { id: "accessibility", title: qsTr("Accessibilité"), icon: "eye", section: qsTr("Système") },
+        { id: "keyboard", title: qsTr("Clavier"), icon: "keyboard", section: qsTr("Système") },
+        { id: "datetime", title: qsTr("Date et heure"), icon: "calendar", section: qsTr("Système") },
+        { id: "users", title: qsTr("Utilisateurs"), icon: "home", section: qsTr("Système") },
+        { id: "backup", title: qsTr("Sauvegarde"), icon: "drive", section: qsTr("Système") },
+        { id: "updates", title: qsTr("Mises à jour"), icon: "restart", section: qsTr("Système") },
+        { id: "about", title: qsTr("À propos"), icon: "info", section: qsTr("Système") }
     ]
     property string page: pages.some(p => p.id === startPage) ? startPage : "appearance"
 
@@ -44,25 +62,31 @@ Window {
         anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
         color: Theme.surfaceSunken
         Rectangle { anchors { right: parent.right; top: parent.top; bottom: parent.bottom } width: 1; color: Theme.border }
-        Column {
-            anchors { fill: parent; margins: Theme.space3; topMargin: Theme.space4 }
-            spacing: 2
-            Label { text: qsTr("Paramètres"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; height: 40; leftPadding: Theme.space2 }
-            Repeater {
-                model: win.pages
-                Rectangle {
-                    required property var modelData
-                    width: parent.width; height: 34
-                    radius: Theme.radiusSm
-                    color: win.page === modelData.id ? Theme.surfaceActive : navMouse.containsMouse ? Theme.surfaceHover : "transparent"
-                    Row {
-                        anchors { left: parent.left; leftMargin: Theme.space2; verticalCenter: parent.verticalCenter }
-                        spacing: Theme.space2
-                        Icon { name: modelData.icon; color: Theme.textSecondary; anchors.verticalCenter: parent.verticalCenter }
-                        Label { text: modelData.title; font.weight: win.page === modelData.id ? Font.DemiBold : Font.Normal }
-                    }
-                    MouseArea { id: navMouse; anchors.fill: parent; hoverEnabled: true; onClicked: win.page = modelData.id }
+        Label { id: sideTitle; text: qsTr("Paramètres"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; height: 40; x: Theme.space3 + Theme.space2; y: Theme.space4 }
+        ListView {
+            anchors { top: sideTitle.bottom; bottom: parent.bottom; left: parent.left; right: parent.right; margins: Theme.space3; topMargin: 0 }
+            clip: true
+            spacing: 1
+            boundsBehavior: Flickable.StopAtBounds
+            model: win.pages
+            section.property: "section"
+            section.delegate: Label {
+                required property string section
+                text: section.toUpperCase(); level: Label.Tertiary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.6
+                height: 28; leftPadding: Theme.space2; verticalAlignment: Text.AlignBottom; bottomPadding: 4
+            }
+            delegate: Rectangle {
+                required property var modelData
+                width: ListView.view.width; height: 30
+                radius: Theme.radiusSm
+                color: win.page === modelData.id ? Theme.surfaceActive : navMouse.containsMouse ? Theme.surfaceHover : "transparent"
+                Row {
+                    anchors { left: parent.left; leftMargin: Theme.space2; verticalCenter: parent.verticalCenter }
+                    spacing: Theme.space2
+                    Icon { name: modelData.icon; color: Theme.textSecondary; anchors.verticalCenter: parent.verticalCenter }
+                    Label { text: modelData.title; font.weight: win.page === modelData.id ? Font.DemiBold : Font.Normal }
                 }
+                MouseArea { id: navMouse; anchors.fill: parent; hoverEnabled: true; onClicked: win.page = modelData.id }
             }
         }
     }
@@ -205,6 +229,206 @@ Window {
                     title: qsTr("Ne pas déranger")
                     description: qsTr("Masque les bulles ; les notifications restent dans le calendrier.")
                     Switch { checked: win.on("notifications/dnd", false); onToggled: (c) => Preferences.setValue("notifications/dnd", c) }
+                }
+            }
+
+            // Écrans (kscreen-doctor)
+            Column {
+                id: displays
+                visible: win.page === "displays"
+                width: parent.width
+                spacing: Theme.space2
+                property var outputs: []
+                function load() {
+                    try { outputs = (JSON.parse(Session.capture("kscreen-doctor", ["-j"]) || "{}").outputs || []).filter(o => o.connected) }
+                    catch (e) { outputs = [] }
+                }
+                onVisibleChanged: if (visible) load()
+                Timer { id: displayReload; interval: 1500; onTriggered: displays.load() }
+                Label { visible: displays.outputs.length === 0; text: qsTr("Réglage des écrans indisponible ici."); level: Label.Secondary }
+                Repeater {
+                    model: displays.outputs
+                    delegate: Column {
+                        id: out
+                        required property var modelData
+                        width: displays.width
+                        readonly property var modes: {
+                            // Une entrée par définition, à la meilleure fréquence.
+                            const best = {}
+                            for (const m of modelData.modes || []) {
+                                const k = m.size.width + "×" + m.size.height
+                                if (!best[k] || m.refreshRate > best[k].refreshRate) best[k] = m
+                            }
+                            return Object.values(best).sort((a, b) => b.size.width * b.size.height - a.size.width * a.size.height)
+                        }
+                        readonly property var current: (modelData.modes || []).find(m => m.id === modelData.currentModeId)
+                        Label { text: modelData.name.toUpperCase(); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 32; verticalAlignment: Text.AlignBottom }
+                        SettingsRow {
+                            title: qsTr("Définition")
+                            description: out.current ? qsTr("%1 × %2 à %3 Hz").arg(out.current.size.width).arg(out.current.size.height).arg(Math.round(out.current.refreshRate)) : ""
+                            Button {
+                                text: qsTr("Changer…"); variant: Button.Secondary
+                                onClicked: modeMenu.visible = !modeMenu.visible
+                            }
+                        }
+                        Flow {
+                            id: modeMenu
+                            visible: false
+                            width: parent.width; spacing: Theme.space2
+                            Repeater {
+                                model: out.modes
+                                delegate: Button {
+                                    required property var modelData
+                                    text: modelData.size.width + " × " + modelData.size.height
+                                    variant: out.current && out.current.size.width === modelData.size.width && out.current.size.height === modelData.size.height ? Button.Primary : Button.Secondary
+                                    onClicked: { Session.launch("kscreen-doctor", ["output." + out.modelData.name + ".mode." + modelData.id]); modeMenu.visible = false; displayReload.restart() }
+                                }
+                            }
+                        }
+                        SettingsRow {
+                            title: qsTr("Taille du texte et des éléments")
+                            description: qsTr("%1 %").arg(Math.round((out.modelData.scale || 1) * 100))
+                            SegmentedControl {
+                                readonly property var scales: [1, 1.25, 1.5, 2]
+                                model: ["100 %", "125 %", "150 %", "200 %"]
+                                currentIndex: Math.max(0, scales.indexOf(out.modelData.scale || 1))
+                                onActivated: (i) => { Session.launch("kscreen-doctor", ["output." + out.modelData.name + ".scale." + scales[i]]); displayReload.restart() }
+                            }
+                        }
+                    }
+                }
+                SettingsRow {
+                    title: qsTr("Disposition, fréquence, orientation")
+                    Button { text: qsTr("Ouvrir…"); variant: Button.Secondary; onClicked: Session.launch("systemsettings", ["kcm_kscreen"]) }
+                }
+            }
+
+            // Énergie (powerdevil + power-profiles-daemon)
+            Column {
+                id: power
+                visible: win.page === "power"
+                width: parent.width
+                property int prev: 0
+                property string profile: ""
+                onVisibleChanged: if (visible) { prev++; profile = Session.capture("powerprofilesctl", ["get"]).trim() }
+                function reload() { Session.launch("busctl", ["--user", "call", "org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement", "org.kde.Solid.PowerManagement", "refreshStatus"]) }
+                // Même réglage sur secteur et sur batterie, pour rester simple.
+                function setIdle(group, enableKey, timeKey, minutes) {
+                    for (const src of ["AC", "Battery", "LowBattery"]) {
+                        win.kwrite("powerdevilrc", src + "/" + group, enableKey, minutes > 0 ? (enableKey === "AutoSuspendAction" ? 1 : "true") : (enableKey === "AutoSuspendAction" ? 0 : "false"))
+                        if (minutes > 0) win.kwrite("powerdevilrc", src + "/" + group, timeKey, minutes * 60)
+                    }
+                    reload(); prev++
+                }
+                function idleIndex(group, enableKey, timeKey, values) {
+                    prev
+                    const on = win.kread("powerdevilrc", "AC/" + group, enableKey, enableKey === "AutoSuspendAction" ? 1 : "true")
+                    if (on === "false" || on === "0") return values.length - 1
+                    const m = Number(win.kread("powerdevilrc", "AC/" + group, timeKey, values[0] * 60)) / 60
+                    const i = values.indexOf(m)
+                    return i < 0 ? 0 : i
+                }
+                SettingsRow {
+                    title: qsTr("Éteindre l'écran après")
+                    SegmentedControl {
+                        readonly property var values: [5, 10, 30, 0]
+                        model: ["5 min", "10 min", "30 min", qsTr("Jamais")]
+                        currentIndex: power.idleIndex("Display", "TurnOffDisplayWhenIdle", "TurnOffDisplayIdleTimeoutSec", values)
+                        onActivated: (i) => power.setIdle("Display", "TurnOffDisplayWhenIdle", "TurnOffDisplayIdleTimeoutSec", values[i])
+                    }
+                }
+                SettingsRow {
+                    title: qsTr("Mettre en veille après")
+                    SegmentedControl {
+                        readonly property var values: [15, 30, 60, 0]
+                        model: ["15 min", "30 min", "1 h", qsTr("Jamais")]
+                        currentIndex: power.idleIndex("SuspendAndShutdown", "AutoSuspendAction", "AutoSuspendIdleTimeoutSec", values)
+                        onActivated: (i) => power.setIdle("SuspendAndShutdown", "AutoSuspendAction", "AutoSuspendIdleTimeoutSec", values[i])
+                    }
+                }
+                SettingsRow {
+                    visible: power.profile !== ""
+                    title: qsTr("Mode d'énergie")
+                    description: qsTr("Économie : autonomie maximale. Performances : plus rapide, plus bruyant.")
+                    SegmentedControl {
+                        readonly property var values: ["power-saver", "balanced", "performance"]
+                        model: [qsTr("Économie"), qsTr("Équilibré"), qsTr("Performances")]
+                        currentIndex: Math.max(0, values.indexOf(power.profile))
+                        onActivated: (i) => { Session.launch("powerprofilesctl", ["set", values[i]]); power.profile = values[i] }
+                    }
+                }
+                SettingsRow {
+                    visible: Battery.present
+                    title: qsTr("Batterie")
+                    Label { text: Battery.percentage + " %" + (Battery.charging ? qsTr(" · en charge") : ""); level: Label.Secondary }
+                }
+            }
+
+            // Imprimantes (CUPS)
+            Column {
+                id: printers
+                visible: win.page === "printers"
+                width: parent.width
+                property var list: []
+                onVisibleChanged: if (visible) list = Session.capture("lpstat", ["-e"]).split("\n").filter(l => l.trim())
+                Label { visible: printers.list.length === 0; text: qsTr("Aucune imprimante. Les imprimantes réseau récentes sont généralement détectées automatiquement."); level: Label.Secondary; wrapMode: Text.WordWrap; width: parent.width; bottomPadding: Theme.space3 }
+                Repeater {
+                    model: printers.list
+                    delegate: SettingsRow { required property string modelData; title: modelData.replace(/_/g, " ") }
+                }
+                SettingsRow {
+                    title: qsTr("Ajouter ou configurer une imprimante")
+                    Button { text: qsTr("Ouvrir…"); variant: Button.Secondary; onClicked: Session.launch("systemsettings", ["kcm_printer_manager"]) }
+                }
+            }
+
+            // Utilisateurs
+            Column {
+                visible: win.page === "users"
+                width: parent.width
+                SettingsRow {
+                    title: (Session.capture("getent", ["passwd", Session.userName]).split(":")[4] || "").split(",")[0] || Session.userName
+                    description: qsTr("Votre compte · administrateur")
+                    Button { text: qsTr("Changer le mot de passe…"); variant: Button.Secondary; onClicked: Session.launch("systemsettings", ["kcm_users"]) }
+                }
+                SettingsRow {
+                    title: qsTr("Ajouter un utilisateur")
+                    description: qsTr("Chaque personne a ses propres documents et réglages.")
+                    Button { text: qsTr("Gérer…"); variant: Button.Secondary; onClicked: Session.launch("systemsettings", ["kcm_users"]) }
+                }
+                SettingsRow {
+                    title: qsTr("Comptes en ligne")
+                    description: qsTr("Google, Nextcloud… pour les fichiers et agendas.")
+                    Button { text: qsTr("Gérer…"); variant: Button.Secondary; onClicked: Session.launch("systemsettings", ["kcm_kaccounts"]) }
+                }
+            }
+
+            // Sauvegarde : instantanés du système (Timeshift)
+            Column {
+                id: backup
+                visible: win.page === "backup"
+                width: parent.width
+                property bool enabledState: false
+                function load() { enabledState = Session.capture("/usr/lib/vinx/vinx-snapshots", ["status"]).trim() === "enabled" }
+                onVisibleChanged: if (visible) load()
+                Timer { id: backupReload; interval: 4000; repeat: true; running: backup.visible; onTriggered: backup.load() }
+                SettingsRow {
+                    title: qsTr("Instantanés du système")
+                    description: qsTr("Un instantané chaque jour et avant chaque mise à jour, pour revenir en arrière en cas de problème. Vos documents ne sont pas inclus.")
+                    Switch {
+                        checked: backup.enabledState
+                        onToggled: (c) => Session.launch("pkexec", ["/usr/lib/vinx/vinx-snapshots", c ? "enable" : "disable"])
+                    }
+                }
+                SettingsRow {
+                    title: qsTr("Restaurer le système")
+                    description: qsTr("Revenir à un instantané précédent (redémarrage nécessaire).")
+                    Button { text: qsTr("Ouvrir…"); variant: Button.Secondary; enabled: backup.enabledState; onClicked: Session.launch("timeshift-launcher") }
+                }
+                SettingsRow {
+                    title: qsTr("Sauvegarder vos documents")
+                    description: qsTr("Copiez régulièrement votre dossier personnel sur un disque externe ou un service en ligne.")
+                    Button { text: qsTr("Ouvrir Fichiers"); variant: Button.Ghost; onClicked: Session.launch("vinx-files") }
                 }
             }
 

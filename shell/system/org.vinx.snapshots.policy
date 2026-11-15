@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>VinX OS</vendor>
+  <action id="org.vinx.snapshots">
+    <description>Configure system snapshots</description>
+    <description xml:lang="fr">Configurer les instantanés du système</description>
+    <message>Authentication is required to configure system snapshots</message>
+    <message xml:lang="fr">Saisissez votre mot de passe pour configurer les instantanés du système</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/vinx/vinx-snapshots</annotate>
+  </action>
+</policyconfig>

@@ -9,6 +9,7 @@ Rectangle {
     property url currentUrl
     property FolderModel source
     signal openRequested(url url)
+    signal dropRequested(var urls, url dest, bool copy)
 
     width: 210
     color: Theme.surfaceSunken
@@ -46,6 +47,14 @@ Rectangle {
                 Label { text: place.modelData.name; font.weight: place.active ? Font.DemiBold : Font.Normal; elide: Text.ElideRight; width: parent.width - 30 }
             }
             MouseArea { id: mouse; anchors.fill: parent; hoverEnabled: true; onClicked: root.openRequested(place.modelData.url) }
+            DropArea {
+                id: drop
+                anchors.fill: parent
+                keys: ["text/uri-list"]
+                onDropped: (d) => { root.dropRequested(d.urls, place.modelData.url, d.proposedAction === Qt.CopyAction || (d.modifiers & Qt.ControlModifier)); d.accept() }
+            }
+            border.width: drop.containsDrag ? 2 : 0
+            border.color: Theme.accentForeground
         }
     }
 }

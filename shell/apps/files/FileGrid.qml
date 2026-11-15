@@ -62,19 +62,47 @@ GridView {
             anchors { top: icon.bottom; topMargin: 4; left: parent.left; right: parent.right; margins: 4 }
             sourceComponent: RenameField { name: cell.name; url: cell.url; onFinished: { grid.host.renaming = ""; grid.forceActiveFocus() } }
         }
+        // Glisser : la sélection part comme liste d'URL (vers Fichiers ou une autre application).
+        Item {
+            id: dragProxy
+            Drag.active: ma.drag.active
+            Drag.dragType: Drag.Automatic
+            Drag.supportedActions: Qt.MoveAction | Qt.CopyAction
+            Drag.proposedAction: Qt.MoveAction
+            Drag.mimeData: ({ "text/uri-list": (grid.host.selected, grid.host.selectedUrls().map(u => u.toString()).join("\r\n")) })
+        }
+        // Déposer sur un dossier : y déplacer (ou copier avec Ctrl).
+        DropArea {
+            id: folderDrop
+            anchors.fill: parent
+            enabled: cell.isDir
+            keys: ["text/uri-list"]
+            onDropped: (d) => { grid.host.dropUrls(d.urls, cell.url, d.proposedAction === Qt.CopyAction || (d.modifiers & Qt.ControlModifier)); d.accept() }
+        }
+        Rectangle {
+            visible: folderDrop.containsDrag
+            anchors { fill: parent; margins: 3 }
+            radius: Theme.radiusMd
+            color: "transparent"
+            border.width: 2; border.color: Theme.accentForeground
+        }
         MouseArea {
             id: ma
             anchors.fill: parent
             enabled: grid.host.renaming !== cell.name
             hoverEnabled: true
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+            drag.target: dragProxy
+            drag.threshold: 8
             onPressed: (m) => {
                 grid.forceActiveFocus()
                 if (m.button === Qt.RightButton) return
+                if (m.button === Qt.MiddleButton) { if (cell.isDir) grid.host.newTab(cell.url); return }
                 // Clic sur un élément déjà seul sélectionné : renommage après un court délai (comme ailleurs).
                 grid.host.select(cell.index, m.modifiers)
             }
             onClicked: (m) => { if (m.button === Qt.RightButton) grid.contextMenu(cell.index, cell.x + m.x - grid.contentX, cell.y + m.y - grid.contentY) }
+            onReleased: dragProxy.x = dragProxy.y = 0
             onDoubleClicked: (m) => { if (m.button === Qt.LeftButton) grid.host.activate(cell.index) }
         }
     }

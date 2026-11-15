@@ -17,7 +17,7 @@ Window {
     AppearanceSync {}
 
     property int step: 0
-    readonly property int steps: 4
+    readonly property int steps: 7
     function finish() { Preferences.setValue("welcome/done", true); Qt.quit() }
 
     Item {
@@ -69,9 +69,76 @@ Window {
             }
         }
 
-        // 3. Applications
+        // 3. Réseau
         Column {
             visible: win.step === 2
+            anchors.centerIn: parent
+            spacing: Theme.space4
+            AppIcon { size: 64; iconName: "globe"; tint: "#55657A"; anchors.horizontalCenter: parent.horizontalCenter }
+            Label { text: qsTr("Connexion à Internet"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
+            Label {
+                width: 460; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
+                text: !Network.available ? qsTr("Le réseau n'est pas disponible pour le moment.")
+                    : Network.connected ? qsTr("Vous êtes connecté : %1.").arg(Network.connectionName)
+                    : qsTr("Vous n'êtes pas connecté. Choisissez un réseau Wi-Fi ou branchez un câble.")
+                level: Label.Secondary
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            Row {
+                visible: Network.wireless
+                spacing: Theme.space3
+                anchors.horizontalCenter: parent.horizontalCenter
+                Label { text: qsTr("Wi-Fi"); anchors.verticalCenter: parent.verticalCenter }
+                Switch { checked: Network.wirelessEnabled; onToggled: (c) => Network.wirelessEnabled = c }
+            }
+            Button {
+                visible: Network.available && !Network.connected
+                text: qsTr("Choisir un réseau…")
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: Session.launch("systemsettings", ["kcm_networkmanagement"])
+            }
+        }
+
+        // 4. Comptes en ligne
+        Column {
+            visible: win.step === 3
+            anchors.centerIn: parent
+            spacing: Theme.space4
+            AppIcon { size: 64; iconName: "mail"; tint: "#3F7896"; anchors.horizontalCenter: parent.horizontalCenter }
+            Label { text: qsTr("Vos comptes en ligne"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
+            Label {
+                width: 460; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
+                text: qsTr("Ajoutez un compte Google, Nextcloud ou autre pour retrouver vos fichiers et agendas. Votre messagerie se configure au premier lancement de Thunderbird.")
+                level: Label.Secondary
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            Button { text: qsTr("Ajouter un compte…"); anchors.horizontalCenter: parent.horizontalCenter; onClicked: Session.launch("systemsettings", ["kcm_kaccounts"]) }
+        }
+
+        // 5. Sauvegarde du système
+        Column {
+            visible: win.step === 4
+            anchors.centerIn: parent
+            spacing: Theme.space4
+            AppIcon { size: 64; iconName: "restart"; tint: "#3E8460"; anchors.horizontalCenter: parent.horizontalCenter }
+            Label { text: qsTr("Revenir en arrière en cas de problème"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
+            Label {
+                width: 460; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
+                text: qsTr("VinX peut prendre un instantané du système avant chaque mise à jour. Vos documents ne sont pas concernés : pensez à les sauvegarder sur un disque externe.")
+                level: Label.Secondary
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            Button {
+                text: Session.fileExists("/etc/timeshift/timeshift.json") ? qsTr("Instantanés activés ✓") : qsTr("Activer les instantanés…")
+                enabled: !Session.fileExists("/etc/timeshift/timeshift.json")
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: Session.launch("pkexec", ["/usr/lib/vinx/vinx-snapshots", "enable"])
+            }
+        }
+
+        // 6. Applications
+        Column {
+            visible: win.step === 5
             anchors.centerIn: parent
             spacing: Theme.space4
             AppIcon { size: 64; iconName: "bag"; tint: "#7358BD"; anchors.horizontalCenter: parent.horizontalCenter }
@@ -85,9 +152,9 @@ Window {
             Button { text: qsTr("Ouvrir le Store"); anchors.horizontalCenter: parent.horizontalCenter; onClicked: Session.launch("vinx-store") }
         }
 
-        // 4. Raccourcis
+        // 7. Raccourcis
         Column {
-            visible: win.step === 3
+            visible: win.step === 6
             anchors.centerIn: parent
             spacing: Theme.space4
             Label { text: qsTr("Les raccourcis essentiels"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }

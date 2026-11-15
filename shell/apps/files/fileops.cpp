@@ -26,10 +26,17 @@ const QString kCutMime = QStringLiteral("application/x-kde-cutselection");
 
 #ifndef VINX_HAVE_KIO
 // Copie récursive locale ; le nom de destination est rendu unique en cas de conflit.
-bool copyRecursive(const QString &src, const QString &destDir, QString *error)
+bool copyRecursive(const QString &src, const QString &destDir, QString *error, bool replace = false)
 {
     const QFileInfo fi(src);
     const QDir dest(destDir);
+    if (replace && dest.exists(fi.fileName()) && QFileInfo(dest.filePath(fi.fileName())).absoluteFilePath() != fi.absoluteFilePath()) {
+        const QFileInfo old(dest.filePath(fi.fileName()));
+        if (!(old.isDir() && !old.isSymLink() ? QDir(old.absoluteFilePath()).removeRecursively() : QFile::remove(old.absoluteFilePath()))) {
+            *error = QObject::tr("Impossible de remplacer « %1 ».").arg(fi.fileName());
+            return false;
+        }
+    }
     const QString name = uniqueName(fi.fileName(), [&dest](const QString &n) { return dest.exists(n); });
     const QString target = dest.filePath(name);
     if (fi.isDir() && !fi.isSymLink()) {
@@ -44,7 +51,7 @@ bool copyRecursive(const QString &src, const QString &destDir, QString *error)
         }
         const QFileInfoList children = QDir(src).entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
         for (const QFileInfo &c : children)
-            if (!copyRecursive(c.absoluteFilePath(), target, error))
+            if (!copyRecursive(c.absoluteFilePath(), target, error, false))
                 return false;
         return true;
     }
@@ -55,6 +62,33 @@ bool copyRecursive(const QString &src, const QString &destDir, QString *error)
     return true;
 }
 #endif
+}
+
+QStringList FileOps::conflicts(const QList<QUrl> &urls, const QUrl &destDir) const
+{
+    QStringList out;
+    if (!destDir.isLocalFile())
+        return out;
+    const QDir dest(destDir.toLocalFile());
+    for (const QUrl &u : urls) {
+        if (!u.isLocalFile())
+            continue;
+        const QFileInfo fi(u.toLocalFile());
+        if (fi.absolutePath() == dest.absolutePath())
+            continue;   // même dossier : copie = doublon « (2) », déplacement = rien
+        if (dest.exists(fi.fileName()))
+            out.append(fi.fileName());
+    }
+    return out;
+}
+
+static QList<QUrl> withoutConflicts(const QList<QUrl> &urls, const QStringList &names)
+{
+    QList<QUrl> out;
+    for (const QUrl &u : urls)
+        if (!names.contains(u.fileName()))
+            out.append(u);
+    return out;
 }
 
 FileOps::FileOps(QObject *parent)
@@ -107,44 +141,55 @@ static void track(FileOps *self, KJob *job, std::function<void(bool, const QStri
 }
 #endif
 
-void FileOps::copy(const QList<QUrl> &urls, const QUrl &destDir)
+void FileOps::copy(const QList<QUrl> &input, const QUrl &destDir, int conflict)
 {
+    const QList<QUrl> urls = conflict == Skip ? withoutConflicts(input, conflicts(input, destDir)) : input;
     if (urls.isEmpty())
         return;
     begin(tr("Copie de %n élément(s)", "", int(urls.size())));
 #ifdef VINX_HAVE_KIO
-    auto *job = KIO::copy(urls, destDir);
-    job->setAutoRename(false);
+    auto *job = KIO::copy(urls, destDir, conflict == Replace ? KIO::Overwrite : KIO::DefaultFlags);
+    job->setAutoRename(conflict == KeepBoth);
     track(this, job, [this](bool ok, const QString &e) { finish(ok, e); },
           [this](int p) { m_progress = p; Q_EMIT progressChanged(); });
 #else
-    QTimer::singleShot(0, this, [this, urls, destDir] {
+    QTimer::singleShot(0, this, [this, urls, destDir, conflict] {
         QString error;
         bool ok = true;
         for (const QUrl &u : urls)
-            if (!(ok = copyRecursive(u.toLocalFile(), destDir.toLocalFile(), &error)))
+            if (!(ok = copyRecursive(u.toLocalFile(), destDir.toLocalFile(), &error, conflict == Replace)))
                 break;
         finish(ok, error);
     });
 #endif
 }
 
-void FileOps::move(const QList<QUrl> &urls, const QUrl &destDir)
+void FileOps::move(const QList<QUrl> &input, const QUrl &destDir, int conflict)
 {
+    const QList<QUrl> urls = conflict == Skip ? withoutConflicts(input, conflicts(input, destDir)) : input;
     if (urls.isEmpty())
         return;
     begin(tr("Déplacement de %n élément(s)", "", int(urls.size())));
 #ifdef VINX_HAVE_KIO
-    track(this, KIO::move(urls, destDir), [this](bool ok, const QString &e) { finish(ok, e); },
+    auto *job = KIO::move(urls, destDir, conflict == Replace ? KIO::Overwrite : KIO::DefaultFlags);
+    job->setAutoRename(conflict == KeepBoth);
+    track(this, job, [this](bool ok, const QString &e) { finish(ok, e); },
           [this](int p) { m_progress = p; Q_EMIT progressChanged(); });
 #else
-    QTimer::singleShot(0, this, [this, urls, destDir] {
+    QTimer::singleShot(0, this, [this, urls, destDir, conflict] {
         QString error;
         const QDir dest(destDir.toLocalFile());
         for (const QUrl &u : urls) {
             const QFileInfo fi(u.toLocalFile());
             if (fi.absolutePath() == dest.absolutePath())
                 continue;   // déjà dans ce dossier
+            if (dest.absolutePath().startsWith(fi.absoluteFilePath() + QLatin1Char('/')))
+                return finish(false, tr("Impossible de déplacer un dossier dans lui-même."));
+            if (conflict == Replace && dest.exists(fi.fileName())) {
+                const QFileInfo old(dest.filePath(fi.fileName()));
+                if (!(old.isDir() ? QDir(old.absoluteFilePath()).removeRecursively() : QFile::remove(old.absoluteFilePath())))
+                    return finish(false, tr("Impossible de remplacer « %1 ».").arg(fi.fileName()));
+            }
             const QString name = uniqueName(fi.fileName(), [&dest](const QString &n) { return dest.exists(n); });
             if (QFile::rename(fi.absoluteFilePath(), dest.filePath(name)))
                 continue;
@@ -292,16 +337,27 @@ bool FileOps::canPaste() const
     return d && d->hasUrls();
 }
 
-void FileOps::paste(const QUrl &destDir)
+QList<QUrl> FileOps::clipboardUrls() const
 {
     const QMimeData *d = QGuiApplication::clipboard()->mimeData();
-    if (!d || !d->hasUrls())
+    return d && d->hasUrls() ? d->urls() : QList<QUrl>();
+}
+
+bool FileOps::clipboardIsCut() const
+{
+    const QMimeData *d = QGuiApplication::clipboard()->mimeData();
+    return d && d->data(kCutMime) == "1";
+}
+
+void FileOps::paste(const QUrl &destDir, int conflict)
+{
+    const QList<QUrl> urls = clipboardUrls();
+    if (urls.isEmpty())
         return;
-    const QList<QUrl> urls = d->urls();
-    if (d->data(kCutMime) == "1") {
-        move(urls, destDir);
+    if (clipboardIsCut()) {
+        move(urls, destDir, conflict);
         QGuiApplication::clipboard()->clear();
     } else {
-        copy(urls, destDir);
+        copy(urls, destDir, conflict);
     }
 }

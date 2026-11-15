@@ -28,6 +28,25 @@ Window {
         onUrlChanged: { win.clearSelection(); filterField.text = "" }
         onCountChanged: if (win.current >= count) win.current = count - 1
     }
+    // Onglets : [{ url, back, forward }] ; la barre n'apparaît qu'à partir de deux onglets.
+    property var tabs: [{ url: win.startUrl, back: [], forward: [] }]
+    property int tab: 0
+    function saveTab() { const t = tabs.slice(); t[tab] = { url: folder.url, back: back, forward: forward }; tabs = t }
+    function switchTab(i) {
+        if (i < 0 || i >= tabs.length || i === tab) return
+        saveTab(); tab = i
+        back = tabs[i].back; forward = tabs[i].forward; folder.url = tabs[i].url
+    }
+    function newTab(url) { saveTab(); tabs = tabs.concat([{ url: url || folder.url, back: [], forward: [] }]); switchTab(tabs.length - 1) }
+    function closeTab(i) {
+        if (tabs.length <= 1) { Qt.quit(); return }
+        saveTab()
+        const t = tabs.slice(); t.splice(i, 1)
+        const next = Math.min(i <= tab ? Math.max(0, tab - 1) : tab, t.length - 1)
+        tabs = t; tab = -1; tab = next
+        back = tabs[next].back; forward = tabs[next].forward; folder.url = tabs[next].url
+    }
+    function tabTitle(t, i) { return i === tab ? folder.title : decodeURIComponent(t.url.toString().replace(/\/$/, "").split("/").pop()) || "/" }
     property var back: []
     property var forward: []
     property var selected: ({})          // nom → true
@@ -75,6 +94,14 @@ Window {
         if (!e.name) return
         if (e.isDir) go(e.url); else FileOps.open(e.url)
     }
+    function paste() { if (FileOps.canPaste) conflict.ask(FileOps.clipboardUrls(), folder.url, FileOps.clipboardIsCut()) }
+    // Glisser-déposer : déplacement par défaut (même disque local), copie avec Ctrl ou vers ailleurs.
+    function dropUrls(urls, dest, copyRequested) {
+        const list = urls.filter(u => u.toString() !== dest.toString())
+        if (!list.length || win.inTrash) return
+        const sameLocal = dest.toString().startsWith("file:") && list.every(u => u.toString().startsWith("file:"))
+        conflict.ask(list, dest, sameLocal && !copyRequested)
+    }
     function startRename() { if (current >= 0 && !inTrash) renaming = folder.get(current).name }
     function newFolder() { pendingSelect = FileOps.createFolder(folder.url, qsTr("Nouveau dossier")); pendingRename = true }
     property bool pendingRename: false
@@ -103,11 +130,15 @@ Window {
     Shortcut { sequence: "Ctrl+H"; onActivated: Preferences.setValue("files/showHidden", !folder.showHidden) }
     Shortcut { sequence: "Ctrl+Shift+N"; enabled: !win.inTrash; onActivated: win.newFolder() }
     Shortcut { sequence: "F5"; onActivated: folder.refresh() }
+    Shortcut { sequence: StandardKey.AddTab; onActivated: win.newTab() }
+    Shortcut { sequences: [StandardKey.Close]; onActivated: win.closeTab(win.tab) }
+    Shortcut { sequence: "Ctrl+Tab"; onActivated: win.switchTab((win.tab + 1) % win.tabs.length) }
+    Shortcut { sequence: "Ctrl+Shift+Tab"; onActivated: win.switchTab((win.tab + win.tabs.length - 1) % win.tabs.length) }
     Shortcut { sequence: "F2"; onActivated: win.startRename() }
     Shortcut { sequences: [StandardKey.SelectAll]; enabled: !win.renaming && !filterField.activeFocus; onActivated: win.selectAll() }
     Shortcut { sequences: [StandardKey.Copy]; enabled: !win.renaming && !filterField.activeFocus; onActivated: FileOps.setClipboard(win.selectedUrls(), false) }
     Shortcut { sequences: [StandardKey.Cut]; enabled: !win.renaming && !filterField.activeFocus && !win.inTrash; onActivated: FileOps.setClipboard(win.selectedUrls(), true) }
-    Shortcut { sequences: [StandardKey.Paste]; enabled: !win.renaming && !filterField.activeFocus && !win.inTrash; onActivated: FileOps.paste(folder.url) }
+    Shortcut { sequences: [StandardKey.Paste]; enabled: !win.renaming && !filterField.activeFocus && !win.inTrash; onActivated: win.paste() }
     Shortcut { sequences: [StandardKey.Delete]; enabled: !win.renaming && !filterField.activeFocus && !win.inTrash; onActivated: FileOps.trash(win.selectedUrls()) }
     Shortcut { sequence: "Ctrl+1"; onActivated: Preferences.setValue("files/view", "grid") }
     Shortcut { sequence: "Ctrl+2"; onActivated: Preferences.setValue("files/view", "list") }
@@ -119,6 +150,8 @@ Window {
         currentUrl: folder.url
         source: folder
         onOpenRequested: (url) => win.go(url)
+        // Corbeille : y déposer = mettre à la corbeille.
+        onDropRequested: (urls, dest, copy) => dest.toString().startsWith("trash:") ? FileOps.trash(urls) : win.dropUrls(urls, dest, copy)
     }
 
     // ---------- Barre d'outils ----------
@@ -173,10 +206,50 @@ Window {
         Rectangle { anchors { left: parent.left; right: parent.right; bottom: parent.bottom } height: 1; color: Theme.border }
     }
 
+    // ---------- Onglets ----------
+    Row {
+        id: tabBar
+        visible: win.tabs.length > 1
+        anchors { left: sidebar.right; right: parent.right; top: toolbar.bottom; leftMargin: Theme.space3; rightMargin: Theme.space3 }
+        height: visible ? 36 : 0
+        spacing: Theme.space1
+        Repeater {
+            model: win.tabs
+            delegate: Rectangle {
+                id: tabItem
+                required property var modelData
+                required property int index
+                readonly property bool current: index === win.tab
+                width: Math.min(200, (tabBar.width - (win.tabs.length - 1) * tabBar.spacing) / win.tabs.length)
+                height: 28; y: 4
+                radius: Theme.radiusSm
+                color: current ? Theme.surfaceActive : tabMouse.containsMouse ? Theme.surfaceHover : "transparent"
+                Label {
+                    anchors { left: parent.left; right: closeTab.left; leftMargin: Theme.space3; verticalCenter: parent.verticalCenter }
+                    text: win.tabTitle(tabItem.modelData, tabItem.index)
+                    font.weight: tabItem.current ? Font.DemiBold : Font.Normal; font.pixelSize: Theme.fsSm
+                    elide: Text.ElideRight
+                }
+                MouseArea {
+                    id: tabMouse; anchors.fill: parent; hoverEnabled: true
+                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton
+                    onClicked: (m) => m.button === Qt.MiddleButton ? win.closeTab(tabItem.index) : win.switchTab(tabItem.index)
+                }
+                IconButton {
+                    id: closeTab
+                    flat: true; width: 20; height: 20
+                    iconName: "close"; toolTip: qsTr("Fermer l'onglet (Ctrl+W)")
+                    anchors { right: parent.right; rightMargin: 4; verticalCenter: parent.verticalCenter }
+                    onClicked: win.closeTab(tabItem.index)
+                }
+            }
+        }
+    }
+
     // ---------- Contenu ----------
     Item {
         id: content
-        anchors { left: sidebar.right; right: parent.right; top: toolbar.bottom; bottom: status.top }
+        anchors { left: sidebar.right; right: parent.right; top: tabBar.bottom; bottom: status.top }
 
         Rectangle {
             id: trashBar
@@ -213,6 +286,12 @@ Window {
                 e.accepted = true
                 if (target >= 0 && target < folder.count) { win.select(target, e.modifiers); item.positionAt(target) }
             }
+        }
+        // Dépôt dans le dossier courant (depuis Fichiers ou une autre application).
+        DropArea {
+            anchors.fill: view
+            keys: ["text/uri-list"]
+            onDropped: (drop) => { win.dropUrls(drop.urls, folder.url, drop.proposedAction === Qt.CopyAction || (drop.modifiers & Qt.ControlModifier)); drop.accept() }
         }
         Component { id: gridComp; FileGrid { model: folder; host: win; onContextMenu: (i, x, y) => win.showMenu(i, x, y, this) } }
         Component { id: listComp; FileList { model: folder; host: win; onContextMenu: (i, x, y) => win.showMenu(i, x, y, this) } }
@@ -295,14 +374,15 @@ Window {
                 ? (onItem ? [{ text: qsTr("Restaurer"), act: "restore" }, { separator: true }, { text: qsTr("Supprimer définitivement"), act: "delete" }]
                           : [{ text: qsTr("Vider la corbeille"), act: "empty", enabled: folder.count > 0 }])
                 : onItem
-                ? [{ text: qsTr("Ouvrir"), act: "open", shortcut: qsTr("Entrée") },
+                ? [{ text: qsTr("Ouvrir"), act: "open", shortcut: qsTr("Entrée") }].concat(
+                   win.current >= 0 && folder.get(win.current).isDir ? [{ text: qsTr("Ouvrir dans un nouvel onglet"), act: "tab" }] : []).concat([
                    { separator: true },
                    { text: qsTr("Couper"), act: "cut", shortcut: "Ctrl+X" },
                    { text: qsTr("Copier"), act: "copy", shortcut: "Ctrl+C" },
                    { text: qsTr("Coller"), act: "paste", shortcut: "Ctrl+V", enabled: FileOps.canPaste },
                    { separator: true },
                    { text: qsTr("Renommer…"), act: "rename", shortcut: "F2", enabled: win.selectedCount <= 1 },
-                   { text: qsTr("Mettre à la corbeille"), act: "trash", shortcut: qsTr("Suppr") }]
+                   { text: qsTr("Mettre à la corbeille"), act: "trash", shortcut: qsTr("Suppr") }])
                 : [{ text: qsTr("Nouveau dossier"), act: "mkdir", shortcut: "Ctrl+Maj+N" },
                    { text: qsTr("Coller"), act: "paste", shortcut: "Ctrl+V", enabled: FileOps.canPaste },
                    { separator: true },
@@ -312,9 +392,10 @@ Window {
             onTriggered: (i, e) => {
                 switch (e.act) {
                 case "open": win.activate(win.current); break
+                case "tab": win.newTab(folder.get(win.current).url); break
                 case "cut": FileOps.setClipboard(win.selectedUrls(), true); break
                 case "copy": FileOps.setClipboard(win.selectedUrls(), false); break
-                case "paste": FileOps.paste(folder.url); break
+                case "paste": win.paste(); break
                 case "rename": win.startRename(); break
                 case "trash": FileOps.trash(win.selectedUrls()); break
                 case "mkdir": win.newFolder(); break
@@ -328,6 +409,8 @@ Window {
             }
         }
     }
+
+    ConflictDialog { id: conflict }
 
     Component.onCompleted: view.forceActiveFocus()
 }

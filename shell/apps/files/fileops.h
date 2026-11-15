@@ -25,8 +25,16 @@ public:
     int progress() const { return m_progress; }
     bool canPaste() const;
 
-    Q_INVOKABLE void copy(const QList<QUrl> &urls, const QUrl &destDir);
-    Q_INVOKABLE void move(const QList<QUrl> &urls, const QUrl &destDir);
+    // Conflits de noms : 0 = demander (KIO), 1 = remplacer, 2 = garder les deux, 3 = ignorer.
+    enum Conflict { Ask = 0, Replace = 1, KeepBoth = 2, Skip = 3 };
+    Q_ENUM(Conflict)
+    Q_INVOKABLE void copy(const QList<QUrl> &urls, const QUrl &destDir, int conflict = KeepBoth);
+    Q_INVOKABLE void move(const QList<QUrl> &urls, const QUrl &destDir, int conflict = KeepBoth);
+    // Noms déjà présents dans destDir (dossiers locaux) ; les éléments déjà dans destDir sont ignorés.
+    Q_INVOKABLE QStringList conflicts(const QList<QUrl> &urls, const QUrl &destDir) const;
+    // Presse-papiers : éléments à coller et opération (couper = déplacer).
+    Q_INVOKABLE QList<QUrl> clipboardUrls() const;
+    Q_INVOKABLE bool clipboardIsCut() const;
     Q_INVOKABLE void trash(const QList<QUrl> &urls);
     Q_INVOKABLE void emptyTrash();
     // Corbeille : remet les éléments à leur emplacement d'origine, ou les supprime.
@@ -40,7 +48,7 @@ public:
 
     // Presse-papiers système (compatible avec les autres gestionnaires de fichiers).
     Q_INVOKABLE void setClipboard(const QList<QUrl> &urls, bool cut);
-    Q_INVOKABLE void paste(const QUrl &destDir);
+    Q_INVOKABLE void paste(const QUrl &destDir, int conflict = KeepBoth);
 
     static bool validName(const QString &name);
 

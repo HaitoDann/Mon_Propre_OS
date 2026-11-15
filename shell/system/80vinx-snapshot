@@ -1,0 +1,2 @@
+// VinX OS : instantané du système (Timeshift) avant l'installation de paquets, une fois par jour.
+DPkg::Pre-Invoke { "[ -x /usr/lib/vinx/vinx-snapshots ] && /usr/lib/vinx/vinx-snapshots pre-update || true"; };
