@@ -26,7 +26,7 @@
 - **Fenêtres** : Breeze réglé (sans bordure, barre de titre sans séparateur, petits boutons,
   titre centré, ombre moyenne).
 - **Thème unifié** : thème d'icônes VinX, police Inter, palette VinX pour Qt (schémas de couleurs)
-  et GTK (Breeze-GTK synchronisé par kde-gtk-config).
+  et GTK (Breeze-GTK synchronisé par kde-config-gtk-style).
 
 ## Conséquences
 
