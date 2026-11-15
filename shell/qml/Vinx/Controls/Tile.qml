@@ -18,21 +18,19 @@ Item {
     Accessible.name: title
     Accessible.checked: checked
 
-    Rectangle {
+    Bevel {
         anchors.fill: parent
-        radius: Theme.radiusMd
-        color: mouse.containsMouse ? Theme.surfaceActive : Theme.surfaceHover
-        border.width: root.activeFocus ? 2 : 0
-        border.color: Theme.accentForeground
-        Behavior on color { ColorAnimation { duration: Theme.durFast } }
+        cut: 9
+        color: root.checked ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.22) : mouse.containsMouse ? Theme.surfaceActive : Theme.surfaceHover
+        borderWidth: root.activeFocus ? 2 : 0
+        borderColor: Theme.accentForeground
     }
     Row {
         anchors { left: parent.left; leftMargin: Theme.space2; verticalCenter: parent.verticalCenter }
         spacing: Theme.space2
-        Rectangle {
-            width: 30; height: 30; radius: 15
+        Bevel {
+            width: 30; height: 30; cut: 7
             color: root.checked ? Theme.accent : Theme.surfaceActive
-            Behavior on color { ColorAnimation { duration: Theme.durFast } }
             Icon {
                 anchors.centerIn: parent
                 width: 16; height: 16

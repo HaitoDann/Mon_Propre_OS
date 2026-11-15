@@ -10,6 +10,7 @@
 #include <QScreen>
 #include <QQmlProperty>
 #include <QRegion>
+#include <functional>
 #include <QApplication>
 #include <QGuiApplication>
 #include <QIcon>
@@ -164,6 +165,7 @@ int main(int argc, char *argv[])
 
     // ---------- Écran principal : dock et bulles de notification ----------
     QPointer<QWindow> dock, toasts;
+    std::function<void()> placeOnPrimaryRef;
     const auto placeOnPrimary = [&]() {
         QScreen *primary = QGuiApplication::primaryScreen();
         if (dock) dock->deleteLater();
@@ -173,7 +175,8 @@ int main(int argc, char *argv[])
         if (!dock || !toasts)
             return;
         // Dock : en bas au centre ; réserve la hauteur de son plateau.
-        configureLayer(dock, LSW::LayerTop, LSW::Anchors(LSW::AnchorBottom), dock->property("exclusiveZone").toInt(),
+        const bool vertical = dock->property("vertical").toBool();
+        configureLayer(dock, LSW::LayerTop, LSW::Anchors(vertical ? LSW::AnchorLeft : LSW::AnchorBottom), dock->property("exclusiveZone").toInt(),
                        LSW::KeyboardInteractivityNone, QStringLiteral("vinx-dock"));
         // Masquage automatique : zone réservée et zone sensible suivent l'état du dock.
         QWindow *dockWindow = dock;
@@ -189,12 +192,18 @@ int main(int argc, char *argv[])
         QQmlProperty(dock, QStringLiteral("exclusiveZone")).connectNotifySignal(syncTimer, SLOT(start()));
         QQmlProperty(dock, QStringLiteral("inputRect")).connectNotifySignal(syncTimer, SLOT(start()));
         syncDock();
+        // Changement de position (bas / gauche) : la surface est recréée avec le nouvel ancrage.
+        auto *replace = new QTimer(dock);
+        replace->setSingleShot(true);
+        QObject::connect(replace, &QTimer::timeout, &app, [&placeOnPrimaryRef] { placeOnPrimaryRef(); });
+        QQmlProperty(dock, QStringLiteral("vertical")).connectNotifySignal(replace, SLOT(start()));
         // Bulles : en haut à droite, sous la barre, sans zone réservée.
         configureLayer(toasts, LSW::LayerTop, LSW::Anchors(LSW::AnchorTop | LSW::AnchorRight), 0,
                        LSW::KeyboardInteractivityNone, QStringLiteral("vinx-notifications"));
         dock->show();
         toasts->show();
     };
+    placeOnPrimaryRef = placeOnPrimary;
     placeOnPrimary();
     QObject::connect(&app, &QGuiApplication::primaryScreenChanged, &app, placeOnPrimary);
 #endif

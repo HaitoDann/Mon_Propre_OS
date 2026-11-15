@@ -15,6 +15,7 @@ qt_add_qml_module(vinxcontrols
     QML_FILES
         Label.qml
         Surface.qml
+        Bevel.qml
         Elevation.qml
         Button.qml
         IconButton.qml

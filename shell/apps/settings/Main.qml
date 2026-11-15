@@ -149,7 +149,7 @@ Window {
                     model: Session.wallpapers()
                     Column {
                         required property var modelData
-                        readonly property bool current: String(win.pref("desktop/wallpaper", "/usr/share/wallpapers/VinX-Graphite/contents/images/3840x2160.png")) === modelData.path
+                        readonly property bool current: String(win.pref("desktop/wallpaper", "/usr/share/wallpapers/VinX-Biseau/contents/images/3840x2160.png")) === modelData.path
                         spacing: Theme.space2
                         Rectangle {
                             width: 200; height: 112; radius: Theme.radiusMd
@@ -198,6 +198,14 @@ Window {
                         from: 40; to: 64; stepSize: 2
                         value: Number(win.pref("dock/iconSize", Theme.dockIcon))
                         onMoved: (v) => Preferences.setValue("dock/iconSize", Math.round(v))
+                    }
+                }
+                SettingsRow {
+                    title: qsTr("Position")
+                    SegmentedControl {
+                        model: [qsTr("En bas"), qsTr("À gauche")]
+                        currentIndex: String(win.pref("dock/position", "bottom")) === "left" ? 1 : 0
+                        onActivated: (i) => Preferences.setValue("dock/position", i === 1 ? "left" : "bottom")
                     }
                 }
                 SettingsRow { title: qsTr("Agrandissement au survol"); Switch { checked: win.on("dock/magnify", true); onToggled: (c) => Preferences.setValue("dock/magnify", c) } }

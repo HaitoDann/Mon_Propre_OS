@@ -32,3 +32,16 @@
 
 - Les silhouettes existent en deux endroits (`AppIcon.qml`, `gen_icons.py`) : à modifier ensemble.
 - Ajouter une application connue = une ligne dans `gen_icons.py` (et `AppStyle.js` pour le dock).
+
+## Révision — direction « Biseau » (2026-11-15)
+
+Trois maquettes (Biseau, Îlot, Ligne) ont été présentées ; l'utilisateur a retenu **Biseau** :
+
+- **Signature** : coins haut-droit et bas-gauche coupés en biseau (angle du logo V/X), via le
+  composant `Bevel` : surfaces, menus, panneaux, notifications, boutons, tuiles, plateau du dock,
+  widgets. Les icônes rondes deviennent des tuiles biseautées ; les silhouettes (dossier, page,
+  enveloppe…) sont conservées.
+- **Fond** : sombre neutre technique, grille discrète et deux bandes violettes en V
+  (`vinx-biseau.svg`, fond par défaut « VinX Biseau »).
+- **Dock** : en bas par défaut (comme macOS), à gauche en option (Paramètres → Dock → Position) ;
+  l'agrandissement au survol n'existe qu'en bas.

@@ -76,7 +76,7 @@ Column {
             elevation: 2
             width: toasts.width
             height: content.implicitHeight + Theme.space3 * 2 + (actionRow.visible ? actionRow.height + Theme.space2 : 0)
-            border.color: critical ? Theme.danger : Theme.borderStrong
+            borderColor: critical ? Theme.danger : Theme.borderStrong
 
             opacity: 0
             Component.onCompleted: opacity = 1

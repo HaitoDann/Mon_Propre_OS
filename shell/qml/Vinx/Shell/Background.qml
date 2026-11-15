@@ -6,7 +6,7 @@ import Vinx.System
 Rectangle {
     id: bg
     readonly property string source: { Preferences.revision; return Preferences.value("desktop/wallpaper",
-        "/usr/share/wallpapers/VinX-Graphite/contents/images/3840x2160.png") }
+        "/usr/share/wallpapers/VinX-Biseau/contents/images/3840x2160.png") }
     // Widgets et menu contextuel du bureau.
     property bool interactive: true
     gradient: Gradient {
@@ -32,5 +32,10 @@ Rectangle {
             else ShellState.close()
         }
     }
-    DesktopWidgets { anchors.fill: parent; visible: bg.interactive }
+    // Dock à gauche : les widgets se décalent pour ne pas passer dessous.
+    DesktopWidgets {
+        anchors.fill: parent
+        anchors.leftMargin: (Preferences.revision, String(Preferences.value("dock/position", "bottom")) === "left") ? Theme.dockIcon + Theme.space6 * 2 : 0
+        visible: bg.interactive
+    }
 }

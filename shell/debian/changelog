@@ -1,3 +1,11 @@
+vinx-shell (0.12.0) trixie; urgency=medium
+
+  * Identité « Biseau » : coins biseautés (angle du logo) sur surfaces, boutons, tuiles et dock.
+  * Fond d'écran par défaut VinX Biseau (sombre technique).
+  * Dock en bas ou à gauche (option).
+
+ -- VinX OS <vinx@localhost>  Sun, 15 Nov 2026 23:28:11 +0000
+
 vinx-shell (0.11.0) trixie; urgency=medium
 
   * Paramètres : Écrans, Énergie, Imprimantes, Utilisateurs, Sauvegarde ; barre latérale par sections.

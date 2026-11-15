@@ -32,7 +32,7 @@ Window {
 
     Background { anchors.fill: parent }
     TopBar { id: bar; anchors { left: parent.left; right: parent.right; top: parent.top } }
-    Dock { id: dock; anchors { left: parent.left; right: parent.right; bottom: parent.bottom } height: 160 }
+    Dock { id: dock; anchors { left: parent.left; right: parent.right; bottom: parent.bottom; top: vertical ? bar.bottom : undefined } height: vertical ? undefined : 160 }
     Toasts { anchors { right: parent.right; top: bar.bottom; margins: Theme.space2 } }
     Panels { anchors.fill: parent }
 

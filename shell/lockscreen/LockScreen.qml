@@ -32,7 +32,7 @@ Item {
     Image {
         anchors.fill: parent
         readonly property string path: String(Preferences.value("desktop/wallpaper",
-                                         "/usr/share/wallpapers/VinX-Graphite/contents/images/3840x2160.png"))
+                                         "/usr/share/wallpapers/VinX-Biseau/contents/images/3840x2160.png"))
         source: Session.fileExists(path) ? "file://" + path : ""
         fillMode: Image.PreserveAspectCrop
         sourceSize: Qt.size(root.width, root.height)

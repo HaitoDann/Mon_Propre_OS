@@ -22,23 +22,16 @@ Item {
     Accessible.role: Accessible.Button
     Accessible.name: text
 
-    Rectangle {
+    Bevel {
         id: bg
         anchors.fill: parent
-        radius: root.pill ? height / 2 : Theme.radiusSm
-        color: root.variant === Button.Primary ? Theme.accent
+        cut: root.pill ? height / 2 : 7
+        color: root.variant === Button.Primary
+               ? (mouse.pressed ? Qt.darker(Theme.accent, 1.12) : mouse.containsMouse ? Qt.lighter(Theme.accent, 1.08) : Theme.accent)
              : root.variant === Button.Ghost ? (mouse.containsMouse ? Theme.surfaceHover : "transparent")
              : (mouse.pressed ? Theme.surfaceActive : mouse.containsMouse ? Theme.surfaceActive : Theme.surfaceHover)
-        Behavior on color { ColorAnimation { duration: Theme.durFast } }
-
-        // Assombrit / éclaircit le bouton principal au survol et à l'appui.
-        Rectangle {
-            anchors.fill: parent; radius: parent.radius
-            visible: root.variant === Button.Primary
-            color: mouse.pressed ? "#26000000" : mouse.containsMouse ? "#18FFFFFF" : "transparent"
-        }
-        border.width: root.activeFocus ? 2 : 0
-        border.color: Theme.accentForeground
+        borderWidth: root.activeFocus ? 2 : 0
+        borderColor: Theme.accentForeground
     }
 
     Row {
