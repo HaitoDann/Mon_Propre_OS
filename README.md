@@ -29,3 +29,7 @@ Ouvrez `prototype/index.html` dans un navigateur : aucune installation n'est né
 - [Architecture](docs/ARCHITECTURE.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Décisions (ADR)](docs/adr/)
+
+## Licence
+
+Code sous [GPL-3.0-or-later](LICENSE). Visuels sous CC BY-SA 4.0 ; logo et nom « VinX OS » réservés (voir [branding/LICENSE.md](branding/LICENSE.md) et [ADR 0012](docs/adr/0012-licence.md)).
