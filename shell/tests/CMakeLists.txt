@@ -5,7 +5,7 @@ if(QMLTESTRUNNER)
         COMMAND "${QMLTESTRUNNER}" -input "${CMAKE_CURRENT_SOURCE_DIR}" -import "${QT_QML_OUTPUT_DIRECTORY}")
     # Préférences isolées : les tests ne lisent jamais la configuration de l'utilisateur qui construit.
     set_tests_properties(qml-controls PROPERTIES ENVIRONMENT
-        "QT_QPA_PLATFORM=offscreen;XDG_CONFIG_HOME=${CMAKE_CURRENT_BINARY_DIR}/config-qml;LANG=C.UTF-8")
+        "QT_QPA_PLATFORM=offscreen;XDG_CONFIG_HOME=${CMAKE_CURRENT_BINARY_DIR}/config-qml;LANG=C.UTF-8;VINX_TASKS_BACKEND=preview")
 else()
     message(WARNING "qmltestrunner introuvable : tests QML désactivés")
 endif()

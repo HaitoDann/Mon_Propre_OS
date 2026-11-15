@@ -1,5 +1,6 @@
 pragma Singleton
 import QtQuick
+import Vinx.System
 
 // Fournisseur de tâches (applications épinglées + fenêtres ouvertes) partagé par le dock et la barre.
 // En session réelle : gestionnaire de tâches de KDE (fenêtres de KWin). Sinon : modèle d'aperçu.
@@ -9,6 +10,9 @@ QtObject {
     readonly property bool live: backend ? backend.live : false
 
     function _create() {
+        // VINX_TASKS_BACKEND=preview impose le modèle d'aperçu (tests, même si Plasma est installé).
+        if (Session.environment("VINX_TASKS_BACKEND") === "preview")
+            return Qt.createComponent("PreviewTasksBackend.qml").createObject(tasks)
         const kde = Qt.createComponent("KdeTasksBackend.qml")
         if (kde.status === Component.Ready) {
             const o = kde.createObject(tasks)

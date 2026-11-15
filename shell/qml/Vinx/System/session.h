@@ -32,6 +32,8 @@ public:
     Q_INVOKABLE QVariantList wallpapers() const;
     Q_INVOKABLE QString kernelVersion() const;
     Q_INVOKABLE QString hostName() const;
+    // Variable d'environnement (ex. VINX_TASKS_BACKEND=preview pour les tests).
+    Q_INVOKABLE QString environment(const QString &name) const { return qEnvironmentVariable(name.toLocal8Bit().constData()); }
 
 private:
     void callManager(const QString &method);
