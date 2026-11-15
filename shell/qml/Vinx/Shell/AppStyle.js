@@ -2,6 +2,7 @@
 // Icônes VinX des applications connues : pictogramme du jeu VinX + teinte sobre.
 // Les autres applications gardent l'icône de leur thème (image://theme/…).
 const known = {
+    "org.vinx.files":    { glyph: "folder",   tint: "#4C6FA8" },
     "org.kde.dolphin":   { glyph: "folder",   tint: "#4C6FA8" },
     "firefox-esr":       { glyph: "globe",    tint: "#B8693F" },
     "firefox":           { glyph: "globe",    tint: "#B8693F" },
@@ -27,7 +28,7 @@ function forApp(appId) {
 }
 
 // Applications épinglées par défaut (identifiants .desktop).
-const defaultPinned = ["org.kde.dolphin", "firefox-esr", "libreoffice-writer", "libreoffice-calc",
+const defaultPinned = ["org.vinx.files", "firefox-esr", "libreoffice-writer", "libreoffice-calc",
                        "thunderbird", "org.vinx.store", "org.vinx.settings"];
 
 // Préférence « liste » : QSettings peut renvoyer une chaîne seule pour une liste d'un élément.

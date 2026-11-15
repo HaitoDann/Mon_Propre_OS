@@ -27,7 +27,7 @@ dock.floating = true;
 var tasks = dock.addWidget("org.kde.plasma.icontasks");
 tasks.currentConfigGroup = ["General"];
 tasks.writeConfig("launchers", [
-    "applications:org.kde.dolphin.desktop",
+    "applications:org.vinx.files.desktop",
     "applications:firefox-esr.desktop",
     "applications:libreoffice-writer.desktop",
     "applications:libreoffice-calc.desktop",

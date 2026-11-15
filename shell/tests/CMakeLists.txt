@@ -50,3 +50,11 @@ file(REMOVE_RECURSE "${CMAKE_CURRENT_BINARY_DIR}/config-qml" "${CMAKE_CURRENT_BI
 add_test(NAME shell-autostart-restart
     COMMAND sh -c "printf '#!/bin/sh\\necho x >> \"$0.count\"\\nexit 3\\n' > crash.sh && chmod +x crash.sh && rm -f crash.sh.count && VINX_SESSION=1 VINX_SHELL_BIN=./crash.sh VINX_SHELL_MAX_CRASHES=3 sh ${CMAKE_SOURCE_DIR}/session/vinx-shell-autostart; [ $? -eq 3 ] && [ $(wc -l < crash.sh.count) -eq 3 ]"
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+
+# Fichiers : moteur local (le moteur KIO n'est compilé que si KIO est présent).
+qt_add_executable(tst_files tst_files.cpp
+    ${PROJECT_SOURCE_DIR}/apps/files/foldermodel.cpp ${PROJECT_SOURCE_DIR}/apps/files/fileops.cpp)
+target_include_directories(tst_files PRIVATE "${PROJECT_SOURCE_DIR}/apps/files")
+target_link_libraries(tst_files PRIVATE Qt6::Test Qt6::Gui Qt6::Qml)
+add_test(NAME files-local COMMAND tst_files)
+set_tests_properties(files-local PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;LANG=C.UTF-8")

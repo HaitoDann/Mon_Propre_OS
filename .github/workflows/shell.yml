@@ -17,7 +17,7 @@ jobs:
         run: |
           apt-get update
           apt-get install -y --no-install-recommends git ca-certificates build-essential dpkg-dev debhelper cmake python3 \
-            qt6-base-dev qt6-declarative-dev qt6-svg-dev liblayershellqtinterface-dev qml6-module-qtquick qml6-module-qtquick-window \
+            qt6-base-dev qt6-declarative-dev qt6-svg-dev liblayershellqtinterface-dev libkf6kio-dev qml6-module-qtquick qml6-module-qtquick-window \
             qml6-module-qtqml-workerscript qml6-module-qttest fonts-inter
       - uses: actions/checkout@v4
       - name: Vérifier la prise en charge de layer-shell

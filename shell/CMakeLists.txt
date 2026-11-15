@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(vinx-shell VERSION 0.8.0 LANGUAGES CXX)
+project(vinx-shell VERSION 0.9.0 LANGUAGES CXX)
 
 # Shell de bureau VinX OS — Qt 6 / QML, au-dessus de KWin.
 # Modules : Vinx.Theme, Vinx.Controls, Vinx.System, Vinx.Shell ; programmes vinx-shell et vinx-gallery.
@@ -10,6 +10,10 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 find_package(Qt6 6.4 REQUIRED COMPONENTS Core Gui Widgets Qml Quick Svg DBus)
 find_package(Python3 3.11 REQUIRED COMPONENTS Interpreter)
+# KIO (KDE Frameworks 6) : moteur du gestionnaire de fichiers (réseau, corbeille, conflits).
+# Facultatif : sans lui, Fichiers se limite aux dossiers locaux.
+find_package(KF6KIO 6.0 QUIET CONFIG)
+message(STATUS "KIO pour Fichiers : ${KF6KIO_FOUND}")
 qt_standard_project_setup()
 
 include(GNUInstallDirs)

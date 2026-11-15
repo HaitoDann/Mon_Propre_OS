@@ -1,3 +1,11 @@
+vinx-shell (0.9.0) trixie; urgency=medium
+
+  * Nouvelle application Fichiers (vinx-files) : interface VinX, moteur KIO.
+  * Installateur : chiffrement, Secure Boot, session VinX par défaut.
+  * Dépôt APT signé (GitHub Pages).
+
+ -- VinX OS <vinx@localhost>  Sun, 15 Nov 2026 19:29:02 +0000
+
 vinx-shell (0.8.0) trixie; urgency=medium
 
   * Mises à jour système (APT via PackageKit) et applications (Flatpak) dans le Store ;

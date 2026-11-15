@@ -1,4 +1,4 @@
-# Applications VinX : Paramètres, Store, Bienvenue (premier démarrage).
+# Applications VinX : Paramètres, Store, Bienvenue (premier démarrage), Fichiers.
 function(vinx_add_app target uri)
     cmake_parse_arguments(ARG "" "DESKTOP" "QML_FILES" ${ARGN})
     qt_add_executable(${target} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
@@ -13,3 +13,4 @@ endfunction()
 add_subdirectory(settings)
 add_subdirectory(store)
 add_subdirectory(welcome)
+add_subdirectory(files)

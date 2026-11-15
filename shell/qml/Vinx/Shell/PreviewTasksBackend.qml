@@ -27,7 +27,7 @@ QtObject {
                  IsActive: false, ChildCount: 0, IsStartup: false }
     }
     function _names() {
-        const n = { "org.kde.dolphin": "Fichiers", "firefox-esr": "Firefox", "libreoffice-writer": "Documents",
+        const n = { "org.vinx.files": "Fichiers", "org.kde.dolphin": "Dolphin", "firefox-esr": "Firefox", "libreoffice-writer": "Documents",
                     "libreoffice-calc": "Tableur", "thunderbird": "Courrier", "org.vinx.store": "Store",
                     "org.vinx.settings": "Paramètres", "org.kde.konsole": "Terminal" }
         return n

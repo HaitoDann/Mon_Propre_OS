@@ -1,0 +1,5 @@
+[Default Applications]
+inode/directory=org.vinx.files.desktop;org.kde.dolphin.desktop;
+
+[Added Associations]
+inode/directory=org.vinx.files.desktop;
