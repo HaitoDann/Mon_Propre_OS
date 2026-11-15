@@ -105,3 +105,14 @@ QVariantList Session::wallpapers() const
 
 QString Session::kernelVersion() const { return QSysInfo::kernelVersion(); }
 QString Session::hostName() const { return QSysInfo::machineHostName(); }
+
+QString Session::capture(const QString &program, const QStringList &arguments) const
+{
+    QProcess p;
+    p.start(program, arguments);
+    if (!p.waitForFinished(3000) || p.exitStatus() != QProcess::NormalExit || p.exitCode() != 0) {
+        p.kill();
+        return {};
+    }
+    return QString::fromUtf8(p.readAllStandardOutput());
+}

@@ -19,6 +19,7 @@ qt_add_qml_module(vinxsystem
         shellservice.h shellservice.cpp
         flatpak.h flatpak.cpp
         menubridge.h menubridge.cpp
+        updateparse.h updates.h updates.cpp
 )
 target_link_libraries(vinxsystem PRIVATE Qt6::Qml Qt6::Gui Qt6::Widgets Qt6::DBus)
 

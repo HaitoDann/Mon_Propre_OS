@@ -112,7 +112,7 @@ Rectangle {
             panel: "calendar"
             Accessible.name: qsTr("Calendrier et notifications")
             Label {
-                text: bar.now.toLocaleString(Qt.locale(), "ddd d MMM  HH:mm")
+                text: bar.now.toLocaleString(Qt.locale(), (Preferences.revision, String(Preferences.value("clock/24h", true)) === "false") ? "ddd d MMM  h:mm AP" : "ddd d MMM  HH:mm")
                 font.weight: Font.Medium
             }
         }

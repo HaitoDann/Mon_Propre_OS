@@ -26,9 +26,13 @@ Window {
         { id: "wallpaper", title: qsTr("Fond d'écran"), icon: "image" },
         { id: "desktop", title: qsTr("Bureau"), icon: "grid" },
         { id: "dock", title: qsTr("Dock"), icon: "folder" },
+        { id: "network", title: qsTr("Réseau"), icon: "globe" },
+        { id: "sound", title: qsTr("Son"), icon: "volume" },
         { id: "notifications", title: qsTr("Notifications"), icon: "bell" },
         { id: "accessibility", title: qsTr("Accessibilité"), icon: "eye" },
         { id: "keyboard", title: qsTr("Clavier"), icon: "keyboard" },
+        { id: "datetime", title: qsTr("Date et heure"), icon: "calendar" },
+        { id: "updates", title: qsTr("Mises à jour"), icon: "restart" },
         { id: "about", title: qsTr("À propos"), icon: "info" }
     ]
     property string page: pages.some(p => p.id === startPage) ? startPage : "appearance"
@@ -183,6 +187,139 @@ Window {
                     title: qsTr("Ne pas déranger")
                     description: qsTr("Masque les bulles ; les notifications restent dans le calendrier.")
                     Switch { checked: win.on("notifications/dnd", false); onToggled: (c) => Preferences.setValue("notifications/dnd", c) }
+                }
+            }
+
+            // Réseau
+            Column {
+                visible: win.page === "network"
+                width: parent.width
+                SettingsRow {
+                    title: qsTr("État")
+                    Label { text: !Network.available ? qsTr("Indisponible") : Network.connected ? qsTr("Connecté · %1").arg(Network.connectionName) : qsTr("Déconnecté"); level: Label.Secondary }
+                }
+                SettingsRow {
+                    visible: Network.wireless
+                    title: qsTr("Wi-Fi")
+                    Switch { checked: Network.wirelessEnabled; onToggled: (c) => Network.wirelessEnabled = c }
+                }
+                SettingsRow {
+                    visible: Bluetooth.available
+                    title: qsTr("Bluetooth")
+                    Switch { checked: Bluetooth.powered; onToggled: (c) => Bluetooth.powered = c }
+                }
+                SettingsRow {
+                    title: qsTr("Réseaux, VPN et appareils Bluetooth")
+                    description: qsTr("Choix du réseau Wi-Fi, mots de passe, VPN, appairage.")
+                    Button { text: qsTr("Ouvrir…"); variant: Button.Secondary; onClicked: Session.launch("systemsettings", ["kcm_networkmanagement"]) }
+                }
+            }
+
+            // Son
+            Column {
+                visible: win.page === "sound"
+                width: parent.width
+                onVisibleChanged: if (visible) Audio.refreshSinks()
+                SettingsRow {
+                    title: qsTr("Volume")
+                    description: Audio.available ? qsTr("%1 %").arg(Math.round(Audio.volume * 100)) : qsTr("Indisponible")
+                    Slider { width: 220; enabled: Audio.available; value: Audio.volume; onMoved: (v) => Audio.volume = v }
+                }
+                SettingsRow {
+                    title: qsTr("Couper le son")
+                    Switch { checked: Audio.muted; enabled: Audio.available; onToggled: (c) => Audio.muted = c }
+                }
+                Label { visible: Audio.sinks.length > 0; text: qsTr("SORTIE"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 32; verticalAlignment: Text.AlignBottom }
+                Repeater {
+                    model: Audio.sinks
+                    delegate: SettingsRow {
+                        required property var modelData
+                        title: modelData.name
+                        Button {
+                            text: modelData.isDefault ? qsTr("Utilisée") : qsTr("Utiliser")
+                            variant: modelData.isDefault ? Button.Ghost : Button.Secondary
+                            enabled: !modelData.isDefault
+                            onClicked: Audio.setDefaultSink(modelData.id)
+                        }
+                    }
+                }
+            }
+
+            // Date et heure (timedatectl ; les modifications passent par polkit)
+            Column {
+                id: dt
+                visible: win.page === "datetime"
+                width: parent.width
+                property var info: ({})
+                property var zones: []
+                function load() {
+                    const o = {}
+                    Session.capture("timedatectl", ["show"]).split("\n").forEach(l => { const i = l.indexOf("="); if (i > 0) o[l.slice(0, i)] = l.slice(i + 1) })
+                    info = o
+                    if (!zones.length) zones = Session.capture("timedatectl", ["list-timezones"]).split("\n").filter(z => z.indexOf("/") > 0)
+                }
+                onVisibleChanged: if (visible) load()
+                Timer { id: dtReload; interval: 1500; onTriggered: dt.load() }
+                SettingsRow {
+                    title: qsTr("Réglage automatique")
+                    description: qsTr("Synchronise l'heure par Internet (NTP).")
+                    Switch {
+                        checked: dt.info.NTP === "yes"
+                        onToggled: (c) => { Session.launch("timedatectl", ["set-ntp", c ? "true" : "false"]); dtReload.restart() }
+                    }
+                }
+                SettingsRow {
+                    title: qsTr("Fuseau horaire")
+                    description: dt.info.Timezone || qsTr("Inconnu")
+                    Button { text: zonePicker.visible ? qsTr("Fermer") : qsTr("Changer…"); variant: Button.Secondary; onClicked: zonePicker.visible = !zonePicker.visible }
+                }
+                Column {
+                    id: zonePicker
+                    visible: false
+                    width: parent.width
+                    spacing: Theme.space2
+                    Rectangle {
+                        width: parent.width; height: 32; radius: Theme.radiusSm
+                        color: Theme.surfaceSunken; border.width: 1; border.color: Theme.border
+                        TextInput {
+                            id: zoneFilter
+                            anchors { fill: parent; leftMargin: Theme.space3; rightMargin: Theme.space3 }
+                            verticalAlignment: TextInput.AlignVCenter
+                            color: Theme.text; font.pixelSize: Theme.fsMd
+                            Label { visible: !zoneFilter.text; text: qsTr("Filtrer (ex. Paris)"); level: Label.Tertiary; anchors.verticalCenter: parent.verticalCenter }
+                        }
+                    }
+                    ListView {
+                        width: parent.width; height: 220; clip: true
+                        model: dt.zones.filter(z => z.toLowerCase().indexOf(zoneFilter.text.toLowerCase()) >= 0)
+                        delegate: MenuItem {
+                            required property var modelData
+                            width: ListView.view.width
+                            text: modelData.replace(/_/g, " ")
+                            checked: modelData === dt.info.Timezone
+                            onTriggered: { Session.launch("timedatectl", ["set-timezone", modelData]); zonePicker.visible = false; dtReload.restart() }
+                        }
+                    }
+                }
+                SettingsRow {
+                    title: qsTr("Format 24 heures")
+                    Switch { checked: win.on("clock/24h", true); onToggled: (c) => Preferences.setValue("clock/24h", c) }
+                }
+            }
+
+            // Mises à jour
+            Column {
+                visible: win.page === "updates"
+                width: parent.width
+                SettingsRow {
+                    title: qsTr("Vérifier automatiquement")
+                    description: qsTr("Toutes les 6 heures ; une notification signale les mises à jour disponibles.")
+                    Switch { checked: win.on("updates/autoCheck", true); onToggled: (c) => Preferences.setValue("updates/autoCheck", c) }
+                }
+                SettingsRow {
+                    title: qsTr("Installer les mises à jour")
+                    description: qsTr("Système (Debian) et applications (Flathub), depuis le Store.")
+                    Button { text: qsTr("Ouvrir…"); variant: Button.Secondary; onClicked: Session.launch("vinx-store", ["--page", "updates"]) }
                 }
             }
 

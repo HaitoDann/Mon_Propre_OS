@@ -18,7 +18,7 @@ Rules-Requires-Root: no
 
 Package: vinx-shell
 Architecture: any
-Depends: ${shlibs:Depends},
+Depends: ${shlibs:Depends},, packagekit-tools
          ${misc:Depends},
          qml6-module-qtquick,
          qml6-module-qtquick-window,

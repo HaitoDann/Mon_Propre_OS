@@ -18,3 +18,7 @@ kcalc
 kde-spectacle
 kde-config-sddm
 libkf6config-bin
+
+# Mises à jour système depuis le Store (PackageKit + polkit)
+packagekit
+packagekit-tools

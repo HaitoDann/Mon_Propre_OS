@@ -1,4 +1,5 @@
 #include "flatpak.h"
+#include "updateparse.h"
 
 #include <QDBusConnection>
 #include <QDBusInterface>
@@ -40,16 +41,47 @@ void Flatpak::refresh()
         return;
     auto *p = new QProcess(this);
     connect(p, &QProcess::finished, this, [this, p] {
-        QStringList ids = QString::fromUtf8(p->readAllStandardOutput()).split(QLatin1Char('\n'), Qt::SkipEmptyParts);
-        for (QString &id : ids)
-            id = id.trimmed();
+        const QVariantList apps = parseFlatpakColumns(QString::fromUtf8(p->readAllStandardOutput()),
+                                                      {QStringLiteral("id"), QStringLiteral("name"), QStringLiteral("version")});
         p->deleteLater();
-        if (ids != m_installed) {
+        QStringList ids;
+        for (const QVariant &a : apps)
+            ids.append(a.toMap().value(QStringLiteral("id")).toString());
+        if (apps != m_installedApps) {
             m_installed = ids;
+            m_installedApps = apps;
             Q_EMIT installedChanged();
         }
     });
-    p->start(QStringLiteral("flatpak"), {QStringLiteral("list"), QStringLiteral("--app"), QStringLiteral("--columns=application")});
+    p->start(QStringLiteral("flatpak"), {QStringLiteral("list"), QStringLiteral("--app"),
+                                         QStringLiteral("--columns=application,name,version")});
+}
+
+void Flatpak::search(const QString &query)
+{
+    const int serial = ++m_searchSerial;
+    if (!m_available || query.trimmed().size() < 2) {
+        m_results.clear();
+        m_searching = false;
+        Q_EMIT searchResultsChanged();
+        return;
+    }
+    m_searching = true;
+    Q_EMIT searchResultsChanged();
+    auto *p = new QProcess(this);
+    connect(p, &QProcess::finished, this, [this, p, serial] {
+        p->deleteLater();
+        if (serial != m_searchSerial)
+            return;   // une recherche plus récente est en cours
+        QVariantList all = parseFlatpakColumns(QString::fromUtf8(p->readAllStandardOutput()),
+                                               {QStringLiteral("id"), QStringLiteral("name"), QStringLiteral("summary")});
+        if (all.size() > 40)
+            all = all.mid(0, 40);
+        m_results = all;
+        m_searching = false;
+        Q_EMIT searchResultsChanged();
+    });
+    p->start(QStringLiteral("flatpak"), {QStringLiteral("search"), QStringLiteral("--columns=application,name,description"), query.trimmed()});
 }
 
 bool Flatpak::start(const QStringList &args, const QString &task, const QString &doneMessage)

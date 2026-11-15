@@ -32,6 +32,9 @@ public:
     Q_INVOKABLE QVariantList wallpapers() const;
     Q_INVOKABLE QString kernelVersion() const;
     Q_INVOKABLE QString hostName() const;
+    // Exécute une commande courte et renvoie sa sortie standard (vide en cas d'échec ;
+    // délai maximal 3 s). Réservé aux lectures rapides (timedatectl show…).
+    Q_INVOKABLE QString capture(const QString &program, const QStringList &arguments = {}) const;
     // Variable d'environnement (ex. VINX_TASKS_BACKEND=preview pour les tests).
     Q_INVOKABLE QString environment(const QString &name) const { return qEnvironmentVariable(name.toLocal8Bit().constData()); }
 

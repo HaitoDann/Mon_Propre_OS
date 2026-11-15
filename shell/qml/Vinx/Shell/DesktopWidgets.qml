@@ -21,7 +21,7 @@ Item {
         defaultPosition: Qt.point(Theme.space5, widgets.firstY)
         Column {
             spacing: Theme.space1
-            Label { text: Qt.formatTime(widgets.now, "HH:mm"); font.pixelSize: Theme.fsDisplay; font.weight: Font.Light }
+            Label { text: Qt.formatTime(widgets.now, (Preferences.revision, String(Preferences.value("clock/24h", true)) === "false") ? "h:mm AP" : "HH:mm"); font.pixelSize: Theme.fsDisplay; font.weight: Font.Light }
             Label {
                 text: { const s = widgets.now.toLocaleDateString(Qt.locale(), "dddd d MMMM"); return s.charAt(0).toUpperCase() + s.slice(1) }
                 level: Label.Secondary

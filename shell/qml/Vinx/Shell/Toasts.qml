@@ -14,6 +14,32 @@ Column {
 
     ListModel { id: live }
 
+    // Vérification automatique des mises à jour (session VinX réelle uniquement) :
+    // 3 min après l'ouverture de session, puis toutes les 6 h.
+    Timer {
+        id: updateTimer
+        readonly property int rev: Preferences.revision
+        running: Session.environment("VINX_SESSION") === "1"
+                 && (rev, String(Preferences.value("updates/autoCheck", true)) !== "false")
+        interval: 3 * 60 * 1000
+        repeat: true
+        onTriggered: { interval = 6 * 3600 * 1000; Updates.check() }
+    }
+    property int notifiedCount: 0
+    Connections {
+        target: Updates
+        function onFinished(ok) {
+            if (Updates.applying || Updates.checking || Updates.count === 0 || Updates.count === toasts.notifiedCount) return
+            toasts.notifiedCount = Updates.count
+            Notifications.notifyFull(qsTr("Mises à jour"), qsTr("Mises à jour disponibles"),
+                                     qsTr("%n mise(s) à jour prête(s) à être installée(s).", "", Updates.count),
+                                     ["vinx-updates", qsTr("Afficher")], { "desktop-entry": "org.vinx.store" })
+        }
+    }
+    Connections {
+        target: Notifications
+        function onActionInvoked(id, key) { if (key === "vinx-updates") Session.launch("vinx-store", ["--page", "updates"]) }
+    }
     Connections {
         target: Notifications
         function onPopup(id) {

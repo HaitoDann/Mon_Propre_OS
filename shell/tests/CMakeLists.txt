@@ -17,6 +17,11 @@ target_include_directories(tst_wpctl PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/Sys
 target_link_libraries(tst_wpctl PRIVATE Qt6::Test)
 add_test(NAME wpctl-parsing COMMAND tst_wpctl)
 
+qt_add_executable(tst_updates tst_updates.cpp)
+target_include_directories(tst_updates PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
+target_link_libraries(tst_updates PRIVATE Qt6::Test)
+add_test(NAME update-parsing COMMAND tst_updates)
+
 qt_add_executable(tst_desktopentry tst_desktopentry.cpp)
 target_include_directories(tst_desktopentry PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
 target_link_libraries(tst_desktopentry PRIVATE Qt6::Test)

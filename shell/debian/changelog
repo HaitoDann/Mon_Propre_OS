@@ -1,3 +1,12 @@
+vinx-shell (0.8.0) trixie; urgency=medium
+
+  * Mises à jour système (APT via PackageKit) et applications (Flatpak) dans le Store ;
+    vérification automatique toutes les 6 h avec notification.
+  * Store : onglets Découvrir, Rechercher (Flathub), Installées, Mises à jour.
+  * Paramètres : pages Réseau, Son, Date et heure, Mises à jour ; format 12/24 h.
+
+ -- VinX OS <vinx@localhost>  Sun, 15 Nov 2026 18:34:21 +0000
+
 vinx-shell (0.7.0) trixie; urgency=medium
 
   * Accessibilité : réduire les animations, taille du texte (Paramètres).
