@@ -19,3 +19,8 @@ License: GPL-3.0-or-later
  .
  On Debian systems, the complete text of the GNU General Public
  License version 3 can be found in "/usr/share/common-licenses/GPL-3".
+
+Files: ../branding/fonts/ibm-plex-sans/*
+Copyright: 2017 IBM Corp.
+License: OFL-1.1
+ See /usr/share/fonts/opentype/ibm-plex-sans/OFL.txt

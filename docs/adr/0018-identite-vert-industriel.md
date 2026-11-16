@@ -15,7 +15,7 @@ Les versions précédentes (gris foncé + violet, biseau partout) étaient jugé
 |---|---|
 | Couleur | Vert du logo `#10DD8C`, seul accent, jamais en dégradé. Encre `#06130D` posée dessus (10,6:1) ; nuance foncée `#0A7F51` pour le texte vert sur fond clair (4,7:1). |
 | Thème par défaut | **Clair** : blanc cassé chaud `#ECEBE6` / surfaces `#F8F7F4`, encre `#141414`. Sombre disponible. |
-| Police | **IBM Plex Sans** (paquet `fonts-ibm-plex`, licence OFL). Pas d'étiquettes en police technique. |
+| Police | **IBM Plex Sans** (fournie avec vinx-shell dans `/usr/share/fonts/opentype/ibm-plex-sans`, licence SIL OFL). Pas d'étiquettes en police technique. |
 | Fond d'écran | « VinX Logo » : grille de points + logo vert en grand, décalé à droite (variante sombre). |
 | Icônes VinX | Tuile neutre arrondie, pictogramme à l'encre au trait, un point de couleur par application. |
 | Applications tierces | Logo officiel (Firefox, LibreOffice, Thunderbird…), posé sur la même tuile neutre. |

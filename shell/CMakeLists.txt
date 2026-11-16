@@ -48,3 +48,6 @@ add_custom_command(
     COMMENT "Génération du thème d'icônes VinX")
 add_custom_target(vinx-icon-theme ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/icon-theme/VinX/index.theme")
 install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/icon-theme/VinX" DESTINATION "${CMAKE_INSTALL_DATADIR}/icons")
+
+# Police système IBM Plex Sans (SIL OFL 1.1), fournie avec VinX (ADR 0018).
+install(DIRECTORY "${VINX_BRANDING_DIR}/fonts/ibm-plex-sans" DESTINATION "${CMAKE_INSTALL_DATADIR}/fonts/opentype")

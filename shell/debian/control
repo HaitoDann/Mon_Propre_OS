@@ -26,7 +26,6 @@ Depends: ${shlibs:Depends},
          qml6-module-qtquick-window,
          qml6-module-qtquick-shapes,
          qml6-module-qtqml-workerscript,
-         fonts-ibm-plex,
          fonts-inter,
          packagekit-tools
 Recommends: plasma-workspace,

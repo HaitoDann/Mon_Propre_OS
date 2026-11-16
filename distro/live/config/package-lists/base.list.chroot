@@ -18,7 +18,6 @@ firmware-misc-nonfree
 firmware-sof-signed
 plymouth
 plymouth-themes
-fonts-ibm-plex
 fonts-inter
 fonts-noto-core
 fonts-noto-color-emoji
