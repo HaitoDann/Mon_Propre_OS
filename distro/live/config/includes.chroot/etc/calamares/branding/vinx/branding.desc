@@ -32,7 +32,7 @@ slideshow:               "show.qml"
 slideshowAPI: 2
 
 style:
-   SidebarBackground:        "#141517"
+   SidebarBackground:        "#121413"
    SidebarText:              "#ECECEE"
-   SidebarTextCurrent:       "#FFFFFF"
-   SidebarBackgroundCurrent: "#7358BD"
+   SidebarTextCurrent:       "#06130D"
+   SidebarBackgroundCurrent: "#10DD8C"

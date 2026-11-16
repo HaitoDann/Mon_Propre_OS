@@ -12,10 +12,10 @@ gradient = "logo/vinx-logo-gradient.svg"
 wallpaper = "wallpaper/vinx-graphite.svg"
 
 [colors]
-logo = "#A855F7"            # violet du logo — réservé au logo (voir docs/DESIGN.md)
-accent = "#7358BD"          # accent de l'interface (violet du logo atténué)
-accent_light_theme = "#6548AE"
-logo_gradient = ["#6366F1", "#A855F7"]
+logo = "#10DD8C"            # violet du logo — réservé au logo (voir docs/DESIGN.md)
+accent = "#10DD8C"          # accent de l'interface (violet du logo atténué)
+accent_light_theme = "#0A7F51"
+logo_gradient = ["#10DD8C", "#10DD8C"]
 background_dark = "#141517"
 background_light = "#F5F5F7"
 success = "#22C55E"

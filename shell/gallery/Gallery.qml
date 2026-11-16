@@ -27,7 +27,7 @@ Window {
         ["folder", "#4C6FA8", "Fichiers"], ["globe", "#B8693F", "Firefox"],
         ["doc", "#4F60A3", "Documents"], ["table", "#3E8460", "Tableur"],
         ["mail", "#3F7896", "Courrier"], ["calendar", "#A8514F", "Calendrier"],
-        ["bag", "#7358BD", "Store"], ["sliders", "#5F6270", "Paramètres"]
+        ["bag", "#10DD8C", "Store"], ["sliders", "#5F6270", "Paramètres"]
     ]
     readonly property var icons: ["search", "wifi", "wifi-off", "bluetooth", "volume", "volume-off", "brightness",
         "battery", "bell", "bell-off", "moon", "sun", "power", "lock", "restart", "logout", "info", "grid", "plus",
@@ -58,7 +58,7 @@ Window {
                     model: ["transparent", "#3B82C4", "#3E8460", "#B8693F", "#A8514F", "#6B6E76"]
                     Rectangle {
                         width: 20; height: 20; radius: 10
-                        color: index === 0 ? (Theme.dark ? "#7358BD" : "#6548AE") : modelData
+                        color: index === 0 ? "#10DD8C" : modelData
                         border.width: Qt.colorEqual(Theme.accentOverride, modelData) ? 2 : 0
                         border.color: Theme.text
                         MouseArea { anchors.fill: parent; onClicked: Theme.accentOverride = modelData }
@@ -170,8 +170,8 @@ Window {
                     Column {
                         spacing: Theme.space2
                         Label { text: "14:08"; font.pixelSize: Theme.fsDisplay; font.weight: Font.Light }
-                        Label { text: "Titre — Inter 20"; font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold }
-                        Label { text: "Texte courant — Inter 13" }
+                        Label { text: "Titre — IBM Plex Sans 20"; font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold }
+                        Label { text: "Texte courant — IBM Plex Sans 13" }
                         Label { text: "Texte secondaire"; level: Label.Secondary }
                         Label { text: "Texte tertiaire"; level: Label.Tertiary }
                     }

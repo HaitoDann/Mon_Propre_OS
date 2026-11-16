@@ -1,0 +1,8 @@
+{
+    "KPlugin": {
+        "Id": "VinX-Logo-Sombre",
+        "Name": "VinX Logo (sombre)",
+        "Authors": [ { "Name": "VinX OS" } ],
+        "License": "CC-BY-SA-4.0"
+    }
+}

@@ -141,7 +141,7 @@ Window {
             visible: win.step === 5
             anchors.centerIn: parent
             spacing: Theme.space4
-            AppIcon { size: 64; iconName: "bag"; tint: "#7358BD"; anchors.horizontalCenter: parent.horizontalCenter }
+            AppIcon { size: 64; iconName: "bag"; tint: "#10DD8C"; anchors.horizontalCenter: parent.horizontalCenter }
             Label { text: qsTr("Ajoutez ce dont vous avez besoin"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
             Label {
                 width: 460; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap

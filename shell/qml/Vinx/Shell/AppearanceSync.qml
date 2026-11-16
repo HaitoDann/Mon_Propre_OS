@@ -7,7 +7,7 @@ import Vinx.System
 QtObject {
     function truthy(v, fallback) { return v === undefined || v === null ? fallback : v === true || v === "true" }
     function apply() {
-        Theme.dark = truthy(Preferences.value("appearance/dark"), true)
+        Theme.dark = truthy(Preferences.value("appearance/dark"), false)   // thème clair par défaut
         const accent = Preferences.value("appearance/accent", "")
         Theme.accentOverride = accent ? accent : "transparent"
         Theme.reduceMotion = truthy(Preferences.value("accessibility/reduceMotion"), false)

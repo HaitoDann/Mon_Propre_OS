@@ -32,13 +32,13 @@ Item {
     Image {
         anchors.fill: parent
         readonly property string path: String(Preferences.value("desktop/wallpaper",
-                                         "/usr/share/wallpapers/VinX-Biseau/contents/images/3840x2160.png"))
+                                         "/usr/share/wallpapers/VinX-Logo/contents/images/3840x2160.png"))
         source: Session.fileExists(path) ? "file://" + path : ""
         fillMode: Image.PreserveAspectCrop
         sourceSize: Qt.size(root.width, root.height)
         asynchronous: true
     }
-    Rectangle { anchors.fill: parent; color: "#000000"; opacity: Theme.dark ? 0.55 : 0.35 }
+    Rectangle { anchors.fill: parent; color: Theme.background; opacity: 0.3 }
 
     // ---------- Heure et date ----------
     Column {
@@ -47,14 +47,14 @@ Item {
         Label {
             anchors.horizontalCenter: parent.horizontalCenter
             text: Qt.formatTime(root.now, "HH:mm")
-            color: "white"
+            color: Theme.text
             font.pixelSize: 96
             font.weight: Font.Light
         }
         Label {
             anchors.horizontalCenter: parent.horizontalCenter
             text: { const s = root.now.toLocaleDateString(Qt.locale(), "dddd d MMMM"); return s.charAt(0).toUpperCase() + s.slice(1) }
-            color: "#E6FFFFFF"
+            color: Theme.textSecondary
             font.pixelSize: Theme.fsLg
         }
     }
@@ -81,7 +81,7 @@ Item {
             Label {
                 anchors.centerIn: parent
                 text: (kscreenlocker_userName || "?").charAt(0).toUpperCase()
-                color: "white"
+                color: Theme.accentText
                 font.pixelSize: 30
                 font.weight: Font.DemiBold
             }
@@ -89,7 +89,7 @@ Item {
         Label {
             anchors.horizontalCenter: parent.horizontalCenter
             text: kscreenlocker_userName || qsTr("Session verrouillée")
-            color: "white"
+            color: Theme.text
             font.pixelSize: Theme.fsLg
             font.weight: Font.DemiBold
         }
@@ -97,9 +97,9 @@ Item {
         // Champ de mot de passe
         Bevel {
             width: parent.width; height: 42; cut: 10
-            color: "#1AFFFFFF"
+            color: Theme.surfaceSunken
             borderWidth: password.activeFocus ? 2 : 1
-            borderColor: password.activeFocus ? Theme.accentForeground : "#33FFFFFF"
+            borderColor: password.activeFocus ? Theme.accentForeground : Theme.borderStrong
             opacity: authenticator.busy ? 0.6 : 1
 
             TextInput {
@@ -107,7 +107,7 @@ Item {
                 anchors { left: parent.left; right: go.left; leftMargin: Theme.space3; rightMargin: Theme.space2; verticalCenter: parent.verticalCenter }
                 echoMode: TextInput.Password
                 passwordCharacter: "•"
-                color: "white"
+                color: Theme.text
                 selectionColor: Theme.accent
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fsLg
@@ -122,7 +122,7 @@ Item {
                     visible: password.text === ""
                     anchors.verticalCenter: parent.verticalCenter
                     text: qsTr("Mot de passe")
-                    color: "#99FFFFFF"
+                    color: Theme.textTertiary
                     font.pixelSize: Theme.fsLg
                 }
             }
@@ -131,8 +131,8 @@ Item {
                 id: go
                 anchors { right: parent.right; rightMargin: 6; verticalCenter: parent.verticalCenter }
                 width: 32; height: 30; cut: 8
-                color: password.text !== "" ? Theme.accent : "#26FFFFFF"
-                Icon { anchors.centerIn: parent; name: "chevron-r"; color: "white" }
+                color: password.text !== "" ? Theme.accent : Theme.surfaceActive
+                Icon { anchors.centerIn: parent; name: "chevron-r"; color: password.text !== "" ? Theme.accentText : Theme.text }
                 MouseArea { anchors.fill: parent; onClicked: root.tryUnlock() }
                 Accessible.role: Accessible.Button
                 Accessible.name: qsTr("Déverrouiller")
@@ -145,7 +145,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
             text: root.message
-            color: "#FFD7D7"
+            color: Theme.danger
             font.pixelSize: Theme.fsSm
             visible: text !== ""
         }
@@ -158,13 +158,13 @@ Item {
         spacing: Theme.space4
         Bevel {
             width: sleepRow.implicitWidth + Theme.space4 * 2; height: 34; cut: 9
-            color: sleepMouse.containsMouse ? "#33FFFFFF" : "#1AFFFFFF"
+            color: sleepMouse.containsMouse ? Theme.surfaceActive : Theme.surfaceGlassStrong
             Row {
                 id: sleepRow
                 anchors.centerIn: parent
                 spacing: Theme.space2
-                Icon { name: "moon"; color: "white"; anchors.verticalCenter: parent.verticalCenter }
-                Label { text: qsTr("Mettre en veille"); color: "white" }
+                Icon { name: "moon"; color: Theme.text; anchors.verticalCenter: parent.verticalCenter }
+                Label { text: qsTr("Mettre en veille"); color: Theme.text }
             }
             MouseArea { id: sleepMouse; anchors.fill: parent; hoverEnabled: true; onClicked: root.suspendToRam() }
         }

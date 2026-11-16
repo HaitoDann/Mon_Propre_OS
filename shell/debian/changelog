@@ -1,3 +1,12 @@
+vinx-shell (0.14.0) trixie; urgency=medium
+
+  * Nouvelle identité : vert du logo, thème clair par défaut, police IBM Plex Sans.
+  * Fond d'écran VinX Logo ; icônes VinX à tuile neutre et point de couleur.
+  * Logos officiels pour les applications tierces.
+  * Démarrage, connexion et verrouillage au nouveau style.
+
+ -- VinX OS <vinx@localhost>  Mon, 16 Nov 2026 15:34:12 +0000
+
 vinx-shell (0.13.1) trixie; urgency=medium
 
   * Formes douces par défaut ; biseau réservé aux signatures (logo, fond, trait d'accent).

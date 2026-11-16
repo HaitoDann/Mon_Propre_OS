@@ -2,7 +2,7 @@
 widgetStyle=Breeze
 
 [kdeglobals][General]
-ColorScheme=VinXDark
+ColorScheme=VinXLight
 AccentColor=115,88,189
 
 [kdeglobals][Icons]
@@ -19,4 +19,4 @@ theme=Breeze
 Theme=org.kde.Breeze
 
 [Wallpaper]
-Image=VinX-Biseau
+Image=VinX-Logo

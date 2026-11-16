@@ -128,7 +128,7 @@ Window {
                                 required property string modelData
                                 readonly property bool current: String(win.pref("appearance/accent", "")) === modelData
                                 width: 22; height: 22; radius: 11
-                                color: modelData === "" ? (Theme.dark ? "#7358BD" : "#6548AE") : modelData
+                                color: modelData === "" ? "#10DD8C" : modelData
                                 border.width: current ? 2 : 0
                                 border.color: Theme.text
                                 Accessible.role: Accessible.RadioButton
@@ -149,7 +149,7 @@ Window {
                     model: Session.wallpapers()
                     Column {
                         required property var modelData
-                        readonly property bool current: String(win.pref("desktop/wallpaper", "/usr/share/wallpapers/VinX-Biseau/contents/images/3840x2160.png")) === modelData.path
+                        readonly property bool current: String(win.pref("desktop/wallpaper", "/usr/share/wallpapers/VinX-Logo/contents/images/3840x2160.png")) === modelData.path
                         spacing: Theme.space2
                         Rectangle {
                             width: 200; height: 112; radius: Theme.radiusMd

@@ -14,7 +14,7 @@ r() { rsvg-convert "$@"; }
 mkdir -p "$BOOT"
 
 # Fonds d'écran (paquets de fonds d'écran Plasma)
-for w in VinX-Biseau:vinx-biseau VinX-Graphite:vinx-graphite VinX:vinx-nebula VinX-Minimal:vinx-nebula-minimal; do
+for w in VinX-Logo:vinx-logo-clair VinX-Logo-Sombre:vinx-logo-sombre VinX-Biseau:vinx-biseau VinX-Graphite:vinx-graphite VinX:vinx-nebula VinX-Minimal:vinx-nebula-minimal; do
 	dir="$CHROOT/usr/share/wallpapers/${w%%:*}/contents"
 	src="$B/wallpaper/${w##*:}.svg"
 	mkdir -p "$dir/images"
@@ -31,8 +31,8 @@ r -w 256 -h 256 --keep-aspect-ratio "$B/logo/vinx-logo-gradient.svg" -o "$CHROOT
 
 # Écran de démarrage Plymouth (thème script « vinx »)
 PLY="$CHROOT/usr/share/plymouth/themes/vinx"
-r -w 200 "$B/logo/vinx-logo-gradient.svg" -o "$PLY/logo.png"
-r -w 1920 -h 1080 "$B/wallpaper/vinx-biseau.svg" -o "$PLY/background.png"
+r -w 200 "$B/logo/vinx-logo.svg" -o "$PLY/logo.png"
+r -w 1920 -h 1080 "$B/boot/plymouth-background.svg" -o "$PLY/background.png"
 r "$B/boot/plymouth-bar-track.svg" -o "$PLY/bar-track.png"
 r "$B/boot/plymouth-bar-fill.svg" -o "$PLY/bar-fill.png"
 r "$B/boot/plymouth-entry.svg" -o "$PLY/entry.png"

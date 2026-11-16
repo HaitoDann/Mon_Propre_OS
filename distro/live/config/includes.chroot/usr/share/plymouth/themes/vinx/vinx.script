@@ -1,8 +1,8 @@
 // Écran de démarrage VinX OS (Plymouth, module script).
-// Fond « Biseau », logo, barre de progression biseautée, champ du mot de passe de chiffrement.
+// Fond clair à points, logo vert, barre de progression, champ du mot de passe de chiffrement.
 
-Window.SetBackgroundTopColor(0.055, 0.059, 0.067);
-Window.SetBackgroundBottomColor(0.055, 0.059, 0.067);
+Window.SetBackgroundTopColor(0.925, 0.922, 0.902);
+Window.SetBackgroundBottomColor(0.925, 0.922, 0.902);
 sw = Window.GetWidth();
 sh = Window.GetHeight();
 
@@ -56,13 +56,13 @@ fun display_password_callback(text, count) {
     entry.SetOpacity(1);
     label = "Mot de passe du disque";
     if (text != "") label = text;
-    t = Image.Text(label, 0.93, 0.93, 0.95, 1, "Inter 12");
+    t = Image.Text(label, 0.08, 0.08, 0.08, 1, "IBM Plex Sans 12");
     prompt.SetImage(t);
     prompt.SetPosition(sw / 2 - t.GetWidth() / 2, bar_y + 40 - t.GetHeight() - 12, 10);
     prompt.SetOpacity(1);
     dots = "";
     for (i = 0; i < count && i < 32; i++) dots = dots + "●";
-    b = Image.Text(dots, 0.93, 0.93, 0.95, 1, "Inter 12");
+    b = Image.Text(dots, 0.08, 0.08, 0.08, 1, "IBM Plex Sans 12");
     bullets.SetImage(b);
     bullets.SetPosition(sw / 2 - entry_img.GetWidth() / 2 + 16, bar_y + 40 + entry_img.GetHeight() / 2 - b.GetHeight() / 2, 11);
     bullets.SetOpacity(1);
@@ -81,7 +81,7 @@ Plymouth.SetDisplayNormalFunction(display_normal_callback);
 // ---------- Messages ----------
 message = Sprite();
 fun message_callback(text) {
-    m = Image.Text(text, 0.65, 0.65, 0.70, 1, "Inter 10");
+    m = Image.Text(text, 0.37, 0.37, 0.35, 1, "IBM Plex Sans 10");
     message.SetImage(m);
     message.SetPosition(sw / 2 - m.GetWidth() / 2, sh - 60, 10);
 }

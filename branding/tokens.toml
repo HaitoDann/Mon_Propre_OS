@@ -1,16 +1,16 @@
 # Design tokens VinX OS — source unique du style (voir docs/DESIGN.md).
 # Consommé par shell/tools/gen_theme.py (→ Theme.qml). Couleurs : #RRGGBB ou #RRGGBBAA.
 #
-# Principes : base neutre (gris légèrement froids, jamais de noir pur ni de fond teinté),
-# un seul accent sobre réservé aux états et à l'action principale, contrastes WCAG AA
-# (texte ≥ 4,5:1, éléments d'interface ≥ 3:1). Le violet de la marque est réservé au logo.
+# Identité (ADR 0018) : design industriel et tech sobre. Base claire chaude (blanc cassé, encre
+# noire), un seul accent : le vert du logo, jamais en dégradé. Contrastes WCAG AA : le vert est clair,
+# on écrit donc en encre foncée dessus ; en texte sur fond clair, on utilise sa nuance foncée.
 
 [brand]
-# Violet du logo atténué (contraste AA avec le texte blanc), utilisé avec parcimonie.
-accent_fill = ["#7358BD", "#6548AE"]        # fonds de bouton principal, interrupteurs actifs
-accent_foreground = ["#A58FE0", "#6548AE"]  # texte, icônes et anneaux de focus colorés
-accent_text = "#FFFFFF"                     # texte posé sur l'accent
-logo = "#A855F7"                            # couleur du logo (marque) — pas pour l'interface
+# Vert du logo : fonds de bouton principal, interrupteurs actifs, curseurs.
+accent_fill = ["#10DD8C", "#10DD8C"]
+accent_foreground = ["#10DD8C", "#0A7F51"]  # texte, icônes et anneaux de focus colorés (≥ 4,5:1)
+accent_text = "#06130D"                     # encre posée sur le vert (≥ 10:1)
+logo = "#10DD8C"                            # couleur du logo
 
 [state]
 success = "#3FA66B"
@@ -18,7 +18,7 @@ warning = "#D4A13C"
 danger = "#E5484D"
 
 [font]
-family = "Inter"
+family = "IBM Plex Sans"
 xs = 11
 sm = 12
 md = 13
@@ -53,16 +53,16 @@ slow = 320
 
 # Couleurs dépendant du thème : [sombre, clair]
 [themed]
-background = ["#141517", "#F5F5F7"]
-surface_glass = ["#1C1D20E0", "#FFFFFFD9"]         # barre, dock (flou fourni par KWin)
-surface_glass_strong = ["#232427", "#FFFFFF"]       # menus et panneaux : opaques (surface « élevée »)
-surface_window = ["#1B1C1F", "#FFFFFF"]
-surface_sunken = ["#17181A", "#F0F0F2"]
-surface_hover = ["#FFFFFF0F", "#0000000A"]
-surface_active = ["#FFFFFF1A", "#00000012"]
-text = ["#ECECEE", "#1D1D1F"]
-text_secondary = ["#A1A1A8", "#6B6B73"]
-text_tertiary = ["#76767E", "#8E8E96"]
-border = ["#FFFFFF12", "#0000000F"]
-border_strong = ["#FFFFFF1F", "#0000001A"]
+background = ["#121413", "#ECEBE6"]
+surface_glass = ["#1A1C1BEB", "#F8F7F4EB"]         # barre, dock (flou fourni par KWin)
+surface_glass_strong = ["#1E2120", "#F8F7F4"]       # menus et panneaux : opaques (surface « élevée »)
+surface_window = ["#1A1C1B", "#F8F7F4"]
+surface_sunken = ["#151716", "#EFEEE9"]
+surface_hover = ["#FFFFFF0F", "#1414140A"]
+surface_active = ["#FFFFFF1A", "#14141414"]
+text = ["#ECECEA", "#141414"]
+text_secondary = ["#A3A6A3", "#5F5E5A"]
+text_tertiary = ["#7A7D7A", "#8A8983"]
+border = ["#FFFFFF14", "#D8D6CF"]
+border_strong = ["#FFFFFF24", "#C9C7C0"]
 shadow = ["#00000066", "#0000001F"]

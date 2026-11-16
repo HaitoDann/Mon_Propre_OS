@@ -6,7 +6,7 @@ import Vinx.System
 Rectangle {
     id: bg
     readonly property string source: { Preferences.revision; return Preferences.value("desktop/wallpaper",
-        "/usr/share/wallpapers/VinX-Biseau/contents/images/3840x2160.png") }
+        "/usr/share/wallpapers/VinX-Logo/contents/images/3840x2160.png") }
     // Widgets et menu contextuel du bureau.
     property bool interactive: true
     gradient: Gradient {

@@ -81,12 +81,12 @@ Item {
             const darkWindow = Theme.surfaceWindow.toString()   // copie (les couleurs sont des références)
             Theme.dark = false
             verify(darkWindow !== Theme.surfaceWindow.toString())
-            compare(Theme.accent, Qt.color("#6548AE"))
+            compare(Theme.accent, Qt.color("#10DD8C"))
             Theme.accentOverride = "#EC4899"
             compare(Theme.accent, Qt.color("#EC4899"))
             Theme.accentOverride = "transparent"
             Theme.dark = true
-            compare(Theme.accent, Qt.color("#7358BD"))
+            compare(Theme.accent, Qt.color("#10DD8C"))
         }
 
         function test_menu_opens_triggers_and_closes() {

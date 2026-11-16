@@ -2,15 +2,15 @@
 LookAndFeelPackage=org.vinx.desktop
 
 [General]
-ColorScheme=VinXDark
-AccentColor=115,88,189
-font=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
-menuFont=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
-toolBarFont=Inter,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
-smallestReadableFont=Inter,8,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+ColorScheme=VinXLight
+AccentColor=16,221,140
+font=IBM Plex Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+menuFont=IBM Plex Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+toolBarFont=IBM Plex Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+smallestReadableFont=IBM Plex Sans,8,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 
 [WM]
-activeFont=Inter,10,-1,5,600,0,0,0,0,0,0,0,0,0,0,1
+activeFont=IBM Plex Sans,10,-1,5,600,0,0,0,0,0,0,0,0,0,0,1
 
 [Icons]
 Theme=VinX

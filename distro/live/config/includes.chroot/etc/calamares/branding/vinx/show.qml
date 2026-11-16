@@ -27,13 +27,13 @@ Presentation {
         Text {
             anchors.top: logo.bottom; anchors.topMargin: 32
             anchors.horizontalCenter: parent.horizontalCenter
-            color: "#ECECEE"; font.pixelSize: 26; font.family: "Inter"
+            color: "#ECECEE"; font.pixelSize: 26; font.family: "IBM Plex Sans"
             text: "Bienvenue dans VinX OS"
         }
         Text {
             anchors.top: logo.bottom; anchors.topMargin: 78
             anchors.horizontalCenter: parent.horizontalCenter
-            color: "#A1A1A8"; font.pixelSize: 16; font.family: "Inter"
+            color: "#A1A1A8"; font.pixelSize: 16; font.family: "IBM Plex Sans"
             text: "Simple. Ergonomique. Stable."
         }
     }
@@ -45,7 +45,7 @@ Presentation {
             width: parent.width * 0.7
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
-            color: "#ECECEE"; font.pixelSize: 20; font.family: "Inter"
+            color: "#ECECEE"; font.pixelSize: 20; font.family: "IBM Plex Sans"
             text: "Prêt à travailler dès le premier démarrage :\nFirefox, LibreOffice, Thunderbird et vos outils essentiels sont déjà installés."
         }
     }
@@ -57,7 +57,7 @@ Presentation {
             width: parent.width * 0.7
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
-            color: "#ECECEE"; font.pixelSize: 20; font.family: "Inter"
+            color: "#ECECEE"; font.pixelSize: 20; font.family: "IBM Plex Sans"
             text: "Ajoutez des fonctionnalités en un clic depuis le Store :\npacks développement, jeux, multimédia et graphisme."
         }
     }
