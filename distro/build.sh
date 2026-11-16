@@ -10,7 +10,7 @@ OUT="$DISTRO/out"
 VERSION="$(sed -n 's/^version *= *"\(.*\)"/\1/p' "$ROOT/branding/brand.toml")"
 
 [ "$(id -u)" -eq 0 ] || { echo "Ce script doit être lancé en root." >&2; exit 1; }
-for cmd in lb debootstrap rsvg-convert rsync dpkg-buildpackage gpg; do
+for cmd in lb debootstrap rsvg-convert rsync dpkg-buildpackage; do
 	command -v "$cmd" >/dev/null || {
 		echo "Commande manquante : $cmd" >&2
 		echo "Installez : sudo apt install live-build debootstrap librsvg2-bin rsync dpkg-dev debhelper" >&2
@@ -58,6 +58,7 @@ fi
 # Dépôt APT VinX (mises à jour du shell sans réinstaller) : actif dès que la clé publique existe.
 KEYRING="$DISTRO/keys/vinx-archive-keyring.asc"
 if [ -f "$KEYRING" ]; then
+	command -v gpg >/dev/null || { echo "Commande manquante : gpg (sudo apt install gnupg)" >&2; exit 1; }
 	echo "==> Ajout du dépôt APT VinX"
 	mkdir -p "$WORK/config/includes.chroot/usr/share/keyrings" "$WORK/config/includes.chroot/etc/apt/sources.list.d"
 	gpg --dearmor < "$KEYRING" > "$WORK/config/includes.chroot/usr/share/keyrings/vinx-archive-keyring.gpg"
