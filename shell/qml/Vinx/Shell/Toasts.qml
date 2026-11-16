@@ -78,8 +78,13 @@ Column {
             height: content.implicitHeight + Theme.space3 * 2 + (actionRow.visible ? actionRow.height + Theme.space2 : 0)
             borderColor: critical ? Theme.danger : Theme.borderStrong
 
+            // Arrivée signature : glissement le long de la diagonale du biseau, trait d'accent.
             opacity: 0
-            Component.onCompleted: opacity = 1
+            property real shift: 14
+            transform: Translate { x: toast.shift; y: -toast.shift }
+            Behavior on shift { NumberAnimation { duration: Theme.durNormal; easing.type: Easing.OutCubic } }
+            Behavior on edgeProgress { NumberAnimation { duration: Theme.durSlow; easing.type: Easing.OutCubic } }
+            Component.onCompleted: { opacity = 1; shift = 0; edgeProgress = 1 }
             Behavior on opacity { NumberAnimation { duration: Theme.durNormal } }
 
             // Les notifications critiques restent affichées jusqu'à ce qu'on les ferme.

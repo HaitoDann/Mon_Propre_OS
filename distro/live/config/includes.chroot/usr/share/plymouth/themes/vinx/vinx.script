@@ -1,0 +1,93 @@
+// Écran de démarrage VinX OS (Plymouth, module script).
+// Fond « Biseau », logo, barre de progression biseautée, champ du mot de passe de chiffrement.
+
+Window.SetBackgroundTopColor(0.055, 0.059, 0.067);
+Window.SetBackgroundBottomColor(0.055, 0.059, 0.067);
+sw = Window.GetWidth();
+sh = Window.GetHeight();
+
+bg = Sprite(Image("background.png").Scale(sw, sh));
+bg.SetZ(-100);
+
+logo_img = Image("logo.png");
+logo = Sprite(logo_img);
+logo.SetX(sw / 2 - logo_img.GetWidth() / 2);
+logo.SetY(sh * 0.42 - logo_img.GetHeight() / 2);
+logo.SetOpacity(0);
+
+track_img = Image("bar-track.png");
+fill_img = Image("bar-fill.png");
+bar_x = sw / 2 - track_img.GetWidth() / 2;
+bar_y = sh * 0.42 + logo_img.GetHeight() / 2 + 48;
+track = Sprite(track_img);
+track.SetPosition(bar_x, bar_y, 1);
+fill = Sprite();
+fill.SetPosition(bar_x, bar_y, 2);
+
+// ---------- Apparition du logo et progression ----------
+fade = 0;
+fun refresh_callback() {
+    if (fade < 1) {
+        fade = fade + 0.04;
+        if (fade > 1) fade = 1;
+        logo.SetOpacity(fade);
+    }
+}
+Plymouth.SetRefreshFunction(refresh_callback);
+
+fun progress_callback(duration, progress) {
+    w = Math.Int(fill_img.GetWidth() * progress);
+    if (w < 2) w = 2;
+    fill.SetImage(fill_img.Scale(w, fill_img.GetHeight()));
+}
+Plymouth.SetBootProgressFunction(progress_callback);
+
+// ---------- Mot de passe (disque chiffré) ----------
+entry_img = Image("entry.png");
+entry = Sprite();
+entry.SetPosition(sw / 2 - entry_img.GetWidth() / 2, bar_y + 40, 10);
+prompt = Sprite();
+bullets = Sprite();
+
+fun display_password_callback(text, count) {
+    track.SetOpacity(0);
+    fill.SetOpacity(0);
+    entry.SetImage(entry_img);
+    entry.SetOpacity(1);
+    label = "Mot de passe du disque";
+    if (text != "") label = text;
+    t = Image.Text(label, 0.93, 0.93, 0.95, 1, "Inter 12");
+    prompt.SetImage(t);
+    prompt.SetPosition(sw / 2 - t.GetWidth() / 2, bar_y + 40 - t.GetHeight() - 12, 10);
+    prompt.SetOpacity(1);
+    dots = "";
+    for (i = 0; i < count && i < 32; i++) dots = dots + "●";
+    b = Image.Text(dots, 0.93, 0.93, 0.95, 1, "Inter 12");
+    bullets.SetImage(b);
+    bullets.SetPosition(sw / 2 - entry_img.GetWidth() / 2 + 16, bar_y + 40 + entry_img.GetHeight() / 2 - b.GetHeight() / 2, 11);
+    bullets.SetOpacity(1);
+}
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+
+fun display_normal_callback() {
+    entry.SetOpacity(0);
+    prompt.SetOpacity(0);
+    bullets.SetOpacity(0);
+    track.SetOpacity(1);
+    fill.SetOpacity(1);
+}
+Plymouth.SetDisplayNormalFunction(display_normal_callback);
+
+// ---------- Messages ----------
+message = Sprite();
+fun message_callback(text) {
+    m = Image.Text(text, 0.65, 0.65, 0.70, 1, "Inter 10");
+    message.SetImage(m);
+    message.SetPosition(sw / 2 - m.GetWidth() / 2, sh - 60, 10);
+}
+Plymouth.SetMessageFunction(message_callback);
+
+fun quit_callback() {
+    logo.SetOpacity(1);
+}
+Plymouth.SetQuitFunction(quit_callback);

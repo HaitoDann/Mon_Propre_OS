@@ -29,8 +29,13 @@ mkdir -p "$CHROOT/usr/share/pixmaps" "$CHROOT/usr/share/icons/hicolor/256x256/ap
 r -w 512 "$B/logo/vinx-logo.svg" -o "$CHROOT/usr/share/pixmaps/vinx-logo.png"
 r -w 256 -h 256 --keep-aspect-ratio "$B/logo/vinx-logo-gradient.svg" -o "$CHROOT/usr/share/icons/hicolor/256x256/apps/vinx-logo.png"
 
-# Écran de démarrage Plymouth (filigrane centré)
-r -w 220 "$B/logo/vinx-logo-gradient.svg" -o "$CHROOT/usr/share/plymouth/themes/vinx/watermark.png"
+# Écran de démarrage Plymouth (thème script « vinx »)
+PLY="$CHROOT/usr/share/plymouth/themes/vinx"
+r -w 200 "$B/logo/vinx-logo-gradient.svg" -o "$PLY/logo.png"
+r -w 1920 -h 1080 "$B/wallpaper/vinx-biseau.svg" -o "$PLY/background.png"
+r "$B/boot/plymouth-bar-track.svg" -o "$PLY/bar-track.png"
+r "$B/boot/plymouth-bar-fill.svg" -o "$PLY/bar-fill.png"
+r "$B/boot/plymouth-entry.svg" -o "$PLY/entry.png"
 
 # Installateur Calamares
 CAL="$CHROOT/etc/calamares/branding/vinx"

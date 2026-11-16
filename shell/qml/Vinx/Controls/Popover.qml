@@ -66,11 +66,18 @@ Item {
         onWidthChanged: root.reposition()
         onHeightChanged: root.reposition()
 
+        // Animation signature VinX : le panneau arrive le long de la diagonale du biseau
+        // (depuis le coin coupé), puis un trait d'accent dessine la coupe.
         opacity: root.open ? 1 : 0
-        scale: root.open ? 1 : 0.97
-        transformOrigin: root.edge === Popover.Above ? Item.Bottom : Item.Top
         Behavior on opacity { NumberAnimation { duration: Theme.durFast } }
-        Behavior on scale { NumberAnimation { duration: Theme.durFast; easing.type: Easing.OutCubic } }
+        transform: Translate {
+            x: root.open ? 0 : 10
+            y: root.open ? 0 : (root.edge === Popover.Above ? 10 : -10)
+            Behavior on x { NumberAnimation { duration: Theme.durNormal; easing.type: Easing.OutCubic } }
+            Behavior on y { NumberAnimation { duration: Theme.durNormal; easing.type: Easing.OutCubic } }
+        }
+        edgeProgress: root.open ? 1 : 0
+        Behavior on edgeProgress { NumberAnimation { duration: Theme.durSlow; easing.type: Easing.OutCubic } }
 
         MouseArea { anchors.fill: parent }   // les clics dans le panneau ne le ferment pas
         Item {

@@ -1,3 +1,11 @@
+vinx-shell (0.13.0) trixie; urgency=medium
+
+  * Écran de connexion SDDM « vinx » (style Biseau).
+  * Écran de démarrage Plymouth propre : barre biseautée, mot de passe de chiffrement.
+  * Animation signature : arrivée en diagonale et trait d'accent sur l'angle coupé.
+
+ -- VinX OS <vinx@localhost>  Mon, 16 Nov 2026 14:07:46 +0000
+
 vinx-shell (0.12.0) trixie; urgency=medium
 
   * Identité « Biseau » : coins biseautés (angle du logo) sur surfaces, boutons, tuiles et dock.

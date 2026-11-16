@@ -1,20 +1,10 @@
 #!/bin/sh
-# Écran de démarrage : thème « vinx » dérivé du thème spinner (logo VinX au centre).
+# Écran de démarrage : thème script « vinx » (logo, barre biseautée, mot de passe de chiffrement).
 set -e
-SRC=/usr/share/plymouth/themes/spinner
 DST=/usr/share/plymouth/themes/vinx
-
-for f in "$SRC"/*.png; do
-	[ "$(basename "$f")" = watermark.png ] || cp "$f" "$DST/"
-done
-
-sed \
-	-e 's/^Name=.*/Name=VinX OS/' \
-	-e "s#^ImageDir=.*#ImageDir=$DST#" \
-	-e 's/^BackgroundStartColor=.*/BackgroundStartColor=0x141517/' \
-	-e 's/^BackgroundEndColor=.*/BackgroundEndColor=0x141517/' \
-	-e 's/^WatermarkVerticalAlignment=.*/WatermarkVerticalAlignment=.42/' \
-	"$SRC/spinner.plymouth" > "$DST/vinx.plymouth"
+# Thème script propre à VinX (vinx.plymouth, vinx.script et images fournis par includes.chroot
+# et render-assets.sh) : rien à dériver d'un autre thème.
+[ -f "$DST/vinx.script" ] || { echo "Thème Plymouth VinX incomplet" >&2; exit 1; }
 
 # Debian (desktop-base) déclare son propre thème « Debian 13 » via les alternatives,
 # prioritaire sur plymouthd.conf : on y enregistre le thème VinX avec une priorité supérieure.

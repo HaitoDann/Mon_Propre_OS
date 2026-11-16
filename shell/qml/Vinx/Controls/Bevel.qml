@@ -15,6 +15,9 @@ Shape {
     readonly property real c: Math.max(0, Math.min(cut, width / 3, height / 3))
     readonly property real r: Math.min(corner, c)
     readonly property real h: borderWidth / 2
+    // Animation signature : trait d'accent qui se dessine le long de la coupe (0 → 1).
+    property real edgeProgress: 0
+    property color edgeColor: Theme.accentForeground
 
     ShapePath {
         fillColor: root.color
@@ -32,5 +35,13 @@ Shape {
                 + "H" + (x0 + root.c) + "L" + x0 + " " + (y1 - root.c)
                 + "V" + (y0 + root.r) + "Q" + x0 + " " + y0 + " " + (x0 + root.r) + " " + y0 + "Z"
         }
+    }
+    ShapePath {
+        strokeColor: root.edgeProgress > 0 ? root.edgeColor : "transparent"
+        strokeWidth: 2
+        fillColor: "transparent"
+        capStyle: ShapePath.RoundCap
+        startX: root.width - root.c - 1; startY: 1
+        PathLine { x: root.width - root.c - 1 + (root.c) * root.edgeProgress; y: 1 + root.c * root.edgeProgress }
     }
 }

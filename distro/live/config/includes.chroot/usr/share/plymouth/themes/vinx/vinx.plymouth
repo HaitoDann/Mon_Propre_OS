@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=VinX OS
+Description=Démarrage VinX OS : logo, barre de progression biseautée, saisie du mot de passe de chiffrement
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/vinx
+ScriptFile=/usr/share/plymouth/themes/vinx/vinx.script

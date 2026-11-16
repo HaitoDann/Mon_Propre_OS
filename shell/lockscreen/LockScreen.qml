@@ -63,16 +63,21 @@ Item {
     Column {
         id: form
         visible: root.locked
+        // Arrivée signature : glissement le long de la diagonale du biseau.
+        opacity: root.locked ? 1 : 0
+        transform: Translate { x: root.locked ? 0 : 16; y: root.locked ? 0 : -16
+            Behavior on x { NumberAnimation { duration: Theme.durSlow; easing.type: Easing.OutCubic } }
+            Behavior on y { NumberAnimation { duration: Theme.durSlow; easing.type: Easing.OutCubic } } }
+        Behavior on opacity { NumberAnimation { duration: Theme.durNormal } }
         anchors { horizontalCenter: parent.horizontalCenter; top: parent.verticalCenter; topMargin: Theme.space5 }
         spacing: Theme.space3
         width: 300
 
         // Pastille avec l'initiale de l'utilisateur
-        Rectangle {
+        Bevel {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: 72; height: 72; radius: 36
-            color: "#33FFFFFF"
-            border.width: 1; border.color: "#40FFFFFF"
+            width: 68; height: 68; cut: 15
+            color: Theme.accent
             Label {
                 anchors.centerIn: parent
                 text: (kscreenlocker_userName || "?").charAt(0).toUpperCase()
@@ -90,12 +95,11 @@ Item {
         }
 
         // Champ de mot de passe
-        Rectangle {
-            width: parent.width; height: 40
-            radius: Theme.radiusMd
-            color: "#26FFFFFF"
-            border.width: password.activeFocus ? 2 : 1
-            border.color: password.activeFocus ? "#B3FFFFFF" : "#33FFFFFF"
+        Bevel {
+            width: parent.width; height: 42; cut: 10
+            color: "#1AFFFFFF"
+            borderWidth: password.activeFocus ? 2 : 1
+            borderColor: password.activeFocus ? Theme.accentForeground : "#33FFFFFF"
             opacity: authenticator.busy ? 0.6 : 1
 
             TextInput {
@@ -123,10 +127,10 @@ Item {
                 }
             }
             // Bouton « valider »
-            Rectangle {
+            Bevel {
                 id: go
-                anchors { right: parent.right; rightMargin: 5; verticalCenter: parent.verticalCenter }
-                width: 30; height: 30; radius: 15
+                anchors { right: parent.right; rightMargin: 6; verticalCenter: parent.verticalCenter }
+                width: 32; height: 30; cut: 8
                 color: password.text !== "" ? Theme.accent : "#26FFFFFF"
                 Icon { anchors.centerIn: parent; name: "chevron-r"; color: "white" }
                 MouseArea { anchors.fill: parent; onClicked: root.tryUnlock() }
@@ -152,9 +156,8 @@ Item {
         visible: root.locked && root.suspendToRamSupported
         anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: Theme.space6 }
         spacing: Theme.space4
-        Rectangle {
-            width: sleepRow.implicitWidth + Theme.space4 * 2; height: 32
-            radius: 16
+        Bevel {
+            width: sleepRow.implicitWidth + Theme.space4 * 2; height: 34; cut: 9
             color: sleepMouse.containsMouse ? "#33FFFFFF" : "#1AFFFFFF"
             Row {
                 id: sleepRow

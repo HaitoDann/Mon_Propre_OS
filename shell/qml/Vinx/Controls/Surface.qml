@@ -11,6 +11,7 @@ Item {
     property int elevation: 1
     property real radius: Theme.radiusLg
     // Couleur de bordure imposée (ex. notification critique) ; sinon celle du matériau.
+    property alias edgeProgress: shape.edgeProgress
     property color borderColor: kind === Surface.Strong ? Theme.borderStrong : Theme.border
     readonly property color color: kind === Surface.Strong ? Theme.surfaceGlassStrong
          : kind === Surface.Window ? Theme.surfaceWindow
@@ -18,6 +19,7 @@ Item {
 
     Elevation { anchors.fill: parent; radius: Theme.radiusXs; level: root.elevation }
     Bevel {
+        id: shape
         anchors.fill: parent
         cut: root.radius
         color: root.color
