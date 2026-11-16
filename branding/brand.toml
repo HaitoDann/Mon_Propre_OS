@@ -2,7 +2,7 @@
 # Ces valeurs alimentent prototype/tokens.css aujourd'hui, puis le design system QML.
 [identity]
 name = "VinX OS"
-version = "0.1"
+version = "0.14"
 tagline = "Simple. Ergonomique. Stable."
 
 [logo]
