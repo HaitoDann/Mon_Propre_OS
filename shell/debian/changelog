@@ -1,3 +1,9 @@
+vinx-shell (0.13.1) trixie; urgency=medium
+
+  * Formes douces par défaut ; biseau réservé aux signatures (logo, fond, trait d'accent).
+
+ -- VinX OS <vinx@localhost>  Mon, 16 Nov 2026 14:29:56 +0000
+
 vinx-shell (0.13.0) trixie; urgency=medium
 
   * Écran de connexion SDDM « vinx » (style Biseau).

@@ -18,7 +18,7 @@ GLYPHS = os.path.join(HERE, "..", "icons")
 SHAPES = {
     "folder":   "M6 16a4 4 0 0 1 4-4h14l5 5h25a4 4 0 0 1 4 4v29a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4Z",
     "page":     "M14 6h24l14 14v34a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4V10a4 4 0 0 1 4-4Z",
-    "circle":   "M6 6H46L58 18V58H18L6 46Z",
+    "circle":   "M18 6H46A12 12 0 0 1 58 18V46A12 12 0 0 1 46 58H18A12 12 0 0 1 6 46V18A12 12 0 0 1 18 6Z",  # tuile arrondie (style doux)
     "envelope": "M8 14h48a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V18a4 4 0 0 1 4-4Z",
     "window":   "M10 8h44a5 5 0 0 1 5 5v38a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5V13a5 5 0 0 1 5-5Z",
     "bag":      "M14 20h36l3 32a5 5 0 0 1-5 6H16a5 5 0 0 1-5-6Z",

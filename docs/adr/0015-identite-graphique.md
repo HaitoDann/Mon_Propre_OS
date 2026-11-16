@@ -45,3 +45,10 @@ Trois maquettes (Biseau, Îlot, Ligne) ont été présentées ; l'utilisateur a 
   (`vinx-biseau.svg`, fond par défaut « VinX Biseau »).
 - **Dock** : en bas par défaut (comme macOS), à gauche en option (Paramètres → Dock → Position) ;
   l'agrandissement au survol n'existe qu'en bas.
+
+## Révision — formes douces (2026-11-16)
+
+Après comparaison sur captures, l'utilisateur préfère des **formes douces** : coins arrondis
+partout (`Theme.shapeStyle = "soft"`, par défaut), tuiles d'icônes arrondies. Le biseau devient
+une **signature rare** : logo, fond d'écran, trait d'accent animé à l'ouverture des panneaux.
+Le style « bevel » reste disponible (préférence `appearance/shape`).

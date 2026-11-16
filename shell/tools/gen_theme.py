@@ -57,7 +57,9 @@ def main() -> None:
 
     out += ["", "    // Accessibilité (réglées par AppearanceSync depuis les préférences)",
             "    property bool reduceMotion: false",
-            "    property real textScale: 1.0"]
+            "    property real textScale: 1.0",
+            "    // Style des formes : « soft » (coins arrondis, biseau réservé aux signatures) ou « bevel ».",
+            "    property string shapeStyle: \"soft\""]
     out += ["", "    // Typographie", f'    readonly property string fontFamily: "{t["font"]["family"]}"']
     for key, val in t["font"].items():
         if key != "family":
