@@ -1,0 +1,151 @@
+#!/bin/sh
+# vinx-dev : faire évoluer VinX OS depuis VinX OS (docs/DEV.md).
+#
+#   vinx-dev [update]    récupère les modifications, reconstruit, installe et relance le shell
+#   vinx-dev build       reconstruit le paquet sans l'installer
+#   vinx-dev install     installe le dernier paquet construit et relance le shell
+#   vinx-dev rollback    réinstalle la version construite précédente
+#   vinx-dev restart     relance le shell (barre, dock, panneaux) sans fermer la session
+#   vinx-dev preview     ouvre le bureau VinX dans une fenêtre de test (session intacte)
+#   vinx-dev status      version installée, branche, historique des versions construites
+#   vinx-dev log         dernières lignes du journal du shell
+#
+# Options : --no-pull (ne pas faire « git pull »), --repo CHEMIN (dépôt, défaut ~/Mon_Propre_OS).
+# Variables : VINX_DEV_REPO (dépôt), VINX_DEV_KEEP (versions gardées, défaut 5).
+set -eu
+
+REPO=${VINX_DEV_REPO:-$HOME/Mon_Propre_OS}
+KEEP=${VINX_DEV_KEEP:-5}
+HIST=${XDG_CACHE_HOME:-$HOME/.cache}/vinx-dev/builds
+PULL=1
+CMD=update
+
+while [ $# -gt 0 ]; do
+	case $1 in
+	--no-pull) PULL=0 ;;
+	--repo) shift; REPO=${1:?chemin manquant} ;;
+	-h|--help) sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+	update|build|install|rollback|restart|preview|status|log) CMD=$1 ;;
+	*) echo "vinx-dev : option inconnue « $1 » (vinx-dev --help)" >&2; exit 2 ;;
+	esac
+	shift
+done
+
+say() { printf '\033[1;32m==>\033[0m %s\n' "$*"; }
+die() { printf '\033[1;31mErreur :\033[0m %s\n' "$*" >&2; exit 1; }
+
+check_repo() {
+	[ -f "$REPO/shell/debian/control" ] || die "dépôt VinX introuvable dans $REPO (option --repo ou variable VINX_DEV_REPO)"
+}
+
+# Versions construites, de la plus récente à la plus ancienne.
+builds() { ls -1t "$HIST"/*.deb 2>/dev/null || true; }
+
+installed_version() { dpkg-query -W -f '${Version}' vinx-shell 2>/dev/null || echo "aucune"; }
+
+restart_shell() {
+	if pgrep -x vinx-shell >/dev/null 2>&1; then
+		say "Relance du shell"
+		# vinx-shell-autostart le relance aussitôt (ADR : relance automatique).
+		pkill -x vinx-shell || true
+		sleep 2
+		pgrep -x vinx-shell >/dev/null 2>&1 || {
+			say "Le shell n'a pas redémarré seul : lancement direct"
+			(VINX_SESSION=1 setsid /usr/libexec/vinx-shell-autostart >/dev/null 2>&1 || setsid vinx-shell >/dev/null 2>&1) &
+		}
+	else
+		say "Shell VinX non lancé (hors session VinX) : rien à relancer"
+	fi
+}
+
+do_pull() {
+	[ "$PULL" = 1 ] || return 0
+	say "Récupération des modifications ($(git -C "$REPO" rev-parse --abbrev-ref HEAD))"
+	if ! git -C "$REPO" diff --quiet || ! git -C "$REPO" diff --cached --quiet; then
+		say "Modifications locales non enregistrées : elles sont conservées (git pull --rebase --autostash)"
+	fi
+	git -C "$REPO" pull --rebase --autostash
+}
+
+do_build() {
+	check_repo
+	cd "$REPO/shell"
+	if ! dpkg-checkbuilddeps >/dev/null 2>&1; then
+		say "Installation des dépendances de construction (mot de passe administrateur)"
+		sudo apt-get update -qq
+		sudo apt-get build-dep -y "$REPO/shell"
+	fi
+	say "Construction de vinx-shell $(dpkg-parsechangelog -S Version)"
+	dpkg-buildpackage -us -uc -b >"$REPO/.vinx-dev-build.log" 2>&1 || {
+		tail -30 "$REPO/.vinx-dev-build.log" >&2
+		die "la construction a échoué (journal complet : $REPO/.vinx-dev-build.log)"
+	}
+	mkdir -p "$HIST"
+	stamp=$(date +%Y%m%d-%H%M%S)
+	for f in "$REPO"/vinx-shell_*.deb; do
+		mv "$f" "$HIST/$(basename "$f" .deb)_$stamp.deb"
+	done
+	rm -f "$REPO"/vinx-shell-dbgsym_*.deb "$REPO"/vinx-shell_*.buildinfo "$REPO"/vinx-shell_*.changes
+	# Ne garde que les KEEP dernières versions.
+	builds | tail -n +"$((KEEP + 1))" | while read -r old; do rm -f "$old"; done
+	say "Paquet prêt : $(builds | head -1)"
+}
+
+install_deb() {
+	deb=$1
+	[ -f "$deb" ] || die "paquet introuvable : $deb"
+	say "Installation de $(basename "$deb") (mot de passe administrateur)"
+	sudo apt-get install -y --allow-downgrades "$deb"
+	restart_shell
+	say "VinX shell $(installed_version) installé."
+}
+
+case $CMD in
+update)
+	check_repo
+	do_pull
+	do_build
+	install_deb "$(builds | head -1)"
+	;;
+build)
+	check_repo
+	do_pull
+	do_build
+	;;
+install)
+	latest=$(builds | head -1)
+	[ -n "$latest" ] || die "aucune version construite (lancer « vinx-dev build »)"
+	install_deb "$latest"
+	;;
+rollback)
+	previous=$(builds | sed -n 2p)
+	[ -n "$previous" ] || die "pas de version précédente dans l'historique ($HIST)"
+	say "Retour à la version précédente"
+	install_deb "$previous"
+	# La version abandonnée part en fin d'historique : un second rollback y revient.
+	latest=$(builds | head -1)
+	touch -d '1 year ago' "$latest" 2>/dev/null || true
+	touch "$previous"
+	;;
+restart)
+	restart_shell
+	;;
+preview)
+	say "Bureau VinX dans une fenêtre de test (fermer la fenêtre pour quitter)"
+	exec vinx-shell --demo
+	;;
+status)
+	echo "Shell installé   : $(installed_version)"
+	if [ -d "$REPO/.git" ]; then
+		echo "Dépôt            : $REPO ($(git -C "$REPO" rev-parse --abbrev-ref HEAD), $(git -C "$REPO" log -1 --format='%h %s'))"
+	else
+		echo "Dépôt            : introuvable ($REPO)"
+	fi
+	echo "Shell en cours   : $(pgrep -x vinx-shell >/dev/null 2>&1 && echo oui || echo non)"
+	echo "Versions gardées :"
+	builds | while read -r f; do echo "  $(basename "$f")"; done
+	;;
+log)
+	journalctl --user -t vinx-shell -n 50 --no-pager 2>/dev/null || echo "Journal indisponible."
+	;;
+esac

@@ -1,3 +1,9 @@
+vinx-shell (0.14.1) trixie; urgency=medium
+
+  * Commande vinx-dev : reconstruire, installer, relancer et revenir en arrière depuis VinX.
+
+ -- VinX OS <vinx@localhost>  Mon, 16 Nov 2026 16:12:14 +0000
+
 vinx-shell (0.14.0) trixie; urgency=medium
 
   * Nouvelle identité : vert du logo, thème clair par défaut, police IBM Plex Sans.

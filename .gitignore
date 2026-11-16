@@ -5,3 +5,6 @@ shell/obj-*/
 /*.buildinfo
 /*.changes
 vinx-apt-signing-key.SECRET.asc
+
+*.log
+.vinx-dev-build.log
