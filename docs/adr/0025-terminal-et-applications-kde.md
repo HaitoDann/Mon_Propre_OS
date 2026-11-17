@@ -34,3 +34,14 @@ Configuration du système.
 
 - Les boutons « Avancé… » des Paramètres ouvrent encore des modules KDE (lot 2).
 - Le Terminal ne se compile qu'en CI Debian 13 (QTermWidget Qt 6 absent de l'environnement local).
+
+## Complément : arborescence et ambiance (maquette validée)
+
+- Terminal **toujours sombre** (l'accent suit les préférences), marges, IBM Plex Mono 11,5 pt.
+- **Arborescence à gauche** (comme MobaXterm), affichée à l'ouverture (Ctrl+Maj+B ou bouton
+  « Dossiers » pour la masquer) : dossiers et fichiers, **fichiers cachés compris**.
+  Double-clic sur un dossier : `cd` écrit et exécuté dans l'onglet courant ; sur un fichier :
+  ouverture avec l'application par défaut ; bouton ↑ : dossier parent. Elle suit les `cd` tapés
+  à la main (dossier courant du shell relu toutes les 0,7 s). Clic droit : se placer dans le
+  dossier, ouvrir dans Fichiers, écrire ou copier le chemin.
+- Plus tard : connexions SSH enregistrées, glisser-déposer vers un serveur.

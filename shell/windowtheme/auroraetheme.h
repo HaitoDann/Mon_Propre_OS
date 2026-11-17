@@ -1,7 +1,7 @@
 #pragma once
 // Thème de fenêtre VinX (ADR 0024) : décoration Aurorae de KWin générée par programme, pour suivre
-// la couleur d'accent et le thème clair/sombre. Boutons « pastilles » à droite (réduire, agrandir,
-// fermer). Pure (sans E/S) : testée par tests/tst_windowtheme.cpp.
+// le thème clair/sombre. Boutons « pastilles » à droite (réduire, agrandir, fermer), toujours en
+// couleur sur la fenêtre active : orange, vert, rouge. Pure (sans E/S) : tests/tst_windowtheme.cpp.
 #include <QByteArray>
 #include <QColor>
 #include <QMap>
@@ -23,6 +23,7 @@ inline QString hex(const QColor &c) { return c.name(QColor::HexRgb).toUpper(); }
 
 struct Palette {
     QString bar, border, text, textInactive, neutral, neutralInactive, glyph, accent, accentInk, danger;
+    QString close, maximize, minimize, glyphOnColor;
 };
 
 inline Palette palette(const Colors &c)
@@ -38,6 +39,11 @@ inline Palette palette(const Colors &c)
     p.accent = hex(c.accent);
     p.accentInk = hex(c.accentInk);
     p.danger = "#E5484D";
+    // Pastilles (choix de l'utilisateur, ADR 0024) : fermer rouge, agrandir vert, réduire orange.
+    p.close = "#FF5F57";
+    p.maximize = "#28C840";
+    p.minimize = "#FEBC2E";
+    p.glyphOnColor = "#4D1F0C";   // pictogramme sombre et chaud, lisible sur les trois couleurs
     return p;
 }
 
@@ -91,8 +97,8 @@ inline QString glyphPath(Glyph g)
     switch (g) {
     case Glyph::Close: return QStringLiteral("M10.5,10.5L15.5,15.5M15.5,10.5L10.5,15.5");
     case Glyph::Minimize: return QStringLiteral("M10,13H16");
-    case Glyph::Maximize: return QStringLiteral("M10.2,14.6L13,11.8L15.8,14.6");
-    case Glyph::Restore: return QStringLiteral("M10.2,11.6L13,14.4L15.8,11.6");
+    case Glyph::Maximize: return QStringLiteral("M13,10V16M10,13H16");
+    case Glyph::Restore: return QStringLiteral("M10,13H16M13,10V16");
     }
     return {};
 }
@@ -100,18 +106,18 @@ inline QString glyphPath(Glyph g)
 // Bouton : une pastille par état (Aurorae : préfixes active, hover, pressed, inactive, deactivated…).
 inline QByteArray buttonSvg(const Palette &p, Glyph g)
 {
-    const bool close = g == Glyph::Close;
     struct State { const char *name; QString fill; QString glyph; };
-    const QString idle = close ? p.accent : p.neutral;
-    const QString hoverFill = close ? p.danger : p.neutral;
-    const QString hoverGlyph = close ? QStringLiteral("#FFFFFF") : p.glyph;
+    const QString color = g == Glyph::Close ? p.close : (g == Glyph::Minimize ? p.minimize : p.maximize);
+    // Enfoncée : même couleur, un peu plus sombre.
+    const QString pressed = QColor(color).darker(115).name(QColor::HexRgb).toUpper();
+    const QString glyph = p.glyphOnColor;
     const QList<State> states = {
-        {"active", idle, QString()},
-        {"hover", hoverFill, hoverGlyph},
-        {"pressed", close ? p.danger : p.border, hoverGlyph},
+        {"active", color, QString()},
+        {"hover", color, glyph},
+        {"pressed", pressed, glyph},
         {"inactive", p.neutralInactive, QString()},
-        {"hover-inactive", hoverFill, hoverGlyph},
-        {"pressed-inactive", close ? p.danger : p.border, hoverGlyph},
+        {"hover-inactive", color, glyph},
+        {"pressed-inactive", pressed, glyph},
         {"deactivated", p.neutralInactive, QString()},
         {"deactivated-inactive", p.neutralInactive, QString()},
     };
@@ -123,7 +129,7 @@ inline QByteArray buttonSvg(const Palette &p, Glyph g)
                                       "<circle cx=\"13\" cy=\"13\" r=\"7\" fill=\"%3\"/>")
                            .arg(buttonWidth).arg(buttonHeight).arg(s.fill);
         if (!s.glyph.isEmpty())
-            body += QStringLiteral("<path d=\"%1\" fill=\"none\" stroke=\"%2\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>")
+            body += QStringLiteral("<path d=\"%1\" fill=\"none\" stroke=\"%2\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\"0.75\"/>")
                         .arg(glyphPath(g), s.glyph);
         out += QStringLiteral("<g id=\"%1-center\" transform=\"translate(%2 0)\">%3</g>\n")
                    .arg(QString::fromLatin1(s.name)).arg(x).arg(body);

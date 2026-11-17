@@ -1,5 +1,5 @@
 #pragma once
-// Terminal VinX : couleurs (schémas au format Konsole lus par QTermWidget) et préférences VinX.
+// Terminal VinX (toujours sombre) : couleurs (schémas au format Konsole lus par QTermWidget) et préférences VinX.
 // Pur (sans QTermWidget) : testé par tests/tst_termtheme.cpp.
 #include "vinxtokens.h"
 

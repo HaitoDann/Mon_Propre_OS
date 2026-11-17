@@ -78,12 +78,13 @@ un **bord vert foncé**, et l'état se lit aussi par la position ou le texte (ja
 ## 6 bis. Fenêtres
 
 - **Boutons « pastilles » en haut à droite**, dans l'ordre réduire, agrandir, fermer (comme sous
-  Windows). Pastilles de 14 px, neutres ; sur la fenêtre active, la fermeture prend la **couleur
-  d'accent**. Les pictogrammes apparaissent au survol ; la fermeture passe au rouge au survol.
-  Fenêtre inactive : pastilles et titre atténués.
+  Windows). Pastilles de 14 px **toujours en couleur** sur la fenêtre active : réduire orange
+  `#FEBC2E`, agrandir vert `#28C840`, fermer rouge `#FF5F57`. Pictogrammes (–, +, ×) au survol.
+  Fenêtre inactive : pastilles grises et titre atténué.
 - Barre de titre de 40 px, titre centré en IBM Plex Sans demi-gras, coins supérieurs arrondis
   (10 px), contour d'un pixel. Thème Aurorae généré par `vinx-window-theme` (ADR 0024).
-- Terminal VinX : IBM Plex Mono 11 pt, onglets soulignés à la couleur d'accent (ADR 0025).
+- Terminal VinX : **toujours sombre**, IBM Plex Mono 11,5 pt, onglets soulignés à la couleur d'accent,
+  arborescence du dossier courant à gauche (ADR 0025).
 
 ## 7. Ergonomie
 

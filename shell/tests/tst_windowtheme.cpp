@@ -34,15 +34,17 @@ private slots:
                 QVERIFY2(svg.elementExists(QString::fromLatin1(s) + "-center"), s);
         }
     }
-    void closeFollowsAccentAndOthersStayNeutral()
+    void pastillesAreRedGreenOrange()
     {
-        Colors c;
-        c.accent = QColor("#2E9BFF");
-        const auto files = themeFiles(c);
-        QVERIFY(files.value("close.svg").contains("#2E9BFF"));
-        QVERIFY(!files.value("minimize.svg").contains("#2E9BFF"));
-        QVERIFY(files.value("close.svg").contains("#E5484D"));   // survol : rouge
+        const auto files = themeFiles({});
+        QVERIFY(files.value("close.svg").contains("#FF5F57"));
+        QVERIFY(files.value("maximize.svg").contains("#28C840"));
+        QVERIFY(files.value("minimize.svg").contains("#FEBC2E"));
+        // Fenêtre inactive : pastilles neutres.
+        QSvgRenderer svg(files.value("close.svg"));
+        QVERIFY(svg.elementExists("inactive-center"));
     }
+
     void darkThemeChangesBarAndText()
     {
         Colors c;

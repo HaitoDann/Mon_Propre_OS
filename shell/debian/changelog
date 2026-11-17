@@ -1,3 +1,12 @@
+vinx-shell (0.20.0) trixie; urgency=medium
+
+  * Pastilles des fenêtres toujours en couleur : réduire orange, agrandir vert,
+    fermer rouge ; grises sur une fenêtre inactive.
+  * Terminal VinX : toujours sombre, plus aéré, arborescence du dossier courant à
+    gauche (double-clic : cd ou ouverture du fichier), fichiers cachés visibles.
+
+ -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 00:50:00 +0000
+
 vinx-shell (0.19.3) trixie; urgency=medium
 
   * Fenêtres VinX : la décoration « pastilles » est imposée après le démarrage de

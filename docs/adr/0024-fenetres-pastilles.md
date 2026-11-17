@@ -37,3 +37,9 @@ Plasma réécrit `library=org.kde.breeze` dans `~/.config/kwinrc` après `vinx-s
 affiché (seul l'ordre des boutons était pris). `vinx-window-theme --reconfigure`, lancé par le shell
 une fois la session démarrée, écrit désormais la décoration VinX (`kwriteconfig6`) avant de
 reconfigurer KWin.
+
+## Complément : couleurs des pastilles
+
+Choix de l'utilisateur après le premier essai : pastilles **toujours en couleur** sur la fenêtre
+active — réduire orange `#FEBC2E`, agrandir vert `#28C840`, fermer rouge `#FF5F57` —, pictogrammes
+(–, +, ×) au survol, grises sur une fenêtre inactive. La fermeture ne suit plus l'accent.
