@@ -24,7 +24,7 @@ const defaultPinned = ["org.vinx.files", "firefox-esr", "libreoffice-writer", "l
 
 // Préférence « liste » : QSettings peut renvoyer une chaîne seule pour une liste d'un élément.
 // Applications KDE remplacées par VinX (ADR 0025) : les épinglages existants suivent.
-const replaced = { "org.kde.konsole": "org.vinx.terminal", "org.kde.dolphin": "org.vinx.files",
+const replaced = { "org.kde.dolphin": "org.vinx.files",
                    "org.kde.discover": "org.vinx.store", "systemsettings": "org.vinx.settings" };
 function asList(v, fallback) {
     if (v === undefined || v === null || v === "") return fallback.slice();

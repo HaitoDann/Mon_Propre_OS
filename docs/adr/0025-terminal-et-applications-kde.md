@@ -13,7 +13,7 @@ Configuration du système.
 ## Décision
 
 - **Terminal VinX** (`vinx-terminal`, `shell/apps/terminal`) : Qt Widgets + **QTermWidget**
-  (moteur de terminal de LXQt, sans dépendance KDE ; Debian : `libqtermwidget6-2-dev`).
+  (moteur de terminal de LXQt, sans dépendance KDE ; paquet de développement QTermWidget Qt 6 de Debian, nom à confirmer).
   Onglets (Ctrl+Maj+T/W, Ctrl+PgPréc/PgSuiv), copier/coller (Ctrl+Maj+C/V), recherche
   (Ctrl+Maj+F), zoom, menu contextuel en français, liens cliquables, `--workdir` et `-e`.
   Couleurs VinX (schémas clair et sombre générés, `termtheme.h` testé), police **IBM Plex Mono**
@@ -28,6 +28,9 @@ Configuration du système.
 - ISO : Dolphin et Discover retirés de la liste des paquets ; Konsole reste installé en secours.
 
 ## Conséquences
+
+- Le Terminal VinX est **facultatif à la construction** : sans QTermWidget, il n'est pas construit et
+  Konsole n'est ni masqué ni remplacé (le masquage et `kdeglobals` ne s'installent qu'avec lui).
 
 - Les boutons « Avancé… » des Paramètres ouvrent encore des modules KDE (lot 2).
 - Le Terminal ne se compile qu'en CI Debian 13 (QTermWidget Qt 6 absent de l'environnement local).
