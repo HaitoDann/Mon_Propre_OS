@@ -1,3 +1,13 @@
+vinx-shell (0.15.0) trixie; urgency=medium
+
+  * Wi-Fi natif : réseaux proches, connexion, réseau masqué, oubli.
+  * Écrans : disposition visuelle, écran principal, duplication ; choix au branchement.
+  * Imprimantes : détection réseau et ajout en un clic.
+  * Utilisateurs : création, mot de passe, type de compte, suppression.
+  * Pilotes : détection du matériel et installation des pilotes manquants.
+
+ -- VinX OS <vinx@localhost>  Tue, 17 Nov 2026 08:11:59 +0000
+
 vinx-shell (0.14.1) trixie; urgency=medium
 
   * Commande vinx-dev : reconstruire, installer, relancer et revenir en arrière depuis VinX.

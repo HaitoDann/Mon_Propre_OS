@@ -34,6 +34,8 @@ public:
     Q_INVOKABLE QString hostName() const;
     // Exécute une commande courte et renvoie sa sortie standard (vide en cas d'échec ;
     // délai maximal 3 s). Réservé aux lectures rapides (timedatectl show…).
+    // Exécute une commande courte (5 s au plus) ; vrai si elle a réussi.
+    Q_INVOKABLE bool run(const QString &program, const QStringList &arguments = {}) const;
     Q_INVOKABLE QString capture(const QString &program, const QStringList &arguments = {}) const;
     // Variable d'environnement (ex. VINX_TASKS_BACKEND=preview pour les tests).
     Q_INVOKABLE QString environment(const QString &name) const { return qEnvironmentVariable(name.toLocal8Bit().constData()); }

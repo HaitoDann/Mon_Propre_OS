@@ -22,6 +22,11 @@ target_include_directories(tst_updates PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/S
 target_link_libraries(tst_updates PRIVATE Qt6::Test)
 add_test(NAME update-parsing COMMAND tst_updates)
 
+qt_add_executable(tst_sysparse tst_sysparse.cpp)
+target_include_directories(tst_sysparse PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
+target_link_libraries(tst_sysparse PRIVATE Qt6::Test)
+add_test(NAME system-parsing COMMAND tst_sysparse)
+
 qt_add_executable(tst_desktopentry tst_desktopentry.cpp)
 target_include_directories(tst_desktopentry PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
 target_link_libraries(tst_desktopentry PRIVATE Qt6::Test)
@@ -58,3 +63,9 @@ target_include_directories(tst_files PRIVATE "${PROJECT_SOURCE_DIR}/apps/files")
 target_link_libraries(tst_files PRIVATE Qt6::Test Qt6::Gui Qt6::Qml)
 add_test(NAME files-local COMMAND tst_files)
 set_tests_properties(files-local PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;LANG=C.UTF-8")
+
+# Comptes : hachage des mots de passe et noms d'utilisateur.
+qt_add_executable(tst_accounts tst_accounts.cpp ${PROJECT_SOURCE_DIR}/qml/Vinx/System/accounts.cpp)
+target_include_directories(tst_accounts PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
+target_link_libraries(tst_accounts PRIVATE Qt6::Test Qt6::DBus Qt6::Qml crypt)
+add_test(NAME accounts COMMAND tst_accounts)

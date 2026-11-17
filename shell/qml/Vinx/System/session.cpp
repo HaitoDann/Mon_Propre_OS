@@ -116,3 +116,14 @@ QString Session::capture(const QString &program, const QStringList &arguments) c
     }
     return QString::fromUtf8(p.readAllStandardOutput());
 }
+
+bool Session::run(const QString &program, const QStringList &arguments) const
+{
+    QProcess p;
+    p.start(program, arguments);
+    if (!p.waitForFinished(5000)) {
+        p.kill();
+        return false;
+    }
+    return p.exitStatus() == QProcess::NormalExit && p.exitCode() == 0;
+}

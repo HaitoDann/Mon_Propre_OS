@@ -40,15 +40,16 @@ Window {
         { id: "desktop", title: qsTr("Bureau"), icon: "grid", section: qsTr("Personnalisation") },
         { id: "dock", title: qsTr("Dock"), icon: "folder", section: qsTr("Personnalisation") },
         { id: "notifications", title: qsTr("Notifications"), icon: "bell", section: qsTr("Personnalisation") },
-        { id: "displays", title: qsTr("Écrans"), icon: "grid", section: qsTr("Matériel") },
+        { id: "displays", title: qsTr("Écrans"), icon: "monitor", section: qsTr("Matériel") },
         { id: "sound", title: qsTr("Son"), icon: "volume", section: qsTr("Matériel") },
         { id: "power", title: qsTr("Énergie"), icon: "bolt", section: qsTr("Matériel") },
         { id: "network", title: qsTr("Réseau"), icon: "globe", section: qsTr("Matériel") },
-        { id: "printers", title: qsTr("Imprimantes"), icon: "doc", section: qsTr("Matériel") },
+        { id: "printers", title: qsTr("Imprimantes"), icon: "printer", section: qsTr("Matériel") },
+        { id: "drivers", title: qsTr("Pilotes"), icon: "chip", section: qsTr("Matériel") },
         { id: "accessibility", title: qsTr("Accessibilité"), icon: "eye", section: qsTr("Système") },
         { id: "keyboard", title: qsTr("Clavier"), icon: "keyboard", section: qsTr("Système") },
         { id: "datetime", title: qsTr("Date et heure"), icon: "calendar", section: qsTr("Système") },
-        { id: "users", title: qsTr("Utilisateurs"), icon: "home", section: qsTr("Système") },
+        { id: "users", title: qsTr("Utilisateurs"), icon: "user", section: qsTr("Système") },
         { id: "backup", title: qsTr("Sauvegarde"), icon: "drive", section: qsTr("Système") },
         { id: "updates", title: qsTr("Mises à jour"), icon: "restart", section: qsTr("Système") },
         { id: "about", title: qsTr("À propos"), icon: "info", section: qsTr("Système") }
@@ -240,76 +241,8 @@ Window {
                 }
             }
 
-            // Écrans (kscreen-doctor)
-            Column {
-                id: displays
-                visible: win.page === "displays"
-                width: parent.width
-                spacing: Theme.space2
-                property var outputs: []
-                function load() {
-                    try { outputs = (JSON.parse(Session.capture("kscreen-doctor", ["-j"]) || "{}").outputs || []).filter(o => o.connected) }
-                    catch (e) { outputs = [] }
-                }
-                onVisibleChanged: if (visible) load()
-                Timer { id: displayReload; interval: 1500; onTriggered: displays.load() }
-                Label { visible: displays.outputs.length === 0; text: qsTr("Réglage des écrans indisponible ici."); level: Label.Secondary }
-                Repeater {
-                    model: displays.outputs
-                    delegate: Column {
-                        id: out
-                        required property var modelData
-                        width: displays.width
-                        readonly property var modes: {
-                            // Une entrée par définition, à la meilleure fréquence.
-                            const best = {}
-                            for (const m of modelData.modes || []) {
-                                const k = m.size.width + "×" + m.size.height
-                                if (!best[k] || m.refreshRate > best[k].refreshRate) best[k] = m
-                            }
-                            return Object.values(best).sort((a, b) => b.size.width * b.size.height - a.size.width * a.size.height)
-                        }
-                        readonly property var current: (modelData.modes || []).find(m => m.id === modelData.currentModeId)
-                        Label { text: modelData.name.toUpperCase(); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 32; verticalAlignment: Text.AlignBottom }
-                        SettingsRow {
-                            title: qsTr("Définition")
-                            description: out.current ? qsTr("%1 × %2 à %3 Hz").arg(out.current.size.width).arg(out.current.size.height).arg(Math.round(out.current.refreshRate)) : ""
-                            Button {
-                                text: qsTr("Changer…"); variant: Button.Secondary
-                                onClicked: modeMenu.visible = !modeMenu.visible
-                            }
-                        }
-                        Flow {
-                            id: modeMenu
-                            visible: false
-                            width: parent.width; spacing: Theme.space2
-                            Repeater {
-                                model: out.modes
-                                delegate: Button {
-                                    required property var modelData
-                                    text: modelData.size.width + " × " + modelData.size.height
-                                    variant: out.current && out.current.size.width === modelData.size.width && out.current.size.height === modelData.size.height ? Button.Primary : Button.Secondary
-                                    onClicked: { Session.launch("kscreen-doctor", ["output." + out.modelData.name + ".mode." + modelData.id]); modeMenu.visible = false; displayReload.restart() }
-                                }
-                            }
-                        }
-                        SettingsRow {
-                            title: qsTr("Taille du texte et des éléments")
-                            description: qsTr("%1 %").arg(Math.round((out.modelData.scale || 1) * 100))
-                            SegmentedControl {
-                                readonly property var scales: [1, 1.25, 1.5, 2]
-                                model: ["100 %", "125 %", "150 %", "200 %"]
-                                currentIndex: Math.max(0, scales.indexOf(out.modelData.scale || 1))
-                                onActivated: (i) => { Session.launch("kscreen-doctor", ["output." + out.modelData.name + ".scale." + scales[i]]); displayReload.restart() }
-                            }
-                        }
-                    }
-                }
-                SettingsRow {
-                    title: qsTr("Disposition, fréquence, orientation")
-                    Button { text: qsTr("Ouvrir…"); variant: Button.Secondary; onClicked: Session.launch("systemsettings", ["kcm_kscreen"]) }
-                }
-            }
+            // Écrans
+            DisplaysPage { visible: win.page === "displays"; width: parent.width }
 
             // Énergie (powerdevil + power-profiles-daemon)
             Column {
@@ -372,44 +305,14 @@ Window {
                 }
             }
 
-            // Imprimantes (CUPS)
-            Column {
-                id: printers
-                visible: win.page === "printers"
-                width: parent.width
-                property var list: []
-                onVisibleChanged: if (visible) list = Session.capture("lpstat", ["-e"]).split("\n").filter(l => l.trim())
-                Label { visible: printers.list.length === 0; text: qsTr("Aucune imprimante. Les imprimantes réseau récentes sont généralement détectées automatiquement."); level: Label.Secondary; wrapMode: Text.WordWrap; width: parent.width; bottomPadding: Theme.space3 }
-                Repeater {
-                    model: printers.list
-                    delegate: SettingsRow { required property string modelData; title: modelData.replace(/_/g, " ") }
-                }
-                SettingsRow {
-                    title: qsTr("Ajouter ou configurer une imprimante")
-                    Button { text: qsTr("Ouvrir…"); variant: Button.Secondary; onClicked: Session.launch("systemsettings", ["kcm_printer_manager"]) }
-                }
-            }
+            // Imprimantes
+            PrintersPage { visible: win.page === "printers"; width: parent.width }
+
+            // Pilotes
+            DriversPage { visible: win.page === "drivers"; width: parent.width }
 
             // Utilisateurs
-            Column {
-                visible: win.page === "users"
-                width: parent.width
-                SettingsRow {
-                    title: (Session.capture("getent", ["passwd", Session.userName]).split(":")[4] || "").split(",")[0] || Session.userName
-                    description: qsTr("Votre compte · administrateur")
-                    Button { text: qsTr("Changer le mot de passe…"); variant: Button.Secondary; onClicked: Session.launch("systemsettings", ["kcm_users"]) }
-                }
-                SettingsRow {
-                    title: qsTr("Ajouter un utilisateur")
-                    description: qsTr("Chaque personne a ses propres documents et réglages.")
-                    Button { text: qsTr("Gérer…"); variant: Button.Secondary; onClicked: Session.launch("systemsettings", ["kcm_users"]) }
-                }
-                SettingsRow {
-                    title: qsTr("Comptes en ligne")
-                    description: qsTr("Google, Nextcloud… pour les fichiers et agendas.")
-                    Button { text: qsTr("Gérer…"); variant: Button.Secondary; onClicked: Session.launch("systemsettings", ["kcm_kaccounts"]) }
-                }
-            }
+            UsersPage { visible: win.page === "users"; width: parent.width }
 
             // Sauvegarde : instantanés du système (Timeshift)
             Column {
@@ -448,20 +351,16 @@ Window {
                     title: qsTr("État")
                     Label { text: !Network.available ? qsTr("Indisponible") : Network.connected ? qsTr("Connecté · %1").arg(Network.connectionName) : qsTr("Déconnecté"); level: Label.Secondary }
                 }
-                SettingsRow {
-                    visible: Network.wireless
-                    title: qsTr("Wi-Fi")
-                    Switch { checked: Network.wirelessEnabled; onToggled: (c) => Network.wirelessEnabled = c }
-                }
+                WifiNetworks { width: parent.width; listHeight: 340; visible: Wifi.available; topPadding: Theme.space2; bottomPadding: Theme.space3 }
                 SettingsRow {
                     visible: Bluetooth.available
                     title: qsTr("Bluetooth")
                     Switch { checked: Bluetooth.powered; onToggled: (c) => Bluetooth.powered = c }
                 }
                 SettingsRow {
-                    title: qsTr("Réseaux, VPN et appareils Bluetooth")
-                    description: qsTr("Choix du réseau Wi-Fi, mots de passe, VPN, appairage.")
-                    Button { text: qsTr("Ouvrir…"); variant: Button.Secondary; onClicked: Session.launch("systemsettings", ["kcm_networkmanagement"]) }
+                    title: qsTr("VPN, réseau filaire et appareils Bluetooth")
+                    description: qsTr("Réglages avancés.")
+                    Button { text: qsTr("Avancé…"); variant: Button.Ghost; onClicked: Session.launch("systemsettings", ["kcm_networkmanagement"]) }
                 }
             }
 

@@ -31,3 +31,9 @@ rsync
 cups
 print-manager
 power-profiles-daemon
+# Pages natives : Wi-Fi (nmcli), comptes, imprimantes sans pilote, détecteur de pilotes
+network-manager
+accountsservice
+cups-filters
+isenkram-cli
+pciutils

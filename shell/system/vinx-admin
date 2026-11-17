@@ -1,0 +1,51 @@
+#!/bin/sh
+# Outil administrateur de VinX OS, appelé via pkexec (action polkit org.vinx.admin).
+# Chaque action valide strictement ses arguments : rien n'est passé tel quel à un shell.
+#
+#   printer-add FILE URI      ajoute une imprimante réseau sans pilote (IPP Everywhere)
+#   printer-remove FILE       supprime une imprimante
+#   install PAQUET…           installe des pilotes ; active les dépôts « non-free » si nécessaire
+set -eu
+[ "$(id -u)" = 0 ] || { echo "À lancer via pkexec." >&2; exit 1; }
+
+valid_queue() { printf '%s' "$1" | grep -Eq '^[A-Za-z0-9_][A-Za-z0-9_-]{0,126}$'; }
+valid_uri() { printf '%s' "$1" | grep -Eq '^(ipps?|dnssd)://[]A-Za-z0-9._~%/:@[-]+$'; }
+valid_pkg() { printf '%s' "$1" | grep -Eq '^[a-z0-9][a-z0-9+.-]{1,62}$'; }
+
+# Active la section non-free (pilote NVIDIA…) dans les sources Debian.
+enable_nonfree() {
+	src=/etc/apt/sources.list.d/debian.sources
+	if [ -f "$src" ]; then
+		grep -q 'non-free ' "$src" || grep -q 'non-free$' "$src" || \
+			sed -i -E '/^Components:/{/(^| )non-free( |$)/!s/$/ non-free/}' "$src"
+	elif [ -f /etc/apt/sources.list ]; then
+		sed -i -E '/^deb .*debian/{/ non-free( |$)/!s/$/ non-free/}' /etc/apt/sources.list
+	fi
+}
+
+case "${1:-}" in
+printer-add)
+	if ! { [ $# -eq 3 ] && valid_queue "$2" && valid_uri "$3"; }; then echo "Arguments invalides." >&2; exit 2; fi
+	lpadmin -p "$2" -v "$3" -m everywhere -E
+	cupsenable "$2" || true
+	cupsaccept "$2" || true
+	;;
+printer-remove)
+	if ! { [ $# -eq 2 ] && valid_queue "$2"; }; then echo "Arguments invalides." >&2; exit 2; fi
+	lpadmin -x "$2"
+	;;
+install)
+	shift
+	[ $# -ge 1 ] || { echo "Aucun paquet." >&2; exit 2; }
+	for p in "$@"; do valid_pkg "$p" || { echo "Nom de paquet invalide : $p" >&2; exit 2; }; done
+	case " $* " in *" nvidia-driver "*) enable_nonfree ;; esac
+	apt-get update
+	# Les en-têtes du noyau sont nécessaires aux pilotes compilés (NVIDIA, DKMS).
+	case " $* " in *" nvidia-driver "*) set -- "$@" linux-headers-amd64 ;; esac
+	DEBIAN_FRONTEND=noninteractive apt-get install -y "$@"
+	;;
+*)
+	echo "usage : vinx-admin printer-add FILE URI | printer-remove FILE | install PAQUET…" >&2
+	exit 2
+	;;
+esac

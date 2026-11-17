@@ -98,6 +98,26 @@ Column {
         }
     }
 
+    // Liste des réseaux Wi-Fi, dépliable.
+    Column {
+        id: wifiSection
+        property bool open: false
+        visible: Wifi.available
+        width: parent.width
+        spacing: Theme.space2
+        MenuItem {
+            width: parent.width
+            iconName: "wifi"
+            text: wifiSection.open ? qsTr("Masquer les réseaux Wi-Fi") : qsTr("Réseaux Wi-Fi…")
+            onTriggered: wifiSection.open = !wifiSection.open
+        }
+        Loader {
+            active: wifiSection.open
+            width: parent.width
+            sourceComponent: WifiNetworks { width: wifiSection.width; listHeight: 220 }
+        }
+    }
+
     Rectangle { width: parent.width; height: 1; color: Theme.border }
 
     Item {

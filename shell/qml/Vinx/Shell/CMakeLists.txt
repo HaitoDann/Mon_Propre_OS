@@ -9,6 +9,8 @@ qt_add_qml_module(vinxshell
     IMPORTS Vinx.Theme Vinx.Controls Vinx.System
     QML_FILES
         ShellState.qml
+        WifiNetworks.qml
+        DisplayHotplug.qml
         TopBar.qml
         TopBarButton.qml
         ControlCenter.qml

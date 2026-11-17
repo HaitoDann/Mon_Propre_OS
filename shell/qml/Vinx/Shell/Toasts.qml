@@ -14,6 +14,9 @@ Column {
 
     ListModel { id: live }
 
+    // Branchement d'un écran : choix Étendre / Dupliquer / Seulement lui.
+    DisplayHotplug { }
+
     // Vérification automatique des mises à jour (session VinX réelle uniquement) :
     // 3 min après l'ouverture de session, puis toutes les 6 h.
     Timer {
