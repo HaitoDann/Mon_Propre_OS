@@ -11,7 +11,7 @@ Item {
 
     function sync() {
         const name = ShellState.openPanel
-        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, search: searchPanel, desktop: desktopMenu, appmenu: appMenu }
+        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, windows: windowMenu, search: searchPanel, desktop: desktopMenu, appmenu: appMenu }
         if (name === "search") ShellState.anchorRect = Qt.rect(layer.width / 2 - 1, layer.height * 0.12, 2, 1)
         for (const k in all) {
             const p = all[k]
@@ -63,6 +63,32 @@ Item {
             case 8: ShellState.confirm("reboot"); break
             case 9: ShellState.confirm("poweroff"); break
             }
+        }
+    }
+
+    // Fenêtres d'une application du dock (clic quand elle en a plusieurs) : les réduites sont marquées.
+    Menu {
+        id: windowMenu
+        objectName: "windowMenu"
+        edge: Popover.Above
+        align: Popover.Center
+        onClosed: if (ShellState.openPanel === "windows") ShellState.close()
+        readonly property var info: ShellState.windowList
+        readonly property var wins: Tasks.backend && Tasks.backend.windows && info.index !== undefined
+                                    ? (Tasks.backend.revision, Tasks.backend.windows(info.index)) : []
+        model: {
+            const m = [{ header: info.name || "" }]
+            for (const w of wins)
+                m.push({ text: w.title, iconName: w.active && !w.minimized ? "check" : "",
+                         shortcut: w.minimized ? qsTr("Réduite") : "" })
+            m.push({ separator: true }, { text: qsTr("Toutes les fenêtres"), iconName: "grid", shortcut: "Méta+W" })
+            return m
+        }
+        onTriggered: (i, entry) => {
+            const idx = info.index
+            ShellState.close()
+            if (i >= 1 && i <= wins.length) Tasks.backend.activateWindow(idx, i - 1)
+            else Session.invokeKWinShortcut("Overview")
         }
     }
 

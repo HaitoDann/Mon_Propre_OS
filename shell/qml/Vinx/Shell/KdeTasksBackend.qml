@@ -43,13 +43,50 @@ Item {
         return AppStyle.normalizeId(_data(i, TaskManager.AbstractTasksModel.AppId), _data(i, TaskManager.AbstractTasksModel.LauncherUrlWithoutIcon))
     }
 
+    // Incrémenté à chaque changement du modèle (liaisons QML qui appellent windows()).
+    property int revision: 0
+    Connections {
+        target: tasks
+        function onDataChanged() { root.revision++ }
+        function onRowsInserted() { root.revision++ }
+        function onRowsRemoved() { root.revision++ }
+        function onModelReset() { root.revision++ }
+    }
+    // Index de la fenêtre j de l'application i (groupe) ou de l'application elle-même (une fenêtre).
+    function _windowIndex(i, j) {
+        return (_data(i, TaskManager.AbstractTasksModel.ChildCount) || 0) > 0 ? tasks.makeModelIndex(i, j) : _index(i)
+    }
+    function _win(idx) {
+        return { title: tasks.data(idx, Qt.DisplayRole) || "",
+                 minimized: !!tasks.data(idx, TaskManager.AbstractTasksModel.IsMinimized),
+                 active: !!tasks.data(idx, TaskManager.AbstractTasksModel.IsActive) }
+    }
+    // Fenêtres de l'application i : [{ title, minimized, active }].
+    function windows(i) {
+        revision
+        const n = _data(i, TaskManager.AbstractTasksModel.ChildCount) || 0
+        const out = []
+        if (n > 0)
+            for (let j = 0; j < n; j++) out.push(_win(tasks.makeModelIndex(i, j)))
+        else if (_data(i, TaskManager.AbstractTasksModel.IsWindow))
+            out.push(_win(_index(i)))
+        return out
+    }
+    // Ramène la fenêtre j (KWin la sort de la réduction) et l'active.
+    function activateWindow(i, j) { tasks.requestActivate(_windowIndex(i, j)) }
+
+    function minimizeWindow(i, j) { if (!windows(i)[j].minimized) tasks.requestToggleMinimized(_windowIndex(i, j)) }
+
     function isPinned(i) { return root.pinned.indexOf(_appId(i)) >= 0 }
+    // Clic sur l'icône : lance, ramène ou réduit (une seule fenêtre). Plusieurs fenêtres : le dock
+    // affiche la liste. (Activer un groupe n'a aucun effet dans libtaskmanager.)
     function activate(i) {
-        const idx = _index(i)
-        if (_data(i, TaskManager.AbstractTasksModel.IsActive) && !_data(i, TaskManager.AbstractTasksModel.IsLauncher))
-            tasks.requestToggleMinimized(idx)
-        else
-            tasks.requestActivate(idx)
+        const w = windows(i)
+        if (w.length === 0) { tasks.requestActivate(_index(i)); return }
+        if (w.length > 1) return
+        const idx = _windowIndex(i, 0)
+        if (w[0].active && !w[0].minimized) tasks.requestToggleMinimized(idx)
+        else tasks.requestActivate(idx)
     }
     function newInstance(i) { tasks.requestNewInstance(_index(i)) }
     function close(i) { tasks.requestClose(_index(i)) }

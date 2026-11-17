@@ -58,6 +58,47 @@ Item {
             compare(backend.model.count, before)
         }
 
+        function test_minimized_window_is_marked_and_restored() {
+            const it = dock.itemAt(4)
+            mouseClick(it)                               // ouvre
+            compare(it.windowStates.length, 1)
+            verify(!it.windowStates[0].minimized)
+            mouseClick(it)                               // active : réduite
+            verify(it.windowStates[0].minimized)
+            verify(!it.active)
+            mouseClick(it)                               // une seule fenêtre : ramenée directement
+            verify(!it.windowStates[0].minimized)
+            verify(it.active)
+            backend.close(4)
+        }
+
+        function test_several_windows_open_the_list() {
+            const it = dock.itemAt(4)
+            mouseClick(it)
+            backend.newInstance(4)
+            backend.minimizeWindow(4, 0)
+            compare(it.windowStates.length, 2)
+            verify(it.windowStates[0].minimized)
+            mouseClick(it)                               // plusieurs fenêtres : liste
+            compare(ShellState.openPanel, "windows")
+            compare(ShellState.windowList.index, 4)
+            const menu = findChild(root, "windowMenu")
+            compare(menu.wins.length, 2)
+            compare(menu.model[1].shortcut, "Réduite")
+            menu.triggered(1, menu.model[1])             // choisir la fenêtre réduite
+            compare(ShellState.openPanel, "")
+            verify(!it.windowStates[0].minimized)
+            verify(it.windowStates[0].active)
+            mouseClick(it)                               // second clic sur l'icône : referme la liste
+            mouseClick(it)
+            compare(ShellState.openPanel, "")
+            backend.close(4)
+        }
+
+        function test_overview_button() {
+            verify(findChild(bar, "overviewButton") !== null)
+        }
+
         function test_workspaces() {
             compare(backend.desktopCount, 3)
             backend.activateDesktop(2)

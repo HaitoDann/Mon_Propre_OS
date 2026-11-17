@@ -60,6 +60,15 @@ Rectangle {
         anchors { right: parent.right; rightMargin: Theme.space2; verticalCenter: parent.verticalCenter }
         spacing: 2
 
+        // Vue d'ensemble de KWin : toutes les fenêtres, réduites comprises (aussi Méta+W).
+        TopBarButton {
+            id: overviewButton
+            objectName: "overviewButton"
+            command: true
+            Accessible.name: qsTr("Toutes les fenêtres")
+            onActivated: Session.invokeKWinShortcut("Overview")
+            Icon { name: "grid"; color: Theme.text; anchors.verticalCenter: parent.verticalCenter }
+        }
         WorkspaceIndicator { anchors.verticalCenter: parent.verticalCenter }
 
         // Mises à jour en cours d'installation (arrière-plan) : progression, clic → Store.

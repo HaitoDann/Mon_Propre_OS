@@ -12,6 +12,8 @@ Item {
     property bool running: false
     property bool active: false
     property int windows: 0
+    // État des fenêtres : [{ title, minimized, active }] (points pleins / creux).
+    property var windowStates: []
     property real pointerX: -1          // position du pointeur dans coordItem (-1 : hors du dock)
     property Item coordItem: parent
     property bool magnify: true
@@ -74,16 +76,20 @@ Item {
         }
     }
 
-    // Indicateur : un point par fenêtre (deux au maximum), plus marqué pour l'app active.
+    // Indicateur : un point par fenêtre (trois au maximum) ; plein = visible, creux = réduite.
     Row {
         anchors { horizontalCenter: parent.horizontalCenter; top: parent.bottom; topMargin: 3 }
         spacing: 3
         Repeater {
-            model: item.running ? Math.min(2, Math.max(1, item.windows)) : 0
+            model: item.running ? (item.windowStates.length > 0 ? item.windowStates.slice(0, 3)
+                                                                  : [{ minimized: false }]) : []
             Rectangle {
-                width: 4; height: 4; radius: 2
-                color: Theme.text
-                opacity: item.active ? 0.9 : 0.45
+                required property var modelData
+                width: 5; height: 5; radius: 2.5
+                color: modelData.minimized ? "transparent" : Theme.text
+                border.width: modelData.minimized ? 1 : 0
+                border.color: Theme.text
+                opacity: item.active ? 0.9 : modelData.minimized ? 0.7 : 0.5
             }
         }
     }

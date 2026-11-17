@@ -98,11 +98,21 @@ Item {
                     running: !!cell.model.IsWindow || cell.model.ChildCount > 0
                     active: !!cell.model.IsActive
                     windows: cell.model.ChildCount > 0 ? cell.model.ChildCount : (cell.model.IsWindow ? 1 : 0)
+                    windowStates: dock.backend && dock.backend.windows ? (dock.backend.revision, dock.backend.windows(cell.index)) : []
                     magnify: dock.magnify
                     base: dock.iconSize
                     coordItem: row
                     pointerX: hover.hovered ? row.mapFromItem(dock, hover.point.position.x, 0).x : -1
-                    onClicked: { ShellState.close(); dock.backend.activate(cell.index) }
+                    onClicked: {
+                        // Plusieurs fenêtres : liste pour choisir (les réduites y sont marquées).
+                        if (windowStates.length > 1) {
+                            ShellState.openWindowList(cell.index, appName, dock.rectOf(icon),
+                                                      Window.window && Window.window.screen ? Window.window.screen.name : "")
+                            return
+                        }
+                        ShellState.close()
+                        dock.backend.activate(cell.index)
+                    }
                     onContextRequested: ShellState.openDockMenu(cell.index, appName, running, dock.backend.isPinned(cell.index), dock.rectOf(icon),
                                                                  Window.window && Window.window.screen ? Window.window.screen.name : "")
                     onHoveredChanged: if (hovered) tip.show(icon); else if (tip.target === icon) tip.target = null

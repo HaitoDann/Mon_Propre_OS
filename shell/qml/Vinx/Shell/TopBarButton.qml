@@ -10,6 +10,7 @@ Item {
     default property alias content: row.data
     readonly property bool active: ShellState.openPanel === panel
     property var menuAction: null      // menu global : QAction racine à ouvrir
+    property bool command: false       // bouton d'action simple (pas de panneau) : seulement activated()
     signal activated()
 
     implicitWidth: row.implicitWidth + Theme.space2 * 2
@@ -20,6 +21,7 @@ Item {
     Keys.onReturnPressed: open()
 
     function open() {
+        if (command) { ShellState.close(); activated(); return }
         const p = mapToItem(null, 0, 0)
         const scr = Window.window && Window.window.screen ? Window.window.screen.name : ""
         if (menuAction) { ShellState.openAppMenu(Qt.rect(p.x, p.y, width, height + (Theme.topbarHeight - height) / 2), menuAction, scr); activated(); return }

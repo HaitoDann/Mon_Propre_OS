@@ -21,6 +21,12 @@ QtObject {
 
     Component.onCompleted: rebuild()
 
+    // Fenêtres simulées par application : { appId: [{ title, minimized }] } ; fenêtre active : "appId#n".
+    property var _wins: ({})
+    property string _activeKey: ""
+    // Incrémenté à chaque changement de fenêtres (liaisons QML qui appellent windows()).
+    property int revision: 0
+
     function _entry(appId, isPinned) {
         const info = Applications.info(appId)
         return { AppId: appId, AppName: info.valid ? info.name : appId, IsLauncher: isPinned, IsWindow: false,
@@ -32,75 +38,99 @@ QtObject {
                     "org.vinx.settings": "Paramètres", "org.kde.konsole": "Terminal" }
         return n
     }
-    function rebuild() {
-        const running = []
+    function _list(appId) { return _wins[appId] || [] }
+    // Recopie l'état des fenêtres simulées dans les rôles du modèle (mêmes rôles que KDE).
+    function _sync() {
+        activeAppName = ""
         for (let i = 0; i < model.count; i++) {
-            const e = model.get(i)
-            if (e.IsWindow) running.push({ AppId: e.AppId, AppName: e.AppName, IsActive: e.IsActive, ChildCount: e.ChildCount })
+            const e = model.get(i), w = _list(e.AppId)
+            const activeHere = _activeKey.split("#")[0] === e.AppId
+            model.setProperty(i, "IsWindow", w.length > 0)
+            model.setProperty(i, "IsLauncher", w.length === 0 && pinned.indexOf(e.AppId) >= 0)
+            model.setProperty(i, "ChildCount", w.length > 1 ? w.length : 0)
+            model.setProperty(i, "IsActive", activeHere)
+            model.setProperty(i, "IsMinimized", w.length > 0 && w.every(x => x.minimized))
+            if (activeHere) activeAppName = e.AppName
         }
+        revision++
+    }
+    function rebuild() {
         model.clear()
         const names = _names()
         for (const id of pinned) {
             const e = _entry(id, true)
             if (!Applications.info(id).valid && names[id]) e.AppName = names[id]
-            const r = running.find(x => x.AppId === id)
-            if (r) { e.IsWindow = true; e.IsLauncher = false; e.IsActive = r.IsActive; e.ChildCount = r.ChildCount }
+            e.IsMinimized = false
             model.append(e)
         }
-        for (const r of running) {
-            if (pinned.indexOf(r.AppId) < 0)
-                model.append({ AppId: r.AppId, AppName: r.AppName, IsLauncher: false, IsWindow: true,
-                               IsActive: r.IsActive, ChildCount: r.ChildCount, IsStartup: false })
-        }
-        _updateActive()
+        for (const id in _wins)
+            if (pinned.indexOf(id) < 0 && _wins[id].length > 0) {
+                const e = _entry(id, false)
+                e.AppName = _wins[id].appName || e.AppName
+                e.IsMinimized = false
+                model.append(e)
+            }
+        _sync()
     }
-    function _updateActive() {
-        activeAppName = ""
-        for (let i = 0; i < model.count; i++)
-            if (model.get(i).IsActive) activeAppName = model.get(i).AppName
-    }
-    function _setActive(i) {
-        for (let k = 0; k < model.count; k++) model.setProperty(k, "IsActive", k === i)
-        _updateActive()
+    function _open(i) {
+        const e = model.get(i)
+        if (launchApps) Applications.launch(e.AppId)
+        const w = _list(e.AppId).slice()
+        w.push({ title: w.length === 0 ? e.AppName : e.AppName + " — " + (w.length + 1), minimized: false })
+        w.appName = e.AppName
+        _wins[e.AppId] = w
+        _activeKey = e.AppId + "#" + (w.length - 1)
+        _sync()
     }
 
     // Ouvre une application non épinglée (aperçu).
     function openApp(appId, name) {
         for (let i = 0; i < model.count; i++)
             if (model.get(i).AppId === appId) { activate(i); return }
-        model.append({ AppId: appId, AppName: name || appId, IsLauncher: false, IsWindow: true, IsActive: false, ChildCount: 1, IsStartup: false })
-        _setActive(model.count - 1)
+        model.append({ AppId: appId, AppName: name || appId, IsLauncher: false, IsWindow: false, IsActive: false,
+                       ChildCount: 0, IsStartup: false, IsMinimized: false })
+        _open(model.count - 1)
     }
 
     function isPinned(i) { return pinned.indexOf(model.get(i).AppId) >= 0 }
+    // Fenêtres de l'application i : [{ title, minimized, active }].
+    function windows(i) {
+        revision
+        if (i < 0 || i >= model.count) return []
+        const id = model.get(i).AppId
+        return _list(id).map((w, j) => ({ title: w.title, minimized: w.minimized, active: _activeKey === id + "#" + j }))
+    }
+    // Ramène la fenêtre j de l'application i (la sort de la réduction) et l'active.
+    function activateWindow(i, j) {
+        const id = model.get(i).AppId, w = _list(id)
+        if (j < 0 || j >= w.length) return
+        w[j].minimized = false
+        _activeKey = id + "#" + j
+        _sync()
+    }
+    function minimizeWindow(i, j) {
+        const id = model.get(i).AppId, w = _list(id)
+        if (j < 0 || j >= w.length) return
+        w[j].minimized = true
+        if (_activeKey === id + "#" + j) _activeKey = ""
+        _sync()
+    }
+    // Clic sur l'icône : lance, ramène ou réduit (une seule fenêtre). Plusieurs fenêtres : le dock
+    // affiche la liste (rien à faire ici).
     function activate(i) {
-        const e = model.get(i)
-        if (!e.IsWindow) {
-            if (launchApps) Applications.launch(e.AppId)
-            model.setProperty(i, "IsWindow", true)
-            model.setProperty(i, "IsLauncher", false)
-            model.setProperty(i, "ChildCount", 1)
-            _setActive(i)
-        } else if (e.IsActive) {
-            model.setProperty(i, "IsActive", false)   // clic sur l'app active : réduction
-            _updateActive()
-        } else {
-            _setActive(i)
-        }
+        const id = model.get(i).AppId, w = _list(id)
+        if (w.length === 0) { _open(i); return }
+        if (w.length > 1) return
+        if (_activeKey === id + "#0") { w[0].minimized = true; _activeKey = ""; _sync() }
+        else activateWindow(i, 0)
     }
-    function newInstance(i) {
-        const e = model.get(i)
-        if (launchApps) Applications.launch(e.AppId)
-        model.setProperty(i, "IsWindow", true)
-        model.setProperty(i, "ChildCount", e.ChildCount + 1)
-        _setActive(i)
-    }
+    function newInstance(i) { _open(i) }
     function close(i) {
         const id = model.get(i).AppId
-        model.setProperty(i, "IsWindow", false); model.setProperty(i, "IsActive", false); model.setProperty(i, "ChildCount", 0)
+        delete _wins[id]
+        if (_activeKey.split("#")[0] === id) _activeKey = ""
         if (pinned.indexOf(id) < 0) model.remove(i)
-        else model.setProperty(i, "IsLauncher", true)
-        _updateActive()
+        _sync()
     }
     function togglePin(i) {
         const id = model.get(i).AppId

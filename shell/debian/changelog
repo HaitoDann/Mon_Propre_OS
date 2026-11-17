@@ -1,3 +1,12 @@
+vinx-shell (0.18.0) trixie; urgency=medium
+
+  * Fenêtres réduites faciles à retrouver (ADR 0023) : points creux sous l'icône
+    du dock, clic qui ramène la fenêtre, liste des fenêtres quand une application
+    en a plusieurs.
+  * Bouton « Toutes les fenêtres » dans la barre (vue d'ensemble de KWin, Méta+W).
+
+ -- VinX OS <vinx@localhost>  Tue, 17 Nov 2026 20:35:00 +0000
+
 vinx-shell (0.17.0) trixie; urgency=medium
 
   * Couleur d'accent au choix : 8 couleurs (vert VinX par défaut) ou Automatique,

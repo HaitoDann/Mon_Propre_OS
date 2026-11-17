@@ -23,6 +23,9 @@ Window {
             Tasks.backend.activate(2)          // Documents
             Tasks.backend.openApp("org.kde.konsole", "Terminal")
             Tasks.backend.activate(2)
+            Tasks.backend.newInstance(2)       // Documents : deux fenêtres, dont une réduite
+            Tasks.backend.minimizeWindow(2, 0)
+            Tasks.backend.minimizeWindow(1, 0) // Firefox réduit
             Notifications.notifyFull("Thunderbird", qsTr("Nouveau message"), qsTr("Réunion d'équipe : l'ordre du jour est disponible."),
                                      ["default", qsTr("Ouvrir"), "reply", qsTr("Répondre"), "read", qsTr("Marquer comme lu")], {})
             Notifications.notify("Thunderbird", qsTr("Nouveau message"), qsTr("Facture de novembre"))
@@ -44,6 +47,11 @@ Window {
             if (win.startOpen === "dock") {
                 const it = dock.itemAt(1)
                 if (it) ShellState.openDockMenu(1, it.appName, it.running, true, dock.rectOf(it), "")
+                return
+            }
+            if (win.startOpen === "windows") {      // liste des fenêtres de Documents
+                const it = dock.itemAt(2)
+                if (it) ShellState.openWindowList(2, it.appName, dock.rectOf(it), "")
                 return
             }
             const target = bar.findButton(win.startOpen)

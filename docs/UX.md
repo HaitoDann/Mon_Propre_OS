@@ -30,7 +30,9 @@ référence est [DESIGN.md](DESIGN.md).
 
 ## Comportements clés
 
-- **Clic sur une icône du dock** : lance l'app ; si elle est au premier plan, la réduit ; si elle est sur un autre espace, y bascule.
+- **Clic sur une icône du dock** : lance l'app ; avec une seule fenêtre, la ramène (même réduite) ou la réduit si elle est au premier plan ; avec plusieurs fenêtres, ouvre la **liste de ses fenêtres** (les réduites sont marquées « Réduite »).
+- **Points sous les icônes** : un par fenêtre (trois au plus) ; **plein = visible, creux = réduite**.
+- **Toutes les fenêtres** : bouton en grille dans la barre (à droite) ou **Méta+W** → vue d'ensemble de KWin, fenêtres réduites comprises. (Méta seule reste la recherche.)
 - **Glisser une fenêtre** contre un bord : moitié d'écran ; contre un coin : quart ; vers le haut : agrandie. Un aperçu translucide à la couleur d'accent montre la zone avant de relâcher.
 - **Glisser une fenêtre en tuile** : elle retrouve sa taille d'origine sous le pointeur.
 - **Bouton vert** : plein écran (la barre et le dock s'effacent, `Échap` pour sortir). **Double-clic sur la barre de titre** : agrandir.

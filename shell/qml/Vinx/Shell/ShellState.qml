@@ -3,7 +3,7 @@ import QtQuick
 
 // État partagé entre la barre et la couche des panneaux (fenêtres distinctes en session réelle).
 QtObject {
-    // Panneau ouvert : "" | "system" | "control" | "calendar" | "confirm" | "dock"
+    // Panneau ouvert : "" | "system" | "control" | "calendar" | "confirm" | "dock" | "windows" | …
     property string openPanel: ""
     property rect anchorRect
     // Écran où s'ouvre le panneau (multi-écran) ; "" = écran principal.
@@ -28,6 +28,15 @@ QtObject {
     function close() { openPanel = ""; pendingAction = "" }
     function confirm(action) { pendingAction = action; openPanel = "confirm" }
     function openDesktopMenu(rect, screen) { anchorRect = rect; screenName = screen || ""; openPanel = "desktop" }
+    // Liste des fenêtres d'une application du dock : { index, name }
+    property var windowList: ({})
+    function openWindowList(index, name, rect, screen) {
+        if (openPanel === "windows" && windowList.index === index) { close(); return }
+        windowList = { index: index, name: name }
+        anchorRect = rect
+        screenName = screen || ""
+        openPanel = "windows"
+    }
     function openDockMenu(index, name, running, pinned, rect, screen) {
         dockMenu = { index: index, name: name, running: running, pinned: pinned }
         anchorRect = rect
