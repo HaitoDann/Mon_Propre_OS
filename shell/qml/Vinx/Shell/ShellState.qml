@@ -1,5 +1,6 @@
 pragma Singleton
 import QtQuick
+import Vinx.System
 
 // État partagé entre la barre et la couche des panneaux (fenêtres distinctes en session réelle).
 QtObject {
@@ -28,6 +29,18 @@ QtObject {
     function close() { openPanel = ""; pendingAction = "" }
     function confirm(action) { pendingAction = action; openPanel = "confirm" }
     function openDesktopMenu(rect, screen) { anchorRect = rect; screenName = screen || ""; openPanel = "desktop" }
+    // Thème de fenêtre VinX (ADR 0024) : régénéré seulement quand l'accent ou le thème change
+    // (un seul appel même avec plusieurs écrans).
+    property string _windowThemeKey: ""
+    function syncWindowTheme(accent, ink, dark) {
+        const key = accent + ink + dark
+        if (key === _windowThemeKey || Session.environment("VINX_SESSION") !== "1") return
+        _windowThemeKey = key
+        const args = ["--accent", accent, "--ink", ink, "--reconfigure"]
+        if (dark) args.push("--dark")
+        Session.run("vinx-window-theme", args)
+    }
+
     // Liste des fenêtres d'une application du dock : { index, name }
     property var windowList: ({})
     function openWindowList(index, name, rect, screen) {

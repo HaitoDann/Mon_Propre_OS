@@ -4,7 +4,9 @@
 #include <QDBusConnection>
 #include <QDBusInterface>
 
+#include <QCoreApplication>
 #include <QStandardPaths>
+#include <QSysInfo>
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -156,4 +158,26 @@ QString Updates::stepLabel() const
     if (!m_bgRunning)
         return {};
     return m_bgStep == QLatin1String("apps") ? tr("Mise à jour des applications") : tr("Mise à jour du système");
+}
+
+namespace {
+QString readText(const QString &path)
+{
+    QFile f(path);
+    return f.open(QIODevice::ReadOnly) ? QString::fromUtf8(f.readAll()) : QString();
+}
+}
+
+QVariantMap Updates::versions() const
+{
+    return {{QStringLiteral("vinxOs"), parseVinxRelease(readText(QStringLiteral("/etc/vinx-release")))},
+            // Version du bureau VinX : celle des applications VinX (même paquet vinx-shell).
+            {QStringLiteral("desktop"), QCoreApplication::applicationVersion()},
+            {QStringLiteral("debian"), readText(QStringLiteral("/etc/debian_version")).trimmed()},
+            {QStringLiteral("kernel"), QSysInfo::kernelVersion()}};
+}
+
+QVariantList Updates::history() const
+{
+    return parseAptHistory(readText(QStringLiteral("/var/log/apt/history.log")));
 }

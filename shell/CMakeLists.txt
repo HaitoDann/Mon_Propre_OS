@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(vinx-shell VERSION 0.18.1 LANGUAGES CXX)
+project(vinx-shell VERSION 0.19.0 LANGUAGES CXX)
 
 # Shell de bureau VinX OS — Qt 6 / QML, au-dessus de KWin.
 # Modules : Vinx.Theme, Vinx.Controls, Vinx.System, Vinx.Shell ; programmes vinx-shell et vinx-gallery.
@@ -29,6 +29,7 @@ add_subdirectory(qml/Vinx/Controls)
 add_subdirectory(qml/Vinx/System)
 add_subdirectory(qml/Vinx/Shell)
 add_subdirectory(src)
+add_subdirectory(windowtheme)
 add_subdirectory(session)
 add_subdirectory(system)
 add_subdirectory(sddm)
@@ -51,3 +52,5 @@ install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/icon-theme/VinX" DESTINATION "${C
 
 # Police système IBM Plex Sans (SIL OFL 1.1), fournie avec VinX (ADR 0018).
 install(DIRECTORY "${VINX_BRANDING_DIR}/fonts/ibm-plex-sans" DESTINATION "${CMAKE_INSTALL_DATADIR}/fonts/opentype")
+# Police à chasse fixe IBM Plex Mono (SIL OFL 1.1) : Terminal VinX.
+install(DIRECTORY "${VINX_BRANDING_DIR}/fonts/ibm-plex-mono" DESTINATION "${CMAKE_INSTALL_DATADIR}/fonts/truetype")

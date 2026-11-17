@@ -35,7 +35,7 @@ QtObject {
     function _names() {
         const n = { "org.vinx.files": "Fichiers", "org.kde.dolphin": "Dolphin", "firefox-esr": "Firefox", "libreoffice-writer": "Documents",
                     "libreoffice-calc": "Tableur", "thunderbird": "Courrier", "org.vinx.store": "Store",
-                    "org.vinx.settings": "Paramètres", "org.kde.konsole": "Terminal" }
+                    "org.vinx.settings": "Paramètres", "org.vinx.terminal": "Terminal" }
         return n
     }
     function _list(appId) { return _wins[appId] || [] }

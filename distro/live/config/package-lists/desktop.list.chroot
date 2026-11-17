@@ -7,10 +7,9 @@ plasma-pa
 bluedevil
 powerdevil
 kscreen
-plasma-discover
-plasma-discover-backend-flatpak
+# Konsole reste installé en secours (masqué dans la session VinX, remplacé par le Terminal VinX).
+# Dolphin et Discover : remplacés par Fichiers et le Store VinX (ADR 0025).
 konsole
-dolphin
 ark
 gwenview
 okular

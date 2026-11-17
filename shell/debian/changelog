@@ -1,3 +1,13 @@
+vinx-shell (0.19.0) trixie; urgency=medium
+
+  * Fenêtres VinX : boutons « pastilles » en haut à droite (réduire, agrandir,
+    fermer), fermeture à la couleur d'accent ; thème Aurorae généré (ADR 0024).
+  * Terminal VinX (QTermWidget) à la place de Konsole, police IBM Plex Mono (ADR 0025).
+  * Application « Mises à jour » : versions, mises à jour groupées, historique (ADR 0026).
+  * Session VinX : Konsole, Dolphin, Discover et Configuration du système masqués.
+
+ -- VinX OS <vinx@localhost>  Tue, 17 Nov 2026 23:00:00 +0000
+
 vinx-shell (0.18.1) trixie; urgency=medium
 
   * Dock : déclare à KWin l'accès à la liste des fenêtres

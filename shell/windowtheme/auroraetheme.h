@@ -1,0 +1,184 @@
+#pragma once
+// Thème de fenêtre VinX (ADR 0024) : décoration Aurorae de KWin générée par programme, pour suivre
+// la couleur d'accent et le thème clair/sombre. Boutons « pastilles » à droite (réduire, agrandir,
+// fermer). Pure (sans E/S) : testée par tests/tst_windowtheme.cpp.
+#include <QByteArray>
+#include <QColor>
+#include <QMap>
+#include <QString>
+
+namespace windowtheme {
+
+struct Colors {
+    QColor accent{0x10, 0xDD, 0x8C};   // fermeture de la fenêtre active
+    QColor accentInk{0x06, 0x13, 0x0D};
+    bool dark = false;
+};
+
+// Dimensions (pixels logiques) : barre de titre de 40 px, pastilles de 14 px.
+constexpr int titleHeight = 26, edgeTop = 7, edgeBottom = 7, bar = edgeTop + titleHeight + edgeBottom;
+constexpr int buttonWidth = 26, buttonHeight = 26, radius = 10;
+
+inline QString hex(const QColor &c) { return c.name(QColor::HexRgb).toUpper(); }
+
+struct Palette {
+    QString bar, border, text, textInactive, neutral, neutralInactive, glyph, accent, accentInk, danger;
+};
+
+inline Palette palette(const Colors &c)
+{
+    Palette p;
+    p.bar = c.dark ? "#1A1C1B" : "#F8F7F4";
+    p.border = c.dark ? "#2C302E" : "#DAD8D1";
+    p.text = c.dark ? "#ECECEA" : "#141414";
+    p.textInactive = c.dark ? "#7A7D7A" : "#8A8983";
+    p.neutral = c.dark ? "#3A3E3C" : "#D2D0C9";
+    p.neutralInactive = c.dark ? "#2C302E" : "#E3E1DB";
+    p.glyph = c.dark ? "#ECECEA" : "#141414";
+    p.accent = hex(c.accent);
+    p.accentInk = hex(c.accentInk);
+    p.danger = "#E5484D";
+    return p;
+}
+
+inline QString rgbTriplet(const QString &h)
+{
+    const QColor c(h);
+    return QStringLiteral("%1,%2,%3").arg(c.red()).arg(c.green()).arg(c.blue());
+}
+
+// Cadre (9 morceaux) : coins supérieurs arrondis, contour d'un pixel.
+inline QByteArray decorationSvg(const Palette &p)
+{
+    QString out = QStringLiteral("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"200\">\n");
+    // prefix "" = fenêtre active, "inactive-" = inactive ; même dessin (le titre change de couleur).
+    // Les fenêtres agrandies (« maximized-* ») n'ont ni coins arrondis ni contour.
+    const QString r = QString::number(radius), h = QString::number(bar);
+    int y = 0;
+    for (const QString &state : {QStringLiteral(""), QStringLiteral("inactive-")}) {
+        const QString oy = QString::number(y);
+        auto g = [&](const QString &id, const QString &body) {
+            out += QStringLiteral("<g id=\"decoration-%1%2\" transform=\"translate(%3 %4)\">%5</g>\n")
+                       .arg(state, id).arg(0).arg(oy).arg(body);
+        };
+        // Coin haut-gauche (12 × 40)
+        g("topleft", QStringLiteral("<path d=\"M12,0H%1A%1,%1 0 0 0 0,%1V%2H12Z\" fill=\"%3\"/>"
+                                    "<path d=\"M12,1H%1A%4,%4 0 0 0 1,%1V%2H12Z\" fill=\"%5\"/>")
+                         .arg(r, h, p.border, QString::number(radius - 1), p.bar));
+        g("top", QStringLiteral("<rect width=\"1\" height=\"1\" fill=\"%1\"/><rect y=\"1\" width=\"1\" height=\"%2\" fill=\"%3\"/>")
+                     .arg(p.border, QString::number(bar - 1), p.bar));
+        g("topright", QStringLiteral("<path d=\"M0,0H2A%1,%1 0 0 1 12,%1V%2H0Z\" fill=\"%3\"/>"
+                                     "<path d=\"M0,1H2A%4,%4 0 0 1 11,%1V%2H0Z\" fill=\"%5\"/>")
+                          .arg(r, h, p.border, QString::number(radius - 1), p.bar));
+        for (const char *id : {"left", "right", "bottom", "bottomleft", "bottomright"})
+            g(QString::fromLatin1(id), QStringLiteral("<rect width=\"1\" height=\"1\" fill=\"%1\"/>").arg(p.border));
+        g("center", QStringLiteral("<rect width=\"1\" height=\"1\" fill=\"%1\"/>").arg(p.bar));
+        // Fenêtre agrandie : barre pleine, sans contour.
+        for (const char *id : {"maximized-topleft", "maximized-top", "maximized-topright"})
+            g(QString::fromLatin1(id), QStringLiteral("<rect width=\"1\" height=\"%1\" fill=\"%2\"/>").arg(h, p.bar));
+        g("maximized-center", QStringLiteral("<rect width=\"1\" height=\"1\" fill=\"%1\"/>").arg(p.bar));
+        y += bar + 10;
+    }
+    out += QStringLiteral("</svg>\n");
+    return out.toUtf8();
+}
+
+enum class Glyph { Close, Minimize, Maximize, Restore };
+
+inline QString glyphPath(Glyph g)
+{
+    // Pictogrammes 6 × 6 centrés sur la pastille (13, 13).
+    switch (g) {
+    case Glyph::Close: return QStringLiteral("M10.5,10.5L15.5,15.5M15.5,10.5L10.5,15.5");
+    case Glyph::Minimize: return QStringLiteral("M10,13H16");
+    case Glyph::Maximize: return QStringLiteral("M10.2,14.6L13,11.8L15.8,14.6");
+    case Glyph::Restore: return QStringLiteral("M10.2,11.6L13,14.4L15.8,11.6");
+    }
+    return {};
+}
+
+// Bouton : une pastille par état (Aurorae : préfixes active, hover, pressed, inactive, deactivated…).
+inline QByteArray buttonSvg(const Palette &p, Glyph g)
+{
+    const bool close = g == Glyph::Close;
+    struct State { const char *name; QString fill; QString glyph; };
+    const QString idle = close ? p.accent : p.neutral;
+    const QString hoverFill = close ? p.danger : p.neutral;
+    const QString hoverGlyph = close ? QStringLiteral("#FFFFFF") : p.glyph;
+    const QList<State> states = {
+        {"active", idle, QString()},
+        {"hover", hoverFill, hoverGlyph},
+        {"pressed", close ? p.danger : p.border, hoverGlyph},
+        {"inactive", p.neutralInactive, QString()},
+        {"hover-inactive", hoverFill, hoverGlyph},
+        {"pressed-inactive", close ? p.danger : p.border, hoverGlyph},
+        {"deactivated", p.neutralInactive, QString()},
+        {"deactivated-inactive", p.neutralInactive, QString()},
+    };
+    QString out = QStringLiteral("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%1\" height=\"%2\">\n")
+                      .arg(buttonWidth * states.size()).arg(buttonHeight);
+    int x = 0;
+    for (const State &s : states) {
+        QString body = QStringLiteral("<rect width=\"%1\" height=\"%2\" fill=\"none\"/>"
+                                      "<circle cx=\"13\" cy=\"13\" r=\"7\" fill=\"%3\"/>")
+                           .arg(buttonWidth).arg(buttonHeight).arg(s.fill);
+        if (!s.glyph.isEmpty())
+            body += QStringLiteral("<path d=\"%1\" fill=\"none\" stroke=\"%2\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>")
+                        .arg(glyphPath(g), s.glyph);
+        out += QStringLiteral("<g id=\"%1-center\" transform=\"translate(%2 0)\">%3</g>\n")
+                   .arg(QString::fromLatin1(s.name)).arg(x).arg(body);
+        x += buttonWidth;
+    }
+    out += QStringLiteral("</svg>\n");
+    return out.toUtf8();
+}
+
+inline QByteArray rcFile(const Palette &p)
+{
+    QString s;
+    s += QStringLiteral("[General]\n");
+    s += QStringLiteral("ActiveTextColor=%1\nInactiveTextColor=%2\n").arg(rgbTriplet(p.text), rgbTriplet(p.textInactive));
+    s += QStringLiteral("TitleAlignment=Center\nTitleVerticalAlignment=Center\nAnimation=120\n");
+    s += QStringLiteral("UseTextShadow=false\nHaloActive=false\nHaloInactive=false\nShadow=true\n");
+    s += QStringLiteral("DecorationPosition=0\n\n[Layout]\n");
+    s += QStringLiteral("BorderLeft=1\nBorderRight=1\nBorderBottom=1\nBorderTop=0\n");
+    s += QStringLiteral("TitleEdgeTop=%1\nTitleEdgeBottom=%2\nTitleEdgeLeft=12\nTitleEdgeRight=10\n").arg(edgeTop).arg(edgeBottom);
+    s += QStringLiteral("TitleEdgeTopMaximized=%1\nTitleEdgeBottomMaximized=%2\nTitleEdgeLeftMaximized=12\nTitleEdgeRightMaximized=10\n")
+             .arg(edgeTop).arg(edgeBottom);
+    s += QStringLiteral("TitleBorderLeft=8\nTitleBorderRight=8\nTitleHeight=%1\n").arg(titleHeight);
+    s += QStringLiteral("ButtonWidth=%1\nButtonHeight=%2\nButtonSpacing=2\nButtonMarginTop=0\nExplicitButtonSpacer=8\n")
+             .arg(buttonWidth).arg(buttonHeight);
+    s += QStringLiteral("PaddingTop=0\nPaddingBottom=0\nPaddingLeft=0\nPaddingRight=0\n");
+    return s.toUtf8();
+}
+
+inline QByteArray metadataDesktop()
+{
+    return QByteArrayLiteral("[Desktop Entry]\nName=VinX\nComment=Fenêtres VinX OS (pastilles)\n"
+                             "X-KDE-PluginInfo-Author=VinX OS\nX-KDE-PluginInfo-Name=VinX\n"
+                             "X-KDE-PluginInfo-Version=1.0\nX-KDE-PluginInfo-License=GPL\n");
+}
+
+inline QByteArray metadataJson()
+{
+    return QByteArrayLiteral("{\n  \"KPlugin\": { \"Id\": \"VinX\", \"Name\": \"VinX\", \"Description\": \"Fenêtres VinX OS (pastilles)\","
+                             " \"License\": \"GPL\", \"Version\": \"1.0\" }\n}\n");
+}
+
+// Fichiers du thème « VinX » (chemins relatifs au dossier aurorae/themes/VinX).
+inline QMap<QString, QByteArray> themeFiles(const Colors &c)
+{
+    const Palette p = palette(c);
+    return {
+        {QStringLiteral("metadata.desktop"), metadataDesktop()},
+        {QStringLiteral("metadata.json"), metadataJson()},
+        {QStringLiteral("VinXrc"), rcFile(p)},
+        {QStringLiteral("decoration.svg"), decorationSvg(p)},
+        {QStringLiteral("close.svg"), buttonSvg(p, Glyph::Close)},
+        {QStringLiteral("minimize.svg"), buttonSvg(p, Glyph::Minimize)},
+        {QStringLiteral("maximize.svg"), buttonSvg(p, Glyph::Maximize)},
+        {QStringLiteral("restore.svg"), buttonSvg(p, Glyph::Restore)},
+    };
+}
+
+} // namespace windowtheme

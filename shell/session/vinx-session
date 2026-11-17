@@ -4,6 +4,9 @@
 export VINX_SESSION=1
 # Réglages propres à la session (KWin…), prioritaires sur ceux du système.
 export XDG_CONFIG_DIRS="/usr/share/vinx/xdg:${XDG_CONFIG_DIRS:-/etc/xdg}"
+# Applications KDE remplacées par VinX (Konsole, Dolphin, Discover, Configuration du système) :
+# masquées par des entrées « Hidden=true » prioritaires, sans désinstaller les paquets (ADR 0025).
+export XDG_DATA_DIRS="/usr/share/vinx/data:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
 
 # Touche Méta seule = recherche VinX. KWin la lit dans la configuration de l'utilisateur :
 # on l'y écrit pour la durée de la session et on rétablit le comportement Plasma ensuite.
@@ -13,6 +16,11 @@ if [ -n "$KWC" ]; then
 	# Pas d'écran de chargement KDE entre l'écran de connexion et le bureau VinX.
 	"$KWC" --file ksplashrc --group KSplash --key Engine none
 	"$KWC" --file ksplashrc --group KSplash --key Theme None
+	# Fenêtres VinX : la configuration de l'utilisateur (souvent Breeze, écrite par Plasma) passerait
+	# avant celle de la session ; on l'impose pour la durée de la session (ADR 0024).
+	for kv in library=org.kde.kwin.aurorae theme=__aurorae__svg__VinX ButtonsOnLeft= ButtonsOnRight=IAX BorderSize=Normal BorderSizeAuto=false; do
+		"$KWC" --file kwinrc --group org.kde.kdecoration2 --key "${kv%%=*}" "${kv#*=}"
+	done
 	# Raccourcis globaux du shell (kglobalaccel lit les .desktop listés dans [services]).
 	for p in search:Meta+Space control:Meta+A calendar:Meta+N; do
 		"$KWC" --file kglobalshortcutsrc --group services --group "org.vinx.shellctl.${p%%:*}.desktop" --key _launch "${p#*:}"
@@ -24,6 +32,9 @@ status=$?
 
 if [ -n "$KWC" ]; then
 	"$KWC" --file kwinrc --group ModifierOnlyShortcuts --key Meta --delete
+	for k in library theme ButtonsOnLeft ButtonsOnRight BorderSize BorderSizeAuto; do
+		"$KWC" --file kwinrc --group org.kde.kdecoration2 --key "$k" --delete
+	done
 	"$KWC" --file ksplashrc --group KSplash --key Engine --delete
 	"$KWC" --file ksplashrc --group KSplash --key Theme --delete
 	for n in search control calendar; do

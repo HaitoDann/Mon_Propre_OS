@@ -11,7 +11,7 @@ Window {
     title: "vinx-topbar"
     // Une barre par écran ; seule celle de l'écran principal pilote les tâches de session.
     property bool isPrimary: true
-    AppearanceSync {}
+    AppearanceSync { windowTheme: true }
     // Les fenêtres des applications suivent l'apparence (palette KDE VinX claire / sombre).
     Connections {
         target: Theme

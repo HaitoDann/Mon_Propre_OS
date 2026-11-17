@@ -17,9 +17,11 @@ jobs:
         run: |
           apt-get update
           apt-get install -y --no-install-recommends git ca-certificates build-essential dpkg-dev debhelper cmake python3 \
-            qt6-base-dev qt6-declarative-dev qt6-svg-dev liblayershellqtinterface-dev libkf6kio-dev qml6-module-qtquick qml6-module-qtquick-window qml6-module-qtquick-shapes \
+            qt6-base-dev qt6-declarative-dev qt6-svg-dev liblayershellqtinterface-dev libkf6kio-dev libqtermwidget6-2-dev qml6-module-qtquick qml6-module-qtquick-window qml6-module-qtquick-shapes \
             qml6-module-qtqml-workerscript qml6-module-qttest fonts-inter
       - uses: actions/checkout@v4
+      - name: Noms des paquets d'exécution (décoration Aurorae)
+        run: apt-cache policy aurorae kwin-decoration-aurorae kwin-wayland | grep -E '^[a-z]|Candidate' || true
       - name: Vérifier la prise en charge de layer-shell
         run: test -n "$(find /usr -name 'LayerShellQtConfig.cmake' 2>/dev/null)"
       - name: Construire le paquet (tests QML inclus)

@@ -1,0 +1,5 @@
+# Réglages KDE propres à la session VinX OS (prioritaires sur ceux du système).
+[General]
+# Terminal par défaut (« Ouvrir un terminal ici », applications KDE) : Terminal VinX (ADR 0025).
+TerminalApplication=vinx-terminal
+TerminalService=org.vinx.terminal.desktop

@@ -7,8 +7,10 @@ const known = {
     "org.vinx.settings": { glyph: "sliders",  tint: "#8A8983" },
     "org.vinx.store":    { glyph: "bag",      tint: "#10DD8C" },
     "org.vinx.welcome":  { glyph: "info",     tint: "#10DD8C" },
+    "org.vinx.updates":  { glyph: "restart",  tint: "#10DD8C" },
     "org.vinx.gallery":  { glyph: "grid",     tint: "#10DD8C" },
     "systemsettings":    { glyph: "sliders",  tint: "#8A8983" },
+    "org.vinx.terminal": { glyph: "terminal", tint: "#141414" },
     "org.kde.konsole":   { glyph: "terminal", tint: "#141414" }
 };
 
@@ -21,9 +23,18 @@ const defaultPinned = ["org.vinx.files", "firefox-esr", "libreoffice-writer", "l
                        "thunderbird", "org.vinx.store", "org.vinx.settings"];
 
 // Préférence « liste » : QSettings peut renvoyer une chaîne seule pour une liste d'un élément.
+// Applications KDE remplacées par VinX (ADR 0025) : les épinglages existants suivent.
+const replaced = { "org.kde.konsole": "org.vinx.terminal", "org.kde.dolphin": "org.vinx.files",
+                   "org.kde.discover": "org.vinx.store", "systemsettings": "org.vinx.settings" };
 function asList(v, fallback) {
     if (v === undefined || v === null || v === "") return fallback.slice();
-    return Array.isArray(v) ? v.slice() : [String(v)];
+    const list = Array.isArray(v) ? v.slice() : [String(v)];
+    const out = [];
+    for (const id of list) {
+        const r = replaced[id] || id;
+        if (out.indexOf(r) < 0) out.push(r);
+    }
+    return out;
 }
 
 // Identifiant .desktop normalisé à partir de ce que fournit le gestionnaire de tâches :

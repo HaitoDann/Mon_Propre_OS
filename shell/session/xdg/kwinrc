@@ -22,10 +22,11 @@ CenterSnapZone=0
 AnimationSpeed=2
 
 [org.kde.kdecoration2]
-library=org.kde.breeze
-theme=Breeze
-ButtonsOnLeft=XIA
-ButtonsOnRight=
-# Pas de bordure épaisse : seule une ombre douce délimite les fenêtres.
-BorderSize=None
+# Fenêtres VinX (ADR 0024) : thème Aurorae « VinX » (pastilles), boutons à droite comme sous Windows :
+# réduire, agrandir, fermer. Pas de bouton à gauche.
+library=org.kde.kwin.aurorae
+theme=__aurorae__svg__VinX
+ButtonsOnLeft=
+ButtonsOnRight=IAX
+BorderSize=Normal
 BorderSizeAuto=false

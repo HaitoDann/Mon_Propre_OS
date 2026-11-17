@@ -42,6 +42,16 @@ target_include_directories(tst_accentpick PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vin
 target_link_libraries(tst_accentpick PRIVATE Qt6::Test Qt6::Gui)
 add_test(NAME accent-pick COMMAND tst_accentpick)
 
+qt_add_executable(tst_windowtheme tst_windowtheme.cpp)
+target_include_directories(tst_windowtheme PRIVATE "${PROJECT_SOURCE_DIR}/windowtheme")
+target_link_libraries(tst_windowtheme PRIVATE Qt6::Test Qt6::Gui Qt6::Svg)
+add_test(NAME window-theme COMMAND tst_windowtheme)
+
+qt_add_executable(tst_termtheme tst_termtheme.cpp)
+target_include_directories(tst_termtheme PRIVATE "${PROJECT_SOURCE_DIR}/apps/terminal")
+target_link_libraries(tst_termtheme PRIVATE Qt6::Test Qt6::Gui vinx::tokens)
+add_test(NAME terminal-theme COMMAND tst_termtheme)
+
 qt_add_executable(tst_flatpak tst_flatpak.cpp "${PROJECT_SOURCE_DIR}/qml/Vinx/System/flatpak.cpp")
 target_include_directories(tst_flatpak PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
 target_link_libraries(tst_flatpak PRIVATE Qt6::Test Qt6::DBus Qt6::Qml)

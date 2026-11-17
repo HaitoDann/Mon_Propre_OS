@@ -312,7 +312,7 @@ void FileOps::open(const QUrl &url)
 void FileOps::openTerminal(const QUrl &dir)
 {
     const QString path = dir.isLocalFile() ? dir.toLocalFile() : QDir::homePath();
-    for (const char *term : {"konsole", "x-terminal-emulator", "gnome-terminal", "xterm"}) {
+    for (const char *term : {"vinx-terminal", "konsole", "x-terminal-emulator", "gnome-terminal", "xterm"}) {
         if (QProcess::startDetached(QString::fromLatin1(term), {}, path))
             return;
     }

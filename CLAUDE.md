@@ -44,7 +44,8 @@ Abandonnés (ne pas réintroduire) : violet/indigo, biseau partout, étiquettes 
 | `shell/qml/Vinx/System` | Singletons C++ : Network, Wifi (nmcli), Audio (wpctl), Bluetooth, Battery, Session, Preferences, Notifications, Flatpak, DebianPackages, Updates, Printers, Drivers, Accounts, Diagnostics, MenuBridge… ; analyseurs testés `sysparse.h`, `diagparse.h`, `updateparse.h`, `wpctl.h` |
 | `shell/qml/Vinx/Shell` | Bureau : TopBar, Dock, ControlCenter, Toasts, Panels, Search, WifiNetworks, DisplayHotplug… |
 | `shell/src/main.cpp` | Process `vinx-shell` (fenêtres layer-shell par écran) |
-| `shell/apps/` | `settings` (pages *Page.qml), `store`, `files` (KIO), `welcome` |
+| `shell/apps/` | `settings` (pages *Page.qml), `store`, `files` (KIO), `welcome`, `updates` (Mises à jour), `terminal` (Qt Widgets + QTermWidget, compilé seulement en CI Debian) |
+| `shell/windowtheme/` | `vinx-window-theme` : décoration de fenêtre Aurorae « pastilles » générée (accent, clair/sombre) |
 | `shell/system/` | `vinx-admin` (pkexec, polkit), `vinx-update`, `vinx-snapshots`, `vinx-dev` |
 | `shell/session/` | Session `vinx.desktop`, `vinx-session`, autostart avec relance |
 | `shell/sddm/vinx`, `shell/lockscreen` | Connexion et verrouillage |
@@ -68,8 +69,9 @@ Préférences utilisateur : `~/.config/vinx/shell.ini` (QSettings, clés `sectio
 
 ## Pièges connus
 
-- Local : Ubuntu, **Qt 6.4**, **sans KIO ni LayerShellQt** (code compilé seulement en CI Debian, Qt 6.8).
-  Le code KIO de Fichiers et layer-shell du dock ne se vérifie qu'en CI.
+- Local : Ubuntu, **Qt 6.4**, **sans KIO, LayerShellQt ni QTermWidget Qt 6** (code compilé seulement en CI Debian, Qt 6.8).
+  Le code KIO de Fichiers, layer-shell du dock et le Terminal VinX ne se vérifient qu'en CI.
+- Couleurs VinX en C++ : `vinxtokens.h` généré (cible `vinx::tokens`) depuis `tokens.toml`.
 - Les dépôts Debian (`deb.debian.org`) sont bloqués ici : impossible d'installer des paquets trixie localement.
 - Vérifier les **noms de paquets Debian** (ex. `kde-config-gtk-style`, pas `kde-gtk-config` ;
   `fonts-ibm-plex` indisponible → police fournie dans le dépôt).
@@ -84,4 +86,6 @@ Préférences utilisateur : `~/.config/vinx/shell.ini` (QSettings, clés `sectio
 - **Retours de test sur le portable** (jamais testé sur matériel réel) : Wi-Fi natif, écrans et
   bulle de branchement, imprimantes, utilisateurs, pilotes, dépannage, recherche Debian du Store,
   fiche détaillée d'application, mises à jour en arrière-plan, couleurs du menu GRUB.
+- **Lot 2 « sans KDE »** (validé, à faire) : écran d'extinction, demande de mot de passe administrateur (polkit),
+  bulles volume/luminosité ; boutons « Avancé… » des Paramètres qui ouvrent encore des modules KDE.
 - Ensuite : version publique 1.0 (site, ISO signée, traduction anglaise, guide).

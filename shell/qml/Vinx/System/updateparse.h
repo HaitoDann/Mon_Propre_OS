@@ -41,3 +41,67 @@ inline QVariantList parseFlatpakColumns(const QString &out, const QStringList &k
     }
     return list;
 }
+
+// Journal d'APT (/var/log/apt/history.log) : une entrée par opération, la plus récente d'abord.
+// [{ date: "2026-11-17 21:37", upgraded, installed, removed, packages: "firefox-esr, vinx-shell…" }]
+inline QVariantList parseAptHistory(const QString &log, int limit = 50)
+{
+    QVariantList out;
+    QVariantMap cur;
+    int up = 0, in = 0, rm = 0;
+    QStringList names;
+    // Paquets d'une ligne « Upgrade: a:amd64 (1, 2), b (3, 4) » : on retire les parenthèses.
+    static const QRegularExpression parens(QStringLiteral("\\([^)]*\\)"));
+    auto packages = [](const QString &value) {
+        QString v = value;
+        v.remove(parens);
+        QStringList list;
+        for (QString p : v.split(QLatin1Char(','), Qt::SkipEmptyParts)) {
+            p = p.trimmed();
+            p = p.section(QLatin1Char(':'), 0, 0);
+            if (!p.isEmpty())
+                list.append(p);
+        }
+        return list;
+    };
+    auto flush = [&] {
+        if (!cur.isEmpty() && (up + in + rm) > 0) {
+            cur.insert(QStringLiteral("upgraded"), up);
+            cur.insert(QStringLiteral("installed"), in);
+            cur.insert(QStringLiteral("removed"), rm);
+            QStringList shown = names.mid(0, 4);
+            QString text = shown.join(QStringLiteral(", "));
+            if (names.size() > 4)
+                text += QStringLiteral("…");
+            cur.insert(QStringLiteral("packages"), text);
+            out.prepend(cur);
+        }
+        cur.clear();
+        up = in = rm = 0;
+        names.clear();
+    };
+    for (const QString &raw : log.split(QLatin1Char('\n'))) {
+        const QString line = raw.trimmed();
+        if (line.startsWith(QLatin1String("Start-Date:"))) {
+            flush();
+            // « 2026-11-17  21:37:41 » → « 2026-11-17 21:37 »
+            const QStringList parts = line.mid(11).simplified().split(QLatin1Char(' '));
+            cur.insert(QStringLiteral("date"), parts.value(0) + QLatin1Char(' ') + parts.value(1).left(5));
+        } else if (line.startsWith(QLatin1String("Upgrade:"))) {
+            const auto l = packages(line.mid(8)); up += l.size(); names += l;
+        } else if (line.startsWith(QLatin1String("Install:")) || line.startsWith(QLatin1String("Reinstall:"))) {
+            const auto l = packages(line.section(QLatin1Char(':'), 1)); in += l.size(); names += l;
+        } else if (line.startsWith(QLatin1String("Remove:")) || line.startsWith(QLatin1String("Purge:"))) {
+            const auto l = packages(line.section(QLatin1Char(':'), 1)); rm += l.size(); names += l;
+        }
+    }
+    flush();
+    return out.mid(0, limit);
+}
+
+// /etc/vinx-release : VINX_VERSION="0.17.1"
+inline QString parseVinxRelease(const QString &text)
+{
+    static const QRegularExpression re(QStringLiteral("^VINX_VERSION=\"?([^\"\\n]*)\"?"), QRegularExpression::MultilineOption);
+    return re.match(text).captured(1).trimmed();
+}

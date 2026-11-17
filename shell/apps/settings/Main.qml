@@ -532,8 +532,8 @@ Window {
                 }
                 SettingsRow {
                     title: qsTr("Installer les mises à jour")
-                    description: qsTr("Système (Debian) et applications (Flathub), depuis le Store.")
-                    Button { text: qsTr("Ouvrir…"); variant: Button.Secondary; onClicked: Session.launch("vinx-store", ["--page", "updates"]) }
+                    description: qsTr("Version de VinX OS, système Debian, bureau VinX et applications, avec l'historique.")
+                    Button { text: qsTr("Ouvrir…"); variant: Button.Secondary; onClicked: Session.launch("vinx-updates") }
                 }
             }
 
@@ -603,9 +603,9 @@ Window {
                     SettingsRow { title: qsTr("Utilisateur"); Label { text: Session.userName; level: Label.Secondary } }
                     SettingsRow { title: qsTr("Noyau Linux"); Label { text: Session.kernelVersion(); level: Label.Secondary } }
                     SettingsRow {
-                        title: qsTr("Réglages du matériel et du système")
-                        description: qsTr("Écrans, réseau, imprimantes, comptes…")
-                        Button { text: qsTr("Ouvrir…"); onClicked: Session.launch("systemsettings") }
+                        title: qsTr("Version de VinX OS")
+                        description: qsTr("Versions détaillées et mises à jour.")
+                        Button { text: qsTr("Mises à jour…"); onClicked: Session.launch("vinx-updates") }
                     }
                 }
             }

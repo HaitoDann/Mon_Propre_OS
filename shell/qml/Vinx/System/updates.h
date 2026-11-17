@@ -42,6 +42,10 @@ public:
     bool packageKitAvailable() const { return m_pkcon; }
 
     Q_INVOKABLE void check();
+    // Versions : { vinxOs, desktop, debian, kernel } (chaînes ; vide si inconnue).
+    Q_INVOKABLE QVariantMap versions() const;
+    // Opérations passées (journal d'APT), la plus récente d'abord.
+    Q_INVOKABLE QVariantList history() const;
     // appsOnly : seulement les applications Flatpak (aucun mot de passe ; mises à jour automatiques).
     Q_INVOKABLE void applyAll(bool appsOnly = false);
 

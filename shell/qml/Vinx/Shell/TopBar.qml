@@ -86,7 +86,7 @@ Rectangle {
                 Icon { name: "download"; color: Theme.accentForeground; anchors.verticalCenter: parent.verticalCenter }
                 Label { text: Math.max(0, Updates.progress) + " %"; font.pixelSize: Theme.fsSm; anchors.verticalCenter: parent.verticalCenter }
             }
-            MouseArea { anchors.fill: parent; onClicked: Session.launch("vinx-store", ["--page", "updates"]) }
+            MouseArea { anchors.fill: parent; onClicked: Session.launch("vinx-updates") }
         }
 
         TopBarButton {

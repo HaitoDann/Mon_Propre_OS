@@ -21,7 +21,7 @@ Window {
             Tasks.backend.launchApps = false
             Tasks.backend.activate(1)          // Firefox
             Tasks.backend.activate(2)          // Documents
-            Tasks.backend.openApp("org.kde.konsole", "Terminal")
+            Tasks.backend.openApp("org.vinx.terminal", "Terminal")
             Tasks.backend.activate(2)
             Tasks.backend.newInstance(2)       // Documents : deux fenêtres, dont une réduite
             Tasks.backend.minimizeWindow(2, 0)

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Génère le singleton QML Theme.qml à partir de branding/tokens.toml.
 
-Usage : gen_theme.py <tokens.toml> <Theme.qml>
+Usage : gen_theme.py <tokens.toml> <Theme.qml> [vinxtokens.h]
+Le troisième argument (facultatif) écrit les mêmes valeurs pour le C++ (applications Qt Widgets).
 """
 import re
 import sys
@@ -87,6 +88,28 @@ def main() -> None:
     out += ["}", ""]
     with open(dst, "w", encoding="utf-8") as f:
         f.write("\n".join(out))
+    if len(sys.argv) > 3:
+        write_header(t, sys.argv[3])
+
+
+def write_header(t: dict, dst: str) -> None:
+    """vinxtokens.h : accents et couleurs liées au thème, pour le C++."""
+    h = ["// FICHIER GÉNÉRÉ par shell/tools/gen_theme.py depuis branding/tokens.toml — ne pas modifier.",
+         "#pragma once", "", "namespace vinx::tokens {", "",
+         "struct Accent { const char *id, *name, *fill, *ink, *text; };",
+         f'inline constexpr const char *defaultAccent = "{t["brand"]["default_accent"]}";',
+         "inline constexpr Accent accents[] = {"]
+    for key, a in t["accents"].items():
+        h.append(f'    {{"{key}", "{a["name"]}", "{a["fill"]}", "{a["ink"]}", "{a["text"]}"}},')
+    h += ["};", "", "// Couleurs liées au thème : { sombre, clair } (#RRGGBB ou #RRGGBBAA)."]
+    for key, (dark, light) in t["themed"].items():
+        qml_color(dark), qml_color(light)
+        h.append(f'inline constexpr const char *{camel(key)}[2] = {{"{dark}", "{light}"}};')
+    for key, val in t["state"].items():
+        h.append(f'inline constexpr const char *{camel(key)} = "{val}";')
+    h += ["", "} // namespace vinx::tokens", ""]
+    with open(dst, "w", encoding="utf-8") as f:
+        f.write("\n".join(h))
 
 
 if __name__ == "__main__":

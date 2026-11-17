@@ -47,7 +47,7 @@ Column {
     }
     Connections {
         target: Notifications
-        function onActionInvoked(id, key) { if (key === "vinx-updates") Session.launch("vinx-store", ["--page", "updates"]) }
+        function onActionInvoked(id, key) { if (key === "vinx-updates") Session.launch("vinx-updates") }
     }
     Connections {
         target: Notifications

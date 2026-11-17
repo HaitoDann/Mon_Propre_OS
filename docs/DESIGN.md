@@ -75,6 +75,16 @@ un **bord vert foncé**, et l'état se lit aussi par la position ou le texte (ja
 - Démarrage (Plymouth), menu GRUB, connexion (SDDM), verrouillage : même fond clair à points,
   logo vert, cartes claires, IBM Plex Sans.
 
+## 6 bis. Fenêtres
+
+- **Boutons « pastilles » en haut à droite**, dans l'ordre réduire, agrandir, fermer (comme sous
+  Windows). Pastilles de 14 px, neutres ; sur la fenêtre active, la fermeture prend la **couleur
+  d'accent**. Les pictogrammes apparaissent au survol ; la fermeture passe au rouge au survol.
+  Fenêtre inactive : pastilles et titre atténués.
+- Barre de titre de 40 px, titre centré en IBM Plex Sans demi-gras, coins supérieurs arrondis
+  (10 px), contour d'un pixel. Thème Aurorae généré par `vinx-window-theme` (ADR 0024).
+- Terminal VinX : IBM Plex Mono 11 pt, onglets soulignés à la couleur d'accent (ADR 0025).
+
 ## 7. Ergonomie
 
 - **Densité confortable** : cibles ≥ 24 px (barre), ≥ 28 px (contrôles).

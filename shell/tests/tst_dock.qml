@@ -51,9 +51,9 @@ Item {
 
         function test_unpinned_app_appears_after_pinned() {
             const before = backend.model.count
-            backend.openApp("org.kde.konsole", "Terminal")
+            backend.openApp("org.vinx.terminal", "Terminal")
             compare(backend.model.count, before + 1)
-            compare(backend.model.get(before).AppId, "org.kde.konsole")
+            compare(backend.model.get(before).AppId, "org.vinx.terminal")
             backend.close(before)
             compare(backend.model.count, before)
         }

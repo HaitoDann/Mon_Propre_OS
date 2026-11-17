@@ -5,6 +5,8 @@ import Vinx.System
 // Applique les préférences partagées (apparence, Ne pas déranger) (Paramètres, barre, recherche).
 // À placer une fois par processus (shell, applications VinX).
 QtObject {
+    // Shell uniquement : écrit le thème de fenêtre VinX (accent, clair/sombre) et recharge KWin.
+    property bool windowTheme: false
     function truthy(v, fallback) { return v === undefined || v === null ? fallback : v === true || v === "true" }
     function apply() {
         Theme.dark = truthy(Preferences.value("appearance/dark"), false)   // thème clair par défaut
@@ -12,6 +14,11 @@ QtObject {
         Theme.reduceMotion = truthy(Preferences.value("accessibility/reduceMotion"), false)
         Theme.shapeStyle = String(Preferences.value("appearance/shape", "soft"))
         Theme.textScale = Number(Preferences.value("accessibility/textScale", 1.0)) || 1.0
+        // Accent résolu (« auto » compris) pour les applications C++ (Terminal VinX).
+        if (windowTheme && String(Preferences.value("appearance/resolvedAccent", "")) !== Theme.accentId)
+            Preferences.setValue("appearance/resolvedAccent", Theme.accentId)
+        if (windowTheme)
+            ShellState.syncWindowTheme(String(Theme.accent), String(Theme.accentText), Theme.dark)
         Notifications.doNotDisturb = truthy(Preferences.value("notifications/dnd"), false)
     }
     // Accent : identifiant du nuancier, « auto » (d'après le fond d'écran) ou vide/inconnu (défaut).
