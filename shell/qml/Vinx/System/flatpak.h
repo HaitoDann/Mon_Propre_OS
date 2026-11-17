@@ -42,6 +42,8 @@ public:
     Q_INVOKABLE bool install(const QStringList &appIds, const QString &label);
     Q_INVOKABLE bool uninstall(const QStringList &appIds, const QString &label);
     Q_INVOKABLE bool launch(const QString &appId) const;
+    // Fiche d'une application Flathub (version, licence, tailles) → detailsReady.
+    Q_INVOKABLE void details(const QString &appId);
 
     static int parseProgress(const QString &output);   // dernier « NN% » de la sortie, -1 sinon
 
@@ -51,6 +53,7 @@ Q_SIGNALS:
     void progressChanged();
     void searchResultsChanged();
     void finished(bool success, const QString &message);
+    void detailsReady(const QString &appId, const QVariantMap &info);
 
 private:
     bool start(const QStringList &args, const QString &task, const QString &doneMessage);

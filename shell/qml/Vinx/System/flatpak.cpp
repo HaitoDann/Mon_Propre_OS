@@ -137,3 +137,23 @@ bool Flatpak::launch(const QString &appId) const
 {
     return QProcess::startDetached(QStringLiteral("flatpak"), {QStringLiteral("run"), appId});
 }
+
+void Flatpak::details(const QString &appId)
+{
+    auto *p = new QProcess(this);
+    connect(p, &QProcess::finished, this, [this, p, appId] {
+        QVariantMap m;
+        for (const QString &raw : QString::fromUtf8(p->readAllStandardOutput()).split(QLatin1Char('\n'))) {
+            const QString line = raw.trimmed();
+            const QString key = line.section(QLatin1Char(':'), 0, 0).trimmed(), val = line.section(QLatin1Char(':'), 1).trimmed();
+            if (key == QLatin1String("Version")) m.insert(QStringLiteral("version"), val);
+            else if (key == QLatin1String("License")) m.insert(QStringLiteral("license"), val);
+            else if (key == QLatin1String("Download")) m.insert(QStringLiteral("download"), val);
+            else if (key == QLatin1String("Installed")) m.insert(QStringLiteral("installedSize"), val);
+            else if (key == QLatin1String("Runtime")) m.insert(QStringLiteral("runtime"), val);
+        }
+        p->deleteLater();
+        Q_EMIT detailsReady(appId, m);
+    });
+    p->start(QStringLiteral("flatpak"), {QStringLiteral("remote-info"), QStringLiteral("flathub"), appId});
+}

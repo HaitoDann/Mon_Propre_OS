@@ -5,6 +5,9 @@
 #include <QDBusInterface>
 
 #include <QStandardPaths>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 namespace {
 void desktopNotify(const QString &summary, const QString &body)
@@ -19,6 +22,12 @@ void desktopNotify(const QString &summary, const QString &body)
 Updates::Updates(QObject *parent)
     : QObject(parent)
 {
+    // Suivi de l'installation en arrière-plan, y compris lancée par un autre processus.
+    m_poll.setInterval(1000);
+    connect(&m_poll, &QTimer::timeout, this, &Updates::readStatus);
+    m_watcher.addPath(qEnvironmentVariable("XDG_RUNTIME_DIR", QStringLiteral("/tmp")));
+    connect(&m_watcher, &QFileSystemWatcher::directoryChanged, this, &Updates::readStatus);
+    readStatus();
     m_pkcon = !QStandardPaths::findExecutable(QStringLiteral("pkcon")).isEmpty();
     m_flatpak = !QStandardPaths::findExecutable(QStringLiteral("flatpak")).isEmpty();
 }
@@ -87,36 +96,64 @@ void Updates::check()
         listApt();
 }
 
-void Updates::applied(bool ok)
+
+void Updates::applyAll(bool appsOnly)
 {
-    m_step = Idle;
-    const QString message = ok ? tr("Le système est à jour.")
-                               : tr("Certaines mises à jour n'ont pas pu être installées.");
-    desktopNotify(tr("Mises à jour"), message);
-    Q_EMIT finished(ok, message);
-    check();   // met la liste à jour
+    if (applying() || (!appsOnly && count() == 0))
+        return;
+    // Processus détaché : l'installation continue si le Store est fermé ; l'état est écrit dans
+    // $XDG_RUNTIME_DIR/vinx-update.json et suivi par readStatus().
+    const QString helper = QStringLiteral("/usr/lib/vinx/vinx-update");
+    QStringList args;
+    if (appsOnly)
+        args << QStringLiteral("--apps-only");
+    if (!QProcess::startDetached(helper, args)) {
+        Q_EMIT finished(false, tr("Impossible de lancer les mises à jour."));
+        return;
+    }
+    m_bgRunning = true;
+    m_bgPercent = 0;
+    m_bgStep = appsOnly ? QStringLiteral("apps") : QStringLiteral("system");
+    m_poll.start();
+    Q_EMIT stateChanged();
 }
 
-void Updates::applyAll()
+static QString statusPath()
 {
-    if (m_step != Idle || count() == 0)
-        return;
-    m_step = Apply;
-    const bool doSystem = !m_system.isEmpty() && m_pkcon;
-    const bool doApps = !m_apps.isEmpty() && m_flatpak;
+    const QString dir = qEnvironmentVariable("XDG_RUNTIME_DIR", QStringLiteral("/tmp"));
+    return dir + QStringLiteral("/vinx-update.json");
+}
 
-    auto applyApps = [this, doApps](bool systemOk, const QString &) {
-        if (!doApps)
-            return applied(systemOk);
-        setStatus(tr("Mise à jour des applications…"));
-        run(QStringLiteral("flatpak"), {QStringLiteral("update"), QStringLiteral("-y"), QStringLiteral("--noninteractive")},
-            [this, systemOk](bool ok, const QString &) { applied(systemOk && ok); });
-    };
-    if (doSystem) {
-        // PackageKit demande le mot de passe administrateur (agent polkit de la session).
-        setStatus(tr("Installation des mises à jour du système…"));
-        run(QStringLiteral("pkcon"), {QStringLiteral("update"), QStringLiteral("-y"), QStringLiteral("--plain")}, applyApps);
-    } else {
-        applyApps(true, {});
+void Updates::readStatus()
+{
+    QFile f(statusPath());
+    if (!f.open(QIODevice::ReadOnly))
+        return;
+    const QJsonObject o = QJsonDocument::fromJson(f.readAll()).object();
+    if (o.isEmpty())
+        return;
+    const QString state = o.value(QStringLiteral("state")).toString();
+    const bool running = state == QLatin1String("running")
+        && QDateTime::currentSecsSinceEpoch() - o.value(QStringLiteral("time")).toInteger() < 3600;
+    const bool wasRunning = m_bgRunning;
+    m_bgRunning = running;
+    m_bgPercent = o.value(QStringLiteral("percent")).toInt();
+    m_bgStep = o.value(QStringLiteral("step")).toString();
+    if (running && !m_poll.isActive())
+        m_poll.start();
+    if (!running)
+        m_poll.stop();
+    Q_EMIT stateChanged();
+    if (wasRunning && !running) {
+        const bool ok = state == QLatin1String("done");
+        Q_EMIT finished(ok, ok ? tr("Le système est à jour.") : tr("Certaines mises à jour n'ont pas pu être installées."));
+        check();
     }
+}
+
+QString Updates::stepLabel() const
+{
+    if (!m_bgRunning)
+        return {};
+    return m_bgStep == QLatin1String("apps") ? tr("Mise à jour des applications") : tr("Mise à jour du système");
 }

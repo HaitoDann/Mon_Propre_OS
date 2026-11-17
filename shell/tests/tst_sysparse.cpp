@@ -67,6 +67,37 @@ private Q_SLOTS:
         QCOMPARE(cupsQueueName(QStringLiteral("HP LaserJet M15w [1A2B3C]")), QStringLiteral("HP_LaserJet_M15w_1A2B3C"));
         QCOMPARE(cupsQueueName(QStringLiteral("é")), QStringLiteral("Imprimante"));
     }
+    void appstream()
+    {
+        const QVariantList l = parseAppstreamSearch(QStringLiteral(
+            "Identifier: org.gimp.GIMP [desktop-application]\nName: GNU Image Manipulation Program\nSummary: Create images and edit photographs\n"
+            "Package: gimp\nHomepage: https://www.gimp.org/\nIcon: cached: 64x64/gimp_org.gimp.GIMP.png\n---\n"
+            "Identifier: gimp-help [addon]\nName: Aide\nSummary: x\n---\n"
+            "Identifier: org.inkscape.Inkscape [desktop-application]\nName: Inkscape\nSummary: Vector Graphics Editor\nPackage: inkscape\nIcon: org.inkscape.Inkscape.png\n"));
+        QCOMPARE(l.size(), 2);
+        QCOMPARE(l[0].toMap().value("package").toString(), QStringLiteral("gimp"));
+        QCOMPARE(l[0].toMap().value("icon").toString(), QStringLiteral("org.gimp.GIMP"));
+        QCOMPARE(l[1].toMap().value("icon").toString(), QStringLiteral("org.inkscape.Inkscape"));
+    }
+    void aptSearchShow()
+    {
+        const QVariantList s = parseAptSearch(QStringLiteral("htop - interactive processes viewer\nbtop - modern monitor - with dashes\n"));
+        QCOMPARE(s.size(), 2);
+        QCOMPARE(s[1].toMap().value("summary").toString(), QStringLiteral("modern monitor - with dashes"));
+        const QVariantMap d = parseAptShow(QStringLiteral(
+            "Package: htop\nVersion: 3.4.0-2\nInstalled-Size: 450\nHomepage: https://htop.dev/\nDescription-en: interactive processes viewer\n"
+            " Htop is an ncursed-based process viewer.\n .\n It is aimed to be better.\nDescription-fr: visualiseur interactif\n Htop affiche les processus.\n\nPackage: htop\nVersion: 0\n"));
+        QCOMPARE(d.value("version").toString(), QStringLiteral("3.4.0-2"));
+        QCOMPARE(d.value("installedSize").toLongLong(), 450 * 1024);
+        QCOMPARE(d.value("summary").toString(), QStringLiteral("visualiseur interactif"));
+        QCOMPARE(d.value("description").toString(), QStringLiteral("Htop affiche les processus."));
+    }
+    void progress()
+    {
+        QCOMPARE(parseProgressLine(QStringLiteral("Percentage:\t42")), 42);
+        QCOMPARE(parseProgressLine(QStringLiteral("Updating 2/5… ████  73%  1.2 MB/s")), 73);
+        QCOMPARE(parseProgressLine(QStringLiteral("Status:\tDownloading")), -1);
+    }
 };
 
 QTEST_GUILESS_MAIN(TestSysParse)

@@ -27,6 +27,11 @@ target_include_directories(tst_sysparse PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/
 target_link_libraries(tst_sysparse PRIVATE Qt6::Test)
 add_test(NAME system-parsing COMMAND tst_sysparse)
 
+qt_add_executable(tst_diag tst_diag.cpp)
+target_include_directories(tst_diag PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
+target_link_libraries(tst_diag PRIVATE Qt6::Test)
+add_test(NAME diagnostics COMMAND tst_diag)
+
 qt_add_executable(tst_desktopentry tst_desktopentry.cpp)
 target_include_directories(tst_desktopentry PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
 target_link_libraries(tst_desktopentry PRIVATE Qt6::Test)

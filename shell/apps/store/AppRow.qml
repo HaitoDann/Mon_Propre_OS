@@ -12,10 +12,12 @@ Item {
     property string glyph: "bag"
     property color tint: "#10DD8C"
     property bool showActions: true
+    signal clicked()
     readonly property bool isInstalled: Flatpak.installed.indexOf(appId) >= 0
     width: parent ? parent.width : 400
     height: 64
 
+    MouseArea { anchors.fill: parent; z: -1; cursorShape: Qt.PointingHandCursor; onClicked: row.clicked() }
     Row {
         anchors { left: parent.left; right: actions.left; rightMargin: Theme.space3; verticalCenter: parent.verticalCenter }
         spacing: Theme.space3

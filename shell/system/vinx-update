@@ -1,0 +1,50 @@
+#!/bin/sh
+# Mises à jour de VinX OS en arrière-plan (lancé par le Store ou le shell, détaché de la fenêtre).
+#   vinx-update             système (PackageKit, mot de passe demandé) puis applications (Flatpak)
+#   vinx-update --apps-only applications seulement (aucun mot de passe)
+# État suivi en direct par le Store et la barre : $XDG_RUNTIME_DIR/vinx-update.json
+#   { "state": "running|done|failed", "step": "system|apps", "percent": 0-100, "time": … }
+set -u
+RUN=${XDG_RUNTIME_DIR:-/tmp}
+STATUS=$RUN/vinx-update.json
+exec 9>"$RUN/vinx-update.lock"
+flock -n 9 || exit 0   # déjà en cours
+
+put() { printf '{"state":"%s","step":"%s","percent":%s,"time":%s}\n' "$1" "$2" "$3" "$(date +%s)" > "$STATUS.tmp" && mv "$STATUS.tmp" "$STATUS"; }
+notify() {
+	busctl --user call org.freedesktop.Notifications /org/freedesktop/Notifications org.freedesktop.Notifications \
+		Notify 'susssasa{sv}i' "Mises à jour" 0 "org.vinx.store" "$1" "$2" 0 0 -1 >/dev/null 2>&1 || true
+}
+
+# step LIBELLÉ COMMANDE… : exécute en relevant les pourcentages ; renvoie le code de la commande.
+step() {
+	label=$1; shift
+	put running "$label" 0
+	rc_file=$(mktemp)
+	{ "$@" 2>&1; echo $? > "$rc_file"; } | tr '\r' '\n' | while IFS= read -r line; do
+		p=$(printf '%s\n' "$line" | sed -n -e 's/^Percentage:[[:space:]]*\([0-9][0-9]*\).*/\1/p' -e 's/.*[^0-9]\([0-9]\{1,3\}\)%.*/\1/p' | tail -n 1)
+		[ -n "$p" ] && [ "$p" -le 100 ] && put running "$label" "$p"
+	done
+	rc=$(cat "$rc_file"); rm -f "$rc_file"
+	return "${rc:-1}"
+}
+
+ok=1
+if [ "${1:-}" != "--apps-only" ] && command -v pkcon >/dev/null; then
+	pkcon --plain refresh >/dev/null 2>&1 || true
+	step system pkcon --plain -y update
+	rc=$?
+	# 5 : rien à mettre à jour.
+	[ "$rc" -eq 0 ] || [ "$rc" -eq 5 ] || ok=0
+fi
+if command -v flatpak >/dev/null; then
+	step apps flatpak update -y --noninteractive || ok=0
+fi
+
+if [ "$ok" = 1 ]; then
+	put "done" end 100
+	notify "Le système est à jour" "Les mises à jour ont été installées."
+else
+	put failed end 100
+	notify "Mises à jour incomplètes" "Certaines mises à jour n'ont pas pu être installées. Réessayez depuis le Store."
+fi

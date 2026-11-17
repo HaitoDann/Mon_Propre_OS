@@ -62,6 +62,24 @@ Rectangle {
 
         WorkspaceIndicator { anchors.verticalCenter: parent.verticalCenter }
 
+        // Mises à jour en cours d'installation (arrière-plan) : progression, clic → Store.
+        Item {
+            visible: Updates.applying
+            width: visible ? updRow.implicitWidth + Theme.space2 * 2 : 0
+            height: 24
+            anchors.verticalCenter: parent.verticalCenter
+            Accessible.role: Accessible.Button
+            Accessible.name: qsTr("Mises à jour en cours : %1 %").arg(Math.max(0, Updates.progress))
+            Row {
+                id: updRow
+                anchors.centerIn: parent
+                spacing: 5
+                Icon { name: "download"; color: Theme.accentForeground; anchors.verticalCenter: parent.verticalCenter }
+                Label { text: Math.max(0, Updates.progress) + " %"; font.pixelSize: Theme.fsSm; anchors.verticalCenter: parent.verticalCenter }
+            }
+            MouseArea { anchors.fill: parent; onClicked: Session.launch("vinx-store", ["--page", "updates"]) }
+        }
+
         TopBarButton {
             id: searchButton
             panel: "search"

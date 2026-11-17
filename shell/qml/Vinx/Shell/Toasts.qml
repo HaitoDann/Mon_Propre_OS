@@ -32,7 +32,13 @@ Column {
     Connections {
         target: Updates
         function onFinished(ok) {
-            if (Updates.applying || Updates.checking || Updates.count === 0 || Updates.count === toasts.notifiedCount) return
+            if (Updates.applying || Updates.checking || Updates.count === 0) return
+            // Option : les applications (Flathub) se mettent à jour seules, sans mot de passe.
+            if (Updates.apps.length > 0 && String(Preferences.value("updates/autoApps", false)) === "true") {
+                Updates.applyAll(true)
+                if (Updates.system.length === 0) return
+            }
+            if (Updates.count === toasts.notifiedCount) return
             toasts.notifiedCount = Updates.count
             Notifications.notifyFull(qsTr("Mises à jour"), qsTr("Mises à jour disponibles"),
                                      qsTr("%n mise(s) à jour prête(s) à être installée(s).", "", Updates.count),

@@ -51,6 +51,7 @@ Window {
         { id: "datetime", title: qsTr("Date et heure"), icon: "calendar", section: qsTr("Système") },
         { id: "users", title: qsTr("Utilisateurs"), icon: "user", section: qsTr("Système") },
         { id: "backup", title: qsTr("Sauvegarde"), icon: "drive", section: qsTr("Système") },
+        { id: "troubleshoot", title: qsTr("Dépannage"), icon: "shield", section: qsTr("Système") },
         { id: "updates", title: qsTr("Mises à jour"), icon: "restart", section: qsTr("Système") },
         { id: "about", title: qsTr("À propos"), icon: "info", section: qsTr("Système") }
     ]
@@ -311,6 +312,9 @@ Window {
             // Pilotes
             DriversPage { visible: win.page === "drivers"; width: parent.width }
 
+            // Dépannage
+            TroubleshootPage { visible: win.page === "troubleshoot"; width: parent.width; onOpenPage: (id) => win.page = id }
+
             // Utilisateurs
             UsersPage { visible: win.page === "users"; width: parent.width }
 
@@ -464,6 +468,11 @@ Window {
                     title: qsTr("Vérifier automatiquement")
                     description: qsTr("Toutes les 6 heures ; une notification signale les mises à jour disponibles.")
                     Switch { checked: win.on("updates/autoCheck", true); onToggled: (c) => Preferences.setValue("updates/autoCheck", c) }
+                }
+                SettingsRow {
+                    title: qsTr("Mettre à jour les applications automatiquement")
+                    description: qsTr("Les applications Flathub se mettent à jour en arrière-plan, sans mot de passe. Le système reste à votre initiative.")
+                    Switch { checked: win.on("updates/autoApps", false); onToggled: (c) => Preferences.setValue("updates/autoApps", c) }
                 }
                 SettingsRow {
                     title: qsTr("Installer les mises à jour")

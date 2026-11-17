@@ -173,3 +173,109 @@ inline QString cupsQueueName(const QString &display)
         s.chop(1);
     return s.isEmpty() ? QStringLiteral("Imprimante") : s.left(127);
 }
+
+// « appstreamcli search » : blocs « Clé: valeur » séparés par « --- ».
+// → [{ id, name, summary, package, icon, homepage }] (seulement les composants avec paquet).
+inline QVariantList parseAppstreamSearch(const QString &out)
+{
+    QVariantList list;
+    QVariantMap cur;
+    auto flush = [&] {
+        if (!cur.value(QStringLiteral("package")).toString().isEmpty() && !cur.value(QStringLiteral("name")).toString().isEmpty())
+            list.append(cur);
+        cur.clear();
+    };
+    static const QRegularExpression kv(QStringLiteral("^(\\w[\\w ]*?):\\s*(.*)$"));
+    for (const QString &raw : out.split(QLatin1Char('\n'))) {
+        const QString line = raw.trimmed();
+        if (line == QLatin1String("---")) { flush(); continue; }
+        const auto m = kv.match(line);
+        if (!m.hasMatch())
+            continue;
+        const QString k = m.captured(1).toLower(), v = m.captured(2).trimmed();
+        if (k == QLatin1String("identifier")) cur.insert(QStringLiteral("id"), v.section(QLatin1Char(' '), 0, 0));
+        else if (k == QLatin1String("name")) cur.insert(QStringLiteral("name"), v);
+        else if (k == QLatin1String("summary")) cur.insert(QStringLiteral("summary"), v);
+        else if (k == QLatin1String("package")) cur.insert(QStringLiteral("package"), v);
+        else if (k == QLatin1String("homepage")) cur.insert(QStringLiteral("homepage"), v);
+        else if (k == QLatin1String("icon")) {
+            // « firefox-esr.png » ou « cached: 64x64/firefox-esr_firefox-esr.png » → nom de thème probable.
+            QString icon = v.section(QLatin1Char(' '), -1).section(QLatin1Char('/'), -1);
+            if (icon.endsWith(QLatin1String(".png")) || icon.endsWith(QLatin1String(".svg")) || icon.endsWith(QLatin1String(".xpm")))
+                icon.chop(4);
+            if (icon.contains(QLatin1Char('_')))
+                icon = icon.section(QLatin1Char('_'), 1);
+            cur.insert(QStringLiteral("icon"), icon);
+        }
+    }
+    flush();
+    // Un composant par paquet.
+    QVariantList out2;
+    QStringList seen;
+    for (const QVariant &v : list) {
+        const QString pkg = v.toMap().value(QStringLiteral("package")).toString();
+        if (!seen.contains(pkg)) { seen << pkg; out2.append(v); }
+    }
+    return out2;
+}
+
+// « apt-cache search --names-only » : « paquet - description courte ».
+inline QVariantList parseAptSearch(const QString &out)
+{
+    QVariantList list;
+    for (const QString &line : out.split(QLatin1Char('\n'), Qt::SkipEmptyParts)) {
+        const int sep = line.indexOf(QLatin1String(" - "));
+        if (sep <= 0)
+            continue;
+        const QString pkg = line.left(sep).trimmed();
+        list.append(QVariantMap{{QStringLiteral("id"), pkg}, {QStringLiteral("name"), pkg}, {QStringLiteral("package"), pkg},
+                                {QStringLiteral("summary"), line.mid(sep + 3).trimmed()}, {QStringLiteral("icon"), QString()}});
+    }
+    return list;
+}
+
+// « apt-cache show PAQUET » : version, taille, site, description longue (en français si disponible).
+inline QVariantMap parseAptShow(const QString &out)
+{
+    QVariantMap m;
+    QString descKey, desc;
+    bool inDesc = false;
+    for (const QString &line : out.split(QLatin1Char('\n'))) {
+        if (line.isEmpty()) {
+            if (!m.isEmpty()) break;   // premier enregistrement seulement
+            continue;
+        }
+        if (inDesc && line.startsWith(QLatin1Char(' '))) {
+            const QString t = line.trimmed();
+            desc += (t == QLatin1String(".") ? QStringLiteral("\n\n") : t + QLatin1Char(' '));
+            continue;
+        }
+        inDesc = false;
+        const QString key = line.section(QLatin1Char(':'), 0, 0), val = line.section(QLatin1Char(':'), 1).trimmed();
+        if (key == QLatin1String("Version")) m.insert(QStringLiteral("version"), val);
+        else if (key == QLatin1String("Installed-Size")) m.insert(QStringLiteral("installedSize"), val.toLongLong() * 1024);
+        else if (key == QLatin1String("Homepage")) m.insert(QStringLiteral("homepage"), val);
+        else if (key == QLatin1String("Section")) m.insert(QStringLiteral("section"), val);
+        else if (key.startsWith(QLatin1String("Description")) && (descKey.isEmpty() || key == QLatin1String("Description-fr"))) {
+            descKey = key;
+            m.insert(QStringLiteral("summary"), val);
+            desc.clear();
+            inDesc = true;
+        }
+    }
+    m.insert(QStringLiteral("description"), desc.trimmed());
+    return m;
+}
+
+// Ligne de progression de « pkcon --plain » (« Percentage:\t42 ») ou de flatpak (« 42% ») : -1 sinon.
+inline int parseProgressLine(const QString &line)
+{
+    static const QRegularExpression pk(QStringLiteral("^Percentage:\\s*(\\d+)"));
+    static const QRegularExpression pct(QStringLiteral("(\\d{1,3})%"));
+    auto m = pk.match(line.trimmed());
+    if (m.hasMatch()) return qMin(100, m.captured(1).toInt());
+    QRegularExpressionMatchIterator it = pct.globalMatch(line);
+    int last = -1;
+    while (it.hasNext()) last = qMin(100, it.next().captured(1).toInt());
+    return last;
+}

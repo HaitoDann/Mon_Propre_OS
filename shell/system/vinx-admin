@@ -5,6 +5,7 @@
 #   printer-add FILE URI      ajoute une imprimante réseau sans pilote (IPP Everywhere)
 #   printer-remove FILE       supprime une imprimante
 #   install PAQUET…           installe des pilotes ; active les dépôts « non-free » si nécessaire
+#   journal                   avertissements et erreurs du journal système (assistant de dépannage)
 set -eu
 [ "$(id -u)" = 0 ] || { echo "À lancer via pkexec." >&2; exit 1; }
 
@@ -44,8 +45,11 @@ install)
 	case " $* " in *" nvidia-driver "*) set -- "$@" linux-headers-amd64 ;; esac
 	DEBIAN_FRONTEND=noninteractive apt-get install -y "$@"
 	;;
+journal)
+	journalctl -b -p 4 -n 4000 -o short --no-pager
+	;;
 *)
-	echo "usage : vinx-admin printer-add FILE URI | printer-remove FILE | install PAQUET…" >&2
+	echo "usage : vinx-admin printer-add FILE URI | printer-remove FILE | install PAQUET… | journal" >&2
 	exit 2
 	;;
 esac

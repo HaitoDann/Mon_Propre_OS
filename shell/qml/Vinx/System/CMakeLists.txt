@@ -25,6 +25,8 @@ qt_add_qml_module(vinxsystem
         printers.h printers.cpp
         drivers.h drivers.cpp
         accounts.h accounts.cpp
+        diagparse.h diagnostics.h diagnostics.cpp
+        debianpackages.h debianpackages.cpp
 )
 target_link_libraries(vinxsystem PRIVATE Qt6::Qml Qt6::Gui Qt6::Widgets Qt6::DBus crypt)
 

@@ -1,3 +1,12 @@
+vinx-shell (0.16.0) trixie; urgency=medium
+
+  * Assistant de dépannage : analyse du journal et explications en français courant.
+  * Store : recherche dans le dépôt Debian, fiche détaillée des applications.
+  * Mises à jour en arrière-plan avec progression en direct (Store et barre) ;
+    mise à jour automatique des applications en option.
+
+ -- VinX OS <vinx@localhost>  Tue, 17 Nov 2026 09:53:18 +0000
+
 vinx-shell (0.15.0) trixie; urgency=medium
 
   * Wi-Fi natif : réseaux proches, connexion, réseau masqué, oubli.
