@@ -121,21 +121,69 @@ Window {
                 }
                 SettingsRow {
                     title: qsTr("Couleur d'accent")
-                    description: qsTr("Boutons principaux, éléments actifs et sélection.")
-                    Row {
-                        spacing: Theme.space2
-                        Repeater {
-                            model: ["", "#3B82C4", "#3E8460", "#B8693F", "#A8514F", "#6B6E76"]
+                    description: String(win.pref("appearance/accent", "")) === "auto"
+                        ? qsTr("Automatique : %1, d'après le fond d'écran.").arg(Theme.accentEntry.name)
+                        : qsTr("Boutons principaux, éléments actifs, sélection et logo du fond « VinX Logo ».")
+                }
+                Flow {
+                    id: accentPicker
+                    width: parent.width
+                    spacing: Theme.space1
+                    bottomPadding: Theme.space4
+                    readonly property string chosen: { const v = String(win.pref("appearance/accent", "")); return v === "" ? Theme.accents[0].id : v }
+                    Repeater {
+                        model: Theme.accents.concat([{ id: "auto", name: qsTr("Automatique"), fill: "" }])
+                        Column {
+                            required property var modelData
+                            readonly property bool current: accentPicker.chosen === modelData.id
+                            width: 66
+                            spacing: Theme.space1
                             Rectangle {
-                                required property string modelData
-                                readonly property bool current: String(win.pref("appearance/accent", "")) === modelData
-                                width: 22; height: 22; radius: 11
-                                color: modelData === "" ? "#10DD8C" : modelData
-                                border.width: current ? 2 : 0
-                                border.color: Theme.text
+                                id: chip
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                width: 36; height: 36; radius: 18
+                                color: parent.modelData.fill !== "" ? parent.modelData.fill : Theme.surfaceSunken
+                                border.width: 1
+                                border.color: Qt.rgba(0, 0, 0, 0.12)
+                                // « Automatique » : quatre pastilles du nuancier.
+                                Grid {
+                                    visible: chip.parent.modelData.id === "auto"
+                                    anchors.centerIn: parent
+                                    columns: 2
+                                    spacing: 2
+                                    Repeater {
+                                        model: ["lagon", "ambre", "framboise", "vert"]
+                                        Rectangle {
+                                            required property string modelData
+                                            width: 11; height: 11; radius: 5.5
+                                            color: Theme.accents.find(a => a.id === modelData).fill
+                                        }
+                                    }
+                                }
+                                Rectangle {
+                                    anchors.centerIn: parent
+                                    width: 44; height: 44; radius: 22
+                                    color: "transparent"
+                                    border.width: 2
+                                    border.color: Theme.text
+                                    visible: chip.parent.current
+                                }
                                 Accessible.role: Accessible.RadioButton
-                                Accessible.name: modelData === "" ? qsTr("Indigo (par défaut)") : modelData
-                                MouseArea { anchors.fill: parent; onClicked: Preferences.setValue("appearance/accent", parent.modelData) }
+                                Accessible.name: chip.parent.modelData.name
+                                Accessible.checked: chip.parent.current
+                                MouseArea {
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: Preferences.setValue("appearance/accent", chip.parent.modelData.id)
+                                }
+                            }
+                            Label {
+                                width: parent.width
+                                horizontalAlignment: Text.AlignHCenter
+                                text: parent.modelData.name
+                                font.pixelSize: Theme.fsXs
+                                level: parent.current ? Label.Primary : Label.Secondary
+                                elide: Text.ElideRight
                             }
                         }
                     }
@@ -158,9 +206,17 @@ Window {
                             color: Theme.surfaceSunken
                             border.width: parent.current ? 2 : 1
                             border.color: parent.current ? Theme.accentForeground : Theme.border
+                            // « VinX Logo » : aperçu en direct, à la couleur d'accent.
+                            readonly property var logoMatch: /\/VinX-Logo(-Sombre)?\//.exec(modelData.path)
+                            LogoWallpaper {
+                                anchors { fill: parent; margins: 3 }
+                                visible: parent.logoMatch !== null
+                                dark: parent.logoMatch !== null && parent.logoMatch[1] !== undefined ? true : Theme.dark
+                            }
                             Image {
                                 anchors { fill: parent; margins: 3 }
-                                source: "file://" + modelData.preview
+                                visible: parent.logoMatch === null
+                                source: parent.logoMatch === null ? "file://" + modelData.preview : ""
                                 fillMode: Image.PreserveAspectCrop
                                 sourceSize: Qt.size(400, 224)
                                 asynchronous: true

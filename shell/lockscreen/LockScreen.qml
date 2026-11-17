@@ -29,15 +29,8 @@ Item {
 
     // ---------- Fond : le fond d'écran du bureau, assombri ----------
     Rectangle { anchors.fill: parent; color: Theme.background }
-    Image {
-        anchors.fill: parent
-        readonly property string path: String(Preferences.value("desktop/wallpaper",
-                                         "/usr/share/wallpapers/VinX-Logo/contents/images/3840x2160.png"))
-        source: Session.fileExists(path) ? "file://" + path : ""
-        fillMode: Image.PreserveAspectCrop
-        sourceSize: Qt.size(root.width, root.height)
-        asynchronous: true
-    }
+    // Même fond que le bureau (dont « VinX Logo » à la couleur d'accent).
+    Background { anchors.fill: parent; interactive: false }
     Rectangle { anchors.fill: parent; color: Theme.background; opacity: 0.3 }
 
     // ---------- Heure et date ----------

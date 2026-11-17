@@ -1,6 +1,7 @@
 import QtQuick
 import Vinx.Theme
 import Vinx.System
+import Vinx.Controls
 
 // Fond d'écran (en session VinX, plasmashell ne le dessine plus).
 Rectangle {
@@ -13,13 +14,20 @@ Rectangle {
         GradientStop { position: 0; color: Theme.dark ? "#1C1D21" : "#EDEDF0" }
         GradientStop { position: 1; color: Theme.dark ? "#0F1012" : "#DCDCE0" }
     }
+    // « VinX Logo » (clair : suit le thème ; sombre : toujours sombre) est dessiné en direct à la couleur d'accent.
+    readonly property var logoMatch: /\/VinX-Logo(-Sombre)?\//.exec(source)
+    LogoWallpaper {
+        anchors.fill: parent
+        visible: bg.logoMatch !== null
+        dark: bg.logoMatch !== null && bg.logoMatch[1] !== undefined ? true : Theme.dark
+    }
     Image {
         anchors.fill: parent
-        source: Session.fileExists(bg.source) ? "file://" + bg.source : ""
+        visible: status === Image.Ready && bg.logoMatch === null
+        source: bg.logoMatch === null && Session.fileExists(bg.source) ? "file://" + bg.source : ""
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
         sourceSize: Qt.size(bg.width, bg.height)
-        visible: status === Image.Ready
     }
 
     MouseArea {

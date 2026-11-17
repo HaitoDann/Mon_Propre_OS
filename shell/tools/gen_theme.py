@@ -37,15 +37,27 @@ def main() -> None:
         "QtObject {",
         "    // Thème courant ; modifiable à l'exécution (Paramètres).",
         "    property bool dark: true",
-        "    // Couleur d'accent choisie par l'utilisateur (transparent = accent de marque).",
-        '    property color accentOverride: "transparent"',
+        "    // Accent choisi (identifiant de [accents] dans tokens.toml) ; réglé par AppearanceSync.",
+        f'    property string accentId: "{t["brand"]["default_accent"]}"',
+        "    // Nuancier : { id, name, fill, ink, text } (couleurs en chaînes #RRGGBB).",
+        "    readonly property var accents: [",
+    ]
+    for key, a in t["accents"].items():
+        for c in ("fill", "ink", "text"):
+            qml_color(a[c])  # validation
+        out.append(f'        {{ id: "{key}", name: "{a["name"]}", fill: "{a["fill"]}", ink: "{a["ink"]}", text: "{a["text"]}" }},')
+    out += [
+        "    ]",
+        "    readonly property var accentEntry: accents.find(a => a.id === accentId) || accents[0]",
         "",
         "    // Accent (sobre, réservé aux états et à l'action principale)",
-        f"    readonly property color accent: accentOverride.a > 0 ? accentOverride : (dark ? {qml_color(t['brand']['accent_fill'][0])} : {qml_color(t['brand']['accent_fill'][1])})",
-        f"    readonly property color accentForeground: accentOverride.a > 0 ? accentOverride : (dark ? {qml_color(t['brand']['accent_foreground'][0])} : {qml_color(t['brand']['accent_foreground'][1])})",
-        f"    readonly property color accentText: {qml_color(t['brand']['accent_text'])}",
-        "    // Couleur du logo (marque) — ne pas utiliser pour l'interface",
-        f"    readonly property color logo: {qml_color(t['brand']['logo'])}",
+        "    readonly property color accent: accentEntry.fill",
+        "    // Texte, icônes et anneaux de focus colorés",
+        "    readonly property color accentForeground: dark ? accentEntry.fill : accentEntry.text",
+        "    // Encre posée sur l'accent",
+        "    readonly property color accentText: accentEntry.ink",
+        "    // Couleur du logo : suit l'accent",
+        "    readonly property color logo: accentEntry.fill",
     ]
     out += ["", "    // États"]
     for key, val in t["state"].items():

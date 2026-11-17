@@ -32,7 +32,7 @@ Vinx.System (C++ : UPower, NetworkManager, BlueZ, WirePlumber, logind) ──▶
 
 | Module | Rôle |
 |---|---|
-| `Vinx.Theme` | Singleton `Theme` **généré** : couleurs (sombre/clair), typographie, espacements, rayons, durées. `Theme.dark` et `Theme.accentOverride` sont modifiables à l'exécution. |
+| `Vinx.Theme` | Singleton `Theme` **généré** : couleurs (sombre/clair), typographie, espacements, rayons, durées. `Theme.dark` et `Theme.accentId` (nuancier `Theme.accents`) sont modifiables à l'exécution. |
 | `Vinx.Controls` | `Label`, `Surface`, `Elevation`, `Button`, `IconButton`, `AppIcon`, `Icon` (C++), `Switch`, `Slider`, `SegmentedControl`, `Tile`, `Popover`, `Menu`, `MenuItem` |
 | `Vinx.System` | Singletons C++ : `Battery` (UPower), `Network` (NetworkManager), `Bluetooth` (BlueZ), `Audio` (WirePlumber/`wpctl`), `Session` (logind : verrouiller, veille, redémarrer, éteindre ; lancement d'apps). Chaque service signale `available: false` s'il est absent. |
 | `Vinx.Shell` | `TopBar`, `Dock`, `DockItem`, `Background`, `ControlCenter`, `CalendarPanel`, `Panels`, `ShellState`, `Tasks` (KDE ou aperçu), fenêtres layer-shell et `Preview` |

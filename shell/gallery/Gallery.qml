@@ -55,13 +55,14 @@ Window {
                 spacing: Theme.space2
                 anchors.verticalCenter: parent.verticalCenter
                 Repeater {
-                    model: ["transparent", "#3B82C4", "#3E8460", "#B8693F", "#A8514F", "#6B6E76"]
+                    model: Theme.accents
                     Rectangle {
+                        required property var modelData
                         width: 20; height: 20; radius: 10
-                        color: index === 0 ? "#10DD8C" : modelData
-                        border.width: Qt.colorEqual(Theme.accentOverride, modelData) ? 2 : 0
+                        color: modelData.fill
+                        border.width: Theme.accentId === modelData.id ? 2 : 0
                         border.color: Theme.text
-                        MouseArea { anchors.fill: parent; onClicked: Theme.accentOverride = modelData }
+                        MouseArea { anchors.fill: parent; onClicked: Theme.accentId = parent.modelData.id }
                     }
                 }
             }

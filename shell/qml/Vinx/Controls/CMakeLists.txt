@@ -27,6 +27,7 @@ qt_add_qml_module(vinxcontrols
         Popover.qml
         Menu.qml
         MenuItem.qml
+        LogoWallpaper.qml
     RESOURCES ${ICON_FILES}
 )
 target_link_libraries(vinxcontrols PRIVATE Qt6::Quick Qt6::Svg)

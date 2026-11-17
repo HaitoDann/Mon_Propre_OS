@@ -14,14 +14,17 @@ connexion, installateur. Les valeurs exactes sont dans [`branding/tokens.toml`](
 | Encre (texte) | `#141414` | `#ECECEA` | Texte principal |
 | Texte secondaire | `#5F5E5A` | `#A3A6A3` | Sous-titres, descriptions |
 | Bordures | `#D8D6CF` | blanc 8 % | Séparations, contours |
-| **Accent : vert du logo** | `#10DD8C` | `#10DD8C` | Bouton principal, interrupteurs, curseurs, sélection, trait signature |
-| Encre sur l'accent | `#06130D` | `#06130D` | Texte posé sur le vert (**jamais de blanc sur le vert**) |
-| Vert foncé (texte, focus) | `#0A7F51` | `#10DD8C` | Liens, texte vert, anneau de focus, bord des contrôles actifs |
+| **Accent (défaut : vert du logo)** | `#10DD8C` | `#10DD8C` | Bouton principal, interrupteurs, curseurs, sélection, trait signature |
+| Encre sur l'accent | `#06130D` | `#06130D` | Texte posé sur l'accent (**jamais de blanc sur l'accent**) |
+| Accent foncé (texte, focus) | `#0A7F51` | `#10DD8C` | Liens, texte coloré, anneau de focus, bord des contrôles actifs |
 | États | succès `#3FA66B` · alerte `#D4A13C` · danger `#E5484D` | idem | Uniquement pour leur sens |
 
 Règles :
-- **Un seul accent, le vert du logo**, utilisé avec parcimonie. Jamais de dégradé.
-- **Le logo est vert** (`#10DD8C`) partout : barre, démarrage, connexion, installateur, fond d'écran.
+- **Un accent à la fois**, utilisé avec parcimonie, jamais en dégradé. Vert du logo par défaut ;
+  l'utilisateur choisit parmi 8 couleurs ou « Automatique » (ADR 0021). Valeurs : `[accents]` de
+  `branding/tokens.toml` (remplissage, encre, texte — contrastes vérifiés).
+- **Le logo prend la couleur d'accent** dans la session (fond « VinX Logo » dessiné en direct,
+  Bienvenue, À propos) ; il reste vert hors session : démarrage, connexion, installateur.
 - **Thème clair par défaut** ; le sombre est disponible (Paramètres → Apparence).
 - Plus aucune trace de l'ancien violet ou de l'indigo (abandonnés, voir ADR 0015 → 0018).
 

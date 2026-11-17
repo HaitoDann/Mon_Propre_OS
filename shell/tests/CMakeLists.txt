@@ -37,6 +37,11 @@ target_include_directories(tst_desktopentry PRIVATE "${PROJECT_SOURCE_DIR}/qml/V
 target_link_libraries(tst_desktopentry PRIVATE Qt6::Test)
 add_test(NAME desktop-entry COMMAND tst_desktopentry)
 
+qt_add_executable(tst_accentpick tst_accentpick.cpp)
+target_include_directories(tst_accentpick PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
+target_link_libraries(tst_accentpick PRIVATE Qt6::Test Qt6::Gui)
+add_test(NAME accent-pick COMMAND tst_accentpick)
+
 qt_add_executable(tst_flatpak tst_flatpak.cpp "${PROJECT_SOURCE_DIR}/qml/Vinx/System/flatpak.cpp")
 target_include_directories(tst_flatpak PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
 target_link_libraries(tst_flatpak PRIVATE Qt6::Test Qt6::DBus Qt6::Qml)

@@ -82,9 +82,14 @@ Item {
             Theme.dark = false
             verify(darkWindow !== Theme.surfaceWindow.toString())
             compare(Theme.accent, Qt.color("#10DD8C"))
-            Theme.accentOverride = "#EC4899"
-            compare(Theme.accent, Qt.color("#EC4899"))
-            Theme.accentOverride = "transparent"
+            compare(Theme.accentForeground, Qt.color("#0A7F51"))
+            Theme.accentId = "lagon"
+            compare(Theme.accent, Qt.color("#2E9BFF"))
+            compare(Theme.accentText, Qt.color("#04121F"))
+            compare(Theme.logo, Qt.color("#2E9BFF"))
+            Theme.accentId = "inconnu"                      // valeur invalide : accent par défaut
+            compare(Theme.accent, Qt.color("#10DD8C"))
+            Theme.accentId = "vert"
             Theme.dark = true
             compare(Theme.accent, Qt.color("#10DD8C"))
         }

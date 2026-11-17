@@ -2,15 +2,58 @@
 # Consommé par shell/tools/gen_theme.py (→ Theme.qml). Couleurs : #RRGGBB ou #RRGGBBAA.
 #
 # Identité (ADR 0018) : design industriel et tech sobre. Base claire chaude (blanc cassé, encre
-# noire), un seul accent : le vert du logo, jamais en dégradé. Contrastes WCAG AA : le vert est clair,
+# noire), un accent à la fois (vert du logo par défaut, ADR 0021), jamais en dégradé. Contrastes WCAG AA : le vert est clair,
 # on écrit donc en encre foncée dessus ; en texte sur fond clair, on utilise sa nuance foncée.
 
 [brand]
-# Vert du logo : fonds de bouton principal, interrupteurs actifs, curseurs.
-accent_fill = ["#10DD8C", "#10DD8C"]
-accent_foreground = ["#10DD8C", "#0A7F51"]  # texte, icônes et anneaux de focus colorés (≥ 4,5:1)
-accent_text = "#06130D"                     # encre posée sur le vert (≥ 10:1)
-logo = "#10DD8C"                            # couleur du logo
+# Accent par défaut : le vert du logo (les valeurs de chaque accent sont dans [accents]).
+default_accent = "vert"
+
+# Couleurs d'accent proposées dans Paramètres → Apparence (ADR 0021).
+# fill : boutons principaux, interrupteurs, curseurs, logo du fond « VinX Logo » ;
+# ink : encre posée sur fill (≥ 4,5:1) ; text : texte et icônes colorés sur fond clair (≥ 4,5:1).
+# Sur fond sombre, fill sert aussi de couleur de texte (≥ 5:1). L'ordre est celui du nuancier.
+# Exclus : violet et indigo (ADR 0018).
+[accents.vert]
+name = "Vert VinX"
+fill = "#10DD8C"
+ink = "#06130D"
+text = "#0A7F51"
+[accents.lagon]
+name = "Lagon"
+fill = "#2E9BFF"
+ink = "#04121F"
+text = "#0B5FAD"
+[accents.turquoise]
+name = "Turquoise"
+fill = "#14C8C8"
+ink = "#04191A"
+text = "#0A7070"
+[accents.citron]
+name = "Citron"
+fill = "#C2E02E"
+ink = "#141A00"
+text = "#5A6B00"
+[accents.ambre]
+name = "Ambre"
+fill = "#FFB21E"
+ink = "#1F1300"
+text = "#8A5A00"
+[accents.corail]
+name = "Corail"
+fill = "#FF6B57"
+ink = "#1F0905"
+text = "#B23A28"
+[accents.framboise]
+name = "Framboise"
+fill = "#F0508C"
+ink = "#1F0510"
+text = "#A82659"
+[accents.graphite]
+name = "Graphite"
+fill = "#9AA09C"
+ink = "#0D0E0E"
+text = "#555A57"
 
 [state]
 success = "#3FA66B"

@@ -30,6 +30,8 @@ public:
     Q_INVOKABLE void invokeKWinShortcut(const QString &name);
     // Fonds d'écran installés : [{ name, path, preview }] (paquets /usr/share/wallpapers/*).
     Q_INVOKABLE QVariantList wallpapers() const;
+    // Accent le plus proche de la teinte dominante d'une image ({id, fill} de Theme.accents ; ADR 0021).
+    Q_INVOKABLE QString pickAccent(const QString &imagePath, const QVariantList &accents, const QString &neutral) const;
     Q_INVOKABLE QString kernelVersion() const;
     Q_INVOKABLE QString hostName() const;
     // Exécute une commande courte et renvoie sa sortie standard (vide en cas d'échec ;

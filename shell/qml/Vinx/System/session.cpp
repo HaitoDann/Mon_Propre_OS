@@ -1,4 +1,7 @@
 #include "session.h"
+#include "accentpick.h"
+
+#include <QImageReader>
 
 #include <QDBusConnection>
 #include <QDBusInterface>
@@ -101,6 +104,20 @@ QVariantList Session::wallpapers() const
                                {QStringLiteral("preview"), QFile::exists(preview) ? preview : images.filePath(files.last())}});
     }
     return out;
+}
+
+QString Session::pickAccent(const QString &imagePath, const QVariantList &accents, const QString &neutral) const
+{
+    QList<accentpick::Candidate> candidates;
+    for (const QVariant &v : accents) {
+        const QVariantMap m = v.toMap();
+        candidates.append({m.value(QStringLiteral("id")).toString(), QColor(m.value(QStringLiteral("fill")).toString())});
+    }
+    QImageReader reader(imagePath);
+    const QSize size = reader.size();
+    if (size.isValid())   // décodage réduit quand le format le permet (JPEG)
+        reader.setScaledSize(size.scaled(256, 256, Qt::KeepAspectRatio));
+    return accentpick::pick(reader.read(), candidates, neutral);
 }
 
 QString Session::kernelVersion() const { return QSysInfo::kernelVersion(); }
