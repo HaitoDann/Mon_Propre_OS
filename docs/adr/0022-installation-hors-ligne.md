@@ -32,3 +32,9 @@ installé (`/etc/default/grub` absent, `grub-mkconfig` en échec).
 - L'ISO grossit de quelques dizaines de Mo.
 - Le test automatique ne couvre que le démarrage du live, pas une installation complète :
   l'installation reste à valider sur le portable.
+
+## Complément : pas de swap activé par le live
+
+Deuxième essai : seul le partitionnement manuel était proposé. live-boot avait activé la
+partition d'échange laissée par l'essai précédent ; Calamares masque alors « Effacer le disque »
+(disque utilisé). Le live démarre désormais avec `noswap`.
