@@ -1,3 +1,9 @@
+vinx-shell (0.16.2) trixie; urgency=medium
+
+  * Repère « vinx-shell: prêt » dans le journal pour le test de démarrage de l'ISO.
+
+ -- VinX OS <vinx@localhost>  Tue, 17 Nov 2026 10:47:44 +0000
+
 vinx-shell (0.16.1) trixie; urgency=medium
 
   * Interrupteurs et curseurs plus contrastés sur fond clair.

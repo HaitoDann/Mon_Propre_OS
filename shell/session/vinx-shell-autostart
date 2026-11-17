@@ -9,6 +9,7 @@ MAX=${VINX_SHELL_MAX_CRASHES:-5}
 WINDOW=${VINX_SHELL_CRASH_WINDOW:-120}
 log() { logger -t vinx-shell "$*" 2>/dev/null || echo "vinx-shell: $*" >&2; }
 
+log "démarrage de la session VinX"
 crashes=0
 first=$(date +%s)
 while :; do

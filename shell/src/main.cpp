@@ -12,6 +12,7 @@
 #include <QRegion>
 #include <functional>
 #include <QApplication>
+#include <QProcess>
 #include <QGuiApplication>
 #include <QIcon>
 #include <QQuickImageProvider>
@@ -206,6 +207,9 @@ int main(int argc, char *argv[])
     placeOnPrimaryRef = placeOnPrimary;
     placeOnPrimary();
     QObject::connect(&app, &QGuiApplication::primaryScreenChanged, &app, placeOnPrimary);
+    // Repère dans le journal : le bureau est affiché (utilisé par le test de démarrage de l'ISO).
+    qInfo("vinx-shell: prêt (%lld écran(s))", qlonglong(QGuiApplication::screens().size()));
+    QProcess::startDetached(QStringLiteral("logger"), {QStringLiteral("-t"), QStringLiteral("vinx-shell"), QStringLiteral("prêt")});
 #endif
     return app.exec();
 }
