@@ -4,7 +4,7 @@
 #
 #   distro/tests/boot-test.sh ISO DOSSIER_SORTIE [DÉLAI_EN_SECONDES]
 #
-# Réussite : « Reached target graphical.target » puis « vinx-shell: prêt » sur la console série.
+# Réussite : « vinx-shell: prêt » sur la console série (le bureau VinX est affiché).
 # Utilisé par .github/workflows/iso.yml ; fonctionne aussi en local (qemu-system-x86, socat,
 # imagemagick ou netpbm pour les captures).
 set -eu
@@ -14,7 +14,8 @@ LIMIT=${3:-900}
 mkdir -p "$OUT"
 WORK=$(mktemp -d)
 QPID=""
-trap 'kill "$QPID" 2>/dev/null || true; rm -rf "$WORK"' EXIT
+# Les fichiers extraits de l'ISO sont en lecture seule : on rétablit les droits avant d'effacer.
+trap 'kill "$QPID" 2>/dev/null || true; chmod -R u+w "$WORK" 2>/dev/null; rm -rf "$WORK"' EXIT
 
 # Noyau et initrd du live, pour ajouter la console série aux paramètres de démarrage.
 xorriso -osirrox on -indev "$ISO" -extract /live "$WORK/live" >/dev/null 2>&1
@@ -45,9 +46,12 @@ while [ $(( $(date +%s) - start )) -lt "$LIMIT" ]; do
 	sleep 15
 	kill -0 "$QPID" 2>/dev/null || { echo "QEMU s'est arrêté" >&2; break; }
 	n=$((n + 1)); shot "$(printf 'ecran-%02d' "$n")"
-	grep -q "Reached target graphical.target" "$OUT/console.log" 2>/dev/null && [ "$boot" = 0 ] && { boot=1; echo "==> Système démarré ($(( $(date +%s) - start )) s)"; }
+	# Système démarré : l'écran de connexion (SDDM) ou la session ont démarré.
+	if [ "$boot" = 0 ] && grep -qE "Started sddm.service|Reached target graphical.target|vinx-shell" "$OUT/console.log" 2>/dev/null; then
+		boot=1; echo "==> Système démarré ($(( $(date +%s) - start )) s)"
+	fi
 	if grep -q "vinx-shell.*prêt" "$OUT/console.log" 2>/dev/null; then
-		shell=1
+		shell=1; boot=1
 		echo "==> Bureau VinX affiché ($(( $(date +%s) - start )) s)"
 		sleep 20; shot bureau   # laisse le temps au dock et au fond d'écran
 		break

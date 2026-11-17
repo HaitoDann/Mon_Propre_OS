@@ -11,8 +11,8 @@
 `distro/tests/boot-test.sh ISO DOSSIER [DÉLAI]` démarre l'ISO en mode live dans QEMU (KVM si
 disponible), avec la console sur le port série, et attend :
 
-1. `Reached target graphical.target` : le système a démarré ;
-2. `vinx-shell: prêt` : la session VinX est ouverte et le bureau affiché.
+1. le système a démarré (SDDM ou la session apparaissent dans le journal) ;
+2. `vinx-shell: prêt` : la session VinX est ouverte et le bureau affiché (critère de réussite).
 
 Il enregistre une capture d'écran toutes les 15 s, la capture du bureau, le journal de la console
 (`console.log`) et un résumé (`resume.txt`) avec les erreurs QML relevées. Sur GitHub, ces fichiers
