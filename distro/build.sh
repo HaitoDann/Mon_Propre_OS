@@ -37,6 +37,9 @@ if [ -d "$WORK/.build" ]; then (cd "$WORK" && lb clean --purge); fi
 rsync -a --delete "$DISTRO/live/auto/" "$WORK/auto/"
 rsync -a --delete "$DISTRO/live/config/" "$WORK/config/"
 echo "VINX_VERSION=\"$VERSION\"" > "$WORK/config/includes.chroot/etc/vinx-release"
+# Version affichée par l'installateur (« Remplacer une partition par VinX … »).
+sed -i -E "s/^( *(short)?[vV]ersion(edName)?: *\")([A-Za-z ]*)[0-9][0-9.]*\"/\\1\\4$VERSION\"/" \
+	"$WORK/config/includes.chroot/etc/calamares/branding/vinx/branding.desc"
 
 # Paquets maison (vinx-shell…) construits puis installés dans l'image.
 if [ -d "$ROOT/shell/debian" ]; then
