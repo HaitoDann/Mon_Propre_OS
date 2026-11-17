@@ -26,7 +26,10 @@ jobs:
       - name: Vérifier la prise en charge de layer-shell
         run: test -n "$(find /usr -name 'LayerShellQtConfig.cmake' 2>/dev/null)"
       - name: Construire le paquet (tests QML inclus)
-        run: cd shell && dpkg-buildpackage -us -uc -b
+        run: |
+          cd shell
+          # Journal complet en artefact ; seules les erreurs de compilation s'affichent ici.
+          dpkg-buildpackage -us -uc -b > ../build.log 2>&1 || { grep -n -E "error|Error [0-9]|undefined reference" ../build.log | grep -v "Werror" | head -60; exit 1; }
       - name: Captures de la galerie
         env:
           QT_QPA_PLATFORM: offscreen
@@ -45,3 +48,4 @@ jobs:
           path: |
             vinx-shell_*.deb
             captures/*.png
+            build.log

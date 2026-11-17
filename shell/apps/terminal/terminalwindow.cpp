@@ -3,6 +3,8 @@
 #include <qtermwidget.h>
 
 #include <QAction>
+#include <QKeySequence>
+#include <functional>
 #include <QApplication>
 #include <QDesktopServices>
 #include <QDir>
@@ -164,21 +166,26 @@ void TerminalWindow::updateTitle()
 void TerminalWindow::showContextMenu(QTermWidget *term, const QPoint &pos)
 {
     QMenu menu(this);
+    // Entrée de menu avec raccourci affiché (forme explicite, indépendante des surcharges de Qt).
+    auto item = [&menu](const QString &text, const char *keys, auto &&slot) {
+        QAction *a = menu.addAction(text);
+        a->setShortcut(QKeySequence(QString::fromLatin1(keys)));
+        QObject::connect(a, &QAction::triggered, slot);
+    };
     const auto links = term->filterActions(pos);   // « Ouvrir le lien », « Copier l'adresse »…
     for (QAction *a : links)
         menu.addAction(a);
     if (!links.isEmpty())
         menu.addSeparator();
-    menu.addAction(tr("Copier"), QKeySequence(QStringLiteral("Ctrl+Shift+C")), term, &QTermWidget::copyClipboard);
-    menu.addAction(tr("Coller"), QKeySequence(QStringLiteral("Ctrl+Shift+V")), term, &QTermWidget::pasteClipboard);
-    menu.addAction(tr("Rechercher…"), QKeySequence(QStringLiteral("Ctrl+Shift+F")), term, &QTermWidget::toggleShowSearchBar);
+    item(tr("Copier"), "Ctrl+Shift+C", [term] { term->copyClipboard(); });
+    item(tr("Coller"), "Ctrl+Shift+V", [term] { term->pasteClipboard(); });
+    item(tr("Rechercher…"), "Ctrl+Shift+F", [term] { term->toggleShowSearchBar(); });
     menu.addSeparator();
-    menu.addAction(tr("Agrandir le texte"), QKeySequence(QStringLiteral("Ctrl++")), term, &QTermWidget::zoomIn);
-    menu.addAction(tr("Réduire le texte"), QKeySequence(QStringLiteral("Ctrl+-")), term, &QTermWidget::zoomOut);
+    item(tr("Agrandir le texte"), "Ctrl++", [term] { term->zoomIn(); });
+    item(tr("Réduire le texte"), "Ctrl+-", [term] { term->zoomOut(); });
     menu.addSeparator();
-    menu.addAction(tr("Nouvel onglet"), QKeySequence(QStringLiteral("Ctrl+Shift+T")), this, [this] { newTab(); });
-    menu.addAction(tr("Fermer l'onglet"), QKeySequence(QStringLiteral("Ctrl+Shift+W")), this,
-                   [this, term] { closeTab(m_tabs->indexOf(term)); });
+    item(tr("Nouvel onglet"), "Ctrl+Shift+T", [this] { newTab(); });
+    item(tr("Fermer l'onglet"), "Ctrl+Shift+W", [this, term] { closeTab(m_tabs->indexOf(term)); });
     menu.exec(term->mapToGlobal(pos));
 }
 
