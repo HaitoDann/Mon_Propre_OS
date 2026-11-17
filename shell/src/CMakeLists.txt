@@ -16,4 +16,4 @@ else()
 endif()
 
 install(TARGETS vinx-shell RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
-install(FILES org.vinx.shell-preview.desktop DESTINATION "${CMAKE_INSTALL_DATADIR}/applications")
+install(FILES org.vinx.shell-preview.desktop org.vinx.shell.desktop DESTINATION "${CMAKE_INSTALL_DATADIR}/applications")

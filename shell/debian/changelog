@@ -1,3 +1,10 @@
+vinx-shell (0.18.1) trixie; urgency=medium
+
+  * Dock : déclare à KWin l'accès à la liste des fenêtres
+    (X-KDE-Wayland-Interfaces) ; sans cela le dock ne voyait aucune fenêtre ouverte.
+
+ -- VinX OS <vinx@localhost>  Tue, 17 Nov 2026 21:50:00 +0000
+
 vinx-shell (0.18.0) trixie; urgency=medium
 
   * Fenêtres réduites faciles à retrouver (ADR 0023) : points creux sous l'icône

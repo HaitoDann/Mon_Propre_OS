@@ -26,3 +26,7 @@ clic) + C (vue d'ensemble) retenues ; B (zone « réduites » dans le dock) éca
 ## Conséquences
 
 - Le code KDE (`KdeTasksBackend.qml`) n'est exercé qu'en session réelle : à valider sur le portable.
+- Premier essai réel : le dock ne voyait aucune fenêtre. KWin réserve le protocole
+  `org_kde_plasma_window_management` aux programmes qui le déclarent
+  (`X-KDE-Wayland-Interfaces` dans un `.desktop` dont `Exec` est le chemin du binaire) :
+  ajout de `org.vinx.shell.desktop` (masqué) pour `/usr/bin/vinx-shell` (0.18.1).

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=VinX Shell
+Comment=Barre, dock et panneaux du bureau VinX OS
+Exec=/usr/bin/vinx-shell
+Icon=vinx-logo
+NoDisplay=true
+OnlyShowIn=KDE;
+# Protocoles Wayland réservés de KWin : sans cette déclaration (associée au chemin du programme),
+# KWin refuse la liste des fenêtres au gestionnaire de tâches et le dock ne voit aucune fenêtre.
+X-KDE-Wayland-Interfaces=org_kde_plasma_window_management,org_kde_kwin_keystate,org_kde_plasma_activation_feedback,zkde_screencast_unstable_v1
