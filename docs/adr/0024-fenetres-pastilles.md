@@ -27,6 +27,6 @@ choix de l'utilisateur : **A « Pastilles »**, **en haut à droite comme sous W
 ## Conséquences
 
 - Ombre des fenêtres : celle de KWin pour Aurorae (pas d'ombre dessinée par le thème pour l'instant).
-- Le paquet Debian fournissant Aurorae est en `Recommends` (nom à confirmer par la CI) ; sans lui,
-  KWin revient à Breeze.
+- Pas de paquet « aurorae » séparé dans Debian 13 : le moteur est censé venir avec KWin (à confirmer
+  sur le portable) ; s'il manque, KWin revient à Breeze.
 - Vérifiable seulement en session KWin réelle.

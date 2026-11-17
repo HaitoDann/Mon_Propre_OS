@@ -13,7 +13,7 @@ Configuration du système.
 ## Décision
 
 - **Terminal VinX** (`vinx-terminal`, `shell/apps/terminal`) : Qt Widgets + **QTermWidget**
-  (moteur de terminal de LXQt, sans dépendance KDE ; paquet de développement QTermWidget Qt 6 de Debian, nom à confirmer).
+  (moteur de terminal de LXQt, sans dépendance KDE ; Debian : `libqtermwidget-dev`).
   Onglets (Ctrl+Maj+T/W, Ctrl+PgPréc/PgSuiv), copier/coller (Ctrl+Maj+C/V), recherche
   (Ctrl+Maj+F), zoom, menu contextuel en français, liens cliquables, `--workdir` et `-e`.
   Couleurs VinX (schémas clair et sombre générés, `termtheme.h` testé), police **IBM Plex Mono**

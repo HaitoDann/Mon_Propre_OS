@@ -1,3 +1,9 @@
+vinx-shell (0.19.2) trixie; urgency=medium
+
+  * Terminal VinX : dépendance de construction libqtermwidget-dev (nom Debian 13).
+
+ -- VinX OS <vinx@localhost>  Tue, 17 Nov 2026 23:35:00 +0000
+
 vinx-shell (0.19.1) trixie; urgency=medium
 
   * Terminal VinX facultatif à la construction (paquet QTermWidget introuvable sous

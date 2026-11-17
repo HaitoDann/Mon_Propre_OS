@@ -1,5 +1,5 @@
 # Terminal VinX (ADR 0025) : Qt Widgets + QTermWidget (moteur de terminal de LXQt, sans KDE).
-# Construit seulement si QTermWidget pour Qt 6 est présent (paquet de développement QTermWidget Qt 6 de Debian).
+# Construit seulement si QTermWidget pour Qt 6 est présent (Debian : libqtermwidget-dev).
 find_package(qtermwidget6 QUIET)
 if(qtermwidget6_FOUND)
     qt_add_executable(vinx-terminal main.cpp terminalwindow.cpp terminalwindow.h termtheme.h)
