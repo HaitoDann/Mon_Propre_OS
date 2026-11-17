@@ -1,3 +1,10 @@
+vinx-shell (0.19.3) trixie; urgency=medium
+
+  * Fenêtres VinX : la décoration « pastilles » est imposée après le démarrage de
+    Plasma (qui réécrivait Breeze).
+
+ -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 00:20:00 +0000
+
 vinx-shell (0.19.2) trixie; urgency=medium
 
   * Terminal VinX : dépendance de construction libqtermwidget-dev (nom Debian 13).

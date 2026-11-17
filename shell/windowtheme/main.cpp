@@ -8,6 +8,7 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDir>
+#include <QProcess>
 #include <QFile>
 #include <QSaveFile>
 #include <QStandardPaths>
@@ -49,6 +50,18 @@ int main(int argc, char **argv)
         }
     }
     if (parser.isSet(reconfigure)) {
+        // Plasma réécrit Breeze dans kwinrc à l'ouverture de session (après vinx-session) : on impose
+        // la décoration VinX ici, une fois la session démarrée (ADR 0024).
+        const QList<QPair<QString, QString>> keys = {
+            {QStringLiteral("library"), QStringLiteral("org.kde.kwin.aurorae")},
+            {QStringLiteral("theme"), QStringLiteral("__aurorae__svg__VinX")},
+            {QStringLiteral("ButtonsOnLeft"), QString()},
+            {QStringLiteral("ButtonsOnRight"), QStringLiteral("IAX")},
+        };
+        for (const auto &kv : keys)
+            QProcess::execute(QStringLiteral("kwriteconfig6"), {QStringLiteral("--file"), QStringLiteral("kwinrc"),
+                              QStringLiteral("--group"), QStringLiteral("org.kde.kdecoration2"),
+                              QStringLiteral("--key"), kv.first, kv.second});
         // Aurorae garde ses SVG en cache : KWin les relit à la reconfiguration.
         QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall(
             QStringLiteral("org.kde.KWin"), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reconfigure")),

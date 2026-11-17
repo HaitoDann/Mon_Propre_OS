@@ -30,3 +30,10 @@ choix de l'utilisateur : **A « Pastilles »**, **en haut à droite comme sous W
 - Pas de paquet « aurorae » séparé dans Debian 13 : le moteur est censé venir avec KWin (à confirmer
   sur le portable) ; s'il manque, KWin revient à Breeze.
 - Vérifiable seulement en session KWin réelle.
+
+## Complément (premier essai réel)
+
+Plasma réécrit `library=org.kde.breeze` dans `~/.config/kwinrc` après `vinx-session` : Breeze restait
+affiché (seul l'ordre des boutons était pris). `vinx-window-theme --reconfigure`, lancé par le shell
+une fois la session démarrée, écrit désormais la décoration VinX (`kwriteconfig6`) avant de
+reconfigurer KWin.
