@@ -29,7 +29,7 @@ jobs:
         run: |
           cd shell
           # Journal complet en artefact ; seules les erreurs de compilation s'affichent ici.
-          dpkg-buildpackage -us -uc -b > ../build.log 2>&1 || { grep -n -E "error|Error [0-9]|undefined reference" ../build.log | grep -v "Werror" | head -60; exit 1; }
+          dpkg-buildpackage -us -uc -b > ../build.log 2>&1 || { grep -n -i -E "error|undefined reference|\*\*\*|fatal|no such file|no rule|cannot|not declared|no member|no matching" ../build.log | grep -v -E "Werror|format-security" | head -80; exit 1; }
       - name: Captures de la galerie
         env:
           QT_QPA_PLATFORM: offscreen
