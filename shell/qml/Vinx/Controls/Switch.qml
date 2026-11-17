@@ -20,9 +20,10 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: height / 2
-        color: root.checked ? Theme.accent : Theme.surfaceActive
-        border.width: root.activeFocus ? 2 : 0
-        border.color: Theme.text
+        // Contraste (WCAG 1.4.11, ≥ 3:1) : bord vert foncé quand activé, rail marqué quand désactivé.
+        color: root.checked ? Theme.accent : (Theme.dark ? Theme.surfaceActive : Theme.borderStrong)
+        border.width: root.activeFocus ? 2 : 1
+        border.color: root.activeFocus ? Theme.text : root.checked ? Theme.accentForeground : (Theme.dark ? Theme.borderStrong : "#B4B1A8")
         Behavior on color { ColorAnimation { duration: Theme.durFast } }
 
         Rectangle {
@@ -31,6 +32,8 @@ Item {
             y: 2
             x: root.checked ? parent.width - width - 2 : 2
             color: "white"
+            border.width: Theme.dark ? 0 : 1
+            border.color: root.checked ? Theme.accentForeground : "#B4B1A8"
             Behavior on x { NumberAnimation { duration: Theme.durFast; easing.type: Easing.OutCubic } }
         }
     }

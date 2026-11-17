@@ -84,6 +84,25 @@ cp -r /usr/share/live/build/bootloaders config/
 cp boot-assets/grub-splash.png config/bootloaders/grub-pc/splash.png
 cp boot-assets/isolinux-splash.png config/bootloaders/isolinux/splash.png
 cp boot-assets/isolinux-splash.svg config/bootloaders/isolinux/splash.svg
+# Fond clair VinX : texte à l'encre, sélection verte (le texte blanc d'origine serait illisible).
+for f in config/bootloaders/isolinux/stdmenu.cfg config/bootloaders/syslinux_common/stdmenu.cfg; do
+	[ -f "$f" ] && cat >> "$f" <<'MENU'
+menu color title	* #ff141414 #00000000 none
+menu color unsel	* #ff141414 #00000000 none
+menu color sel		* #ff06130d #ff10dd8c none
+menu color hotsel	* #ff06130d #ff10dd8c none
+menu color tabmsg	* #ff5f5e5a #00000000 none
+menu color timeout_msg	* #ff5f5e5a #00000000 none
+menu color timeout	* #ff141414 #00000000 none
+MENU
+done
+find config/bootloaders/grub-pc -type f \( -name '*.cfg' -o -name '*.txt' \) -print0 2>/dev/null | xargs -0 -r sed -i -E \
+	-e 's/(color_normal=)[^ ]+/\1black\/black/' \
+	-e 's/(color_highlight=)[^ ]+/\1green\/black/' \
+	-e 's/(menu_color_normal=)[^ ]+/\1black\/black/' \
+	-e 's/(menu_color_highlight=)[^ ]+/\1green\/black/' \
+	-e 's/((item|title|message|label|text)[-_]color *[=:] *)"#[0-9A-Fa-f]{6}"/\1"#141414"/' \
+	-e 's/(selected_item_color *[=:] *)"#[0-9A-Fa-f]{6}"/\1"#0A7F51"/'
 # Entrées du menu de démarrage : « VinX OS » au lieu de « Debian GNU/Linux » / « Live system ».
 grep -rlE "Debian GNU/Linux|Live system" config/bootloaders | xargs -r sed -i \
 	-e 's#Debian GNU/Linux#VinX OS#g' -e 's#Live system#VinX OS (live)#g'

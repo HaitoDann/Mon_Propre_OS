@@ -5,7 +5,10 @@
     "DisableTelemetry": true,
     "DisableFirefoxStudies": true,
     "DontCheckDefaultBrowser": true,
-    "Homepage": { "URL": "about:home", "StartPage": "homepage" },
+    "Homepage": {
+      "URL": "about:home",
+      "StartPage": "homepage"
+    },
     "UserMessaging": {
       "WhatsNew": false,
       "ExtensionRecommendations": false,
@@ -14,8 +17,38 @@
       "SkipOnboarding": true
     },
     "Preferences": {
-      "datareporting.policy.firstRunURL": { "Value": "", "Status": "default" },
-      "browser.aboutwelcome.enabled": { "Value": false, "Status": "default" }
+      "datareporting.policy.firstRunURL": {
+        "Value": "",
+        "Status": "default"
+      },
+      "browser.aboutwelcome.enabled": {
+        "Value": false,
+        "Status": "default"
+      },
+      "widget.gtk.non-native-titlebar-buttons.enabled": {
+        "Value": false,
+        "Status": "default"
+      },
+      "layout.css.prefers-color-scheme.content-override": {
+        "Value": 2,
+        "Status": "default"
+      },
+      "widget.non-native-theme.use-theme-accent": {
+        "Value": true,
+        "Status": "default"
+      },
+      "font.name.sans-serif.x-western": {
+        "Value": "IBM Plex Sans",
+        "Status": "default"
+      },
+      "browser.theme.content-theme": {
+        "Value": 2,
+        "Status": "default"
+      },
+      "browser.theme.toolbar-theme": {
+        "Value": 2,
+        "Status": "default"
+      }
     }
   }
 }

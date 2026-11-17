@@ -28,7 +28,7 @@ Item {
         id: track
         anchors.fill: parent
         radius: height / 2
-        color: Theme.surfaceHover
+        color: Theme.dark ? Theme.surfaceHover : Theme.borderStrong
         border.width: root.activeFocus ? 2 : 0
         border.color: Theme.accentForeground
 
@@ -37,12 +37,16 @@ Item {
             height: parent.height
             radius: parent.radius
             color: Theme.accent
+            border.width: Theme.dark ? 0 : 1
+            border.color: Theme.accentForeground
         }
         Rectangle {
             id: knob
             width: parent.height; height: width; radius: width / 2
             x: root.position * (parent.width - width)
             color: "white"
+            border.width: 1
+            border.color: Theme.dark ? Theme.borderStrong : Theme.accentForeground
         }
     }
     MouseArea {
