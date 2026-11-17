@@ -2,7 +2,7 @@
 # tokens.toml (source de Theme.qml) ; les règles d'usage dans docs/DESIGN.md.
 [identity]
 name = "VinX OS"
-version = "0.17"
+version = "0.17.1"
 tagline = "Simple. Ergonomique. Stable."
 
 [logo]

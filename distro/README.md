@@ -32,7 +32,7 @@ qemu-system-x86_64 -enable-kvm -m 4096 -smp 2 -cdrom distro/out/vinx-os-0.1-amd6
 
 Ou VirtualBox / GNOME Boxes, ou une clé USB (`dd` ou Ventoy). Session live : utilisateur `vinx`
 (mot de passe `live`), connexion automatique dans la session **VinX OS** ; Plasma reste disponible
-à l'écran de connexion. L'icône « Installer VinX OS » lance Calamares.
+à l'écran de connexion. L'icône « Installer VinX OS » lance Calamares. L'installation fonctionne hors ligne : GRUB et le chiffrement sont fournis par un petit dépôt sur l'ISO (ADR 0022).
 
 Premier lancement épuré : pas de Centre de bienvenue KDE (remplacé par l'assistant VinX), pas de pages
 d'accueil Firefox ni de télémétrie (`/etc/firefox/policies`), pas de bandeau « nouveautés » dans

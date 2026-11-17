@@ -39,6 +39,19 @@ if [ -f $M/displaymanager.conf ]; then
 	printf 'defaultDesktopEnvironment:\n    executable: "vinx-session"\n    desktopFile: "vinx"\n' >> $M/displaymanager.conf
 fi
 
+# Installation hors ligne (ADR 0022) : pendant l'installation, APT du système installé n'utilise
+# que la clé (dépôt /pool de l'ISO) ; les sources réseau sont mises de côté puis rétablies
+# (sources-final réécrit ensuite sources.list).
+SM=/usr/sbin/sources-media
+if [ -f $SM ] && ! grep -q vinx-off $SM; then
+	sed -i '/^    umount \$CHROOT\/\$MEDIUM_PATH/a\
+    for f in $CHROOT/etc/apt/sources.list.d/*.vinx-off; do [ -e "$f" ] \&\& mv "$f" "${f%.vinx-off}"; done\
+    rm -f $CHROOT/etc/apt/sources.list.vinx-off' $SM
+	sed -i '/^echo "deb \[trusted=yes\]/i\
+[ -f $CHROOT/etc/apt/sources.list ] \&\& mv $CHROOT/etc/apt/sources.list $CHROOT/etc/apt/sources.list.vinx-off\
+for f in $CHROOT/etc/apt/sources.list.d/*.list $CHROOT/etc/apt/sources.list.d/*.sources; do [ -e "$f" ] \&\& mv "$f" "$f.vinx-off"; done' $SM
+fi
+
 # Renomme le raccourci « Install Debian » fourni par calamares-settings-debian.
 for f in /usr/share/applications/*.desktop /etc/skel/Desktop/*.desktop; do
 	[ -f "$f" ] && grep -q "Install Debian" "$f" && sed -i \

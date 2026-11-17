@@ -73,6 +73,35 @@ else
 	echo "!! Pas de clé distro/keys/vinx-archive-keyring.asc : dépôt APT VinX non configuré (voir docs/APT.md)"
 fi
 
+# Dépôt de paquets hors ligne sur l'ISO. L'installateur (calamares-settings-debian, étape
+# « sources-media ») configure l'APT du système installé sur la clé (/run/live/medium) puis
+# installe GRUB (grub-efi-amd64 en UEFI, grub-pc en BIOS) et, si le disque est chiffré,
+# cryptsetup-initramfs. Sans ces paquets sur l'ISO, l'installation échoue hors connexion (ADR 0022).
+echo "==> Dépôt hors ligne de l'installateur (GRUB, chiffrement)"
+command -v dpkg-scanpackages >/dev/null && command -v apt-ftparchive >/dev/null || {
+	apt-get update -qq
+	apt-get install -y --no-install-recommends dpkg-dev apt-utils
+}
+OFFLINE_PKGS="grub-efi-amd64 grub-efi grub-efi-amd64-bin grub-efi-amd64-signed shim-signed grub-pc grub-pc-bin
+	cryptsetup cryptsetup-initramfs keyutils efibootmgr os-prober"
+MEDIA="$WORK/config/includes.binary"
+rm -rf "$MEDIA/pool" "$MEDIA/dists"
+mkdir -p "$MEDIA/pool/main" "$MEDIA/dists/trixie/main/binary-amd64"
+apt-get update -qq
+# Fermeture des dépendances (paquets réels uniquement : les virtuels sont entre < >).
+DEPS="$(apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks \
+	--no-replaces --no-enhances $OFFLINE_PKGS | grep -E '^[a-z0-9]' | sort -u)"
+(cd "$MEDIA/pool/main" && apt-get download $DEPS)
+(cd "$MEDIA" && dpkg-scanpackages --multiversion pool/main /dev/null > dists/trixie/main/binary-amd64/Packages \
+	&& gzip -9kf dists/trixie/main/binary-amd64/Packages \
+	&& apt-ftparchive -o APT::FTPArchive::Release::Suite=trixie -o APT::FTPArchive::Release::Codename=trixie \
+		-o APT::FTPArchive::Release::Components=main -o APT::FTPArchive::Release::Architectures=amd64 \
+		release dists/trixie > "$WORK/Release.tmp" && mv "$WORK/Release.tmp" dists/trixie/Release)
+for p in $OFFLINE_PKGS; do
+	grep -q "^Package: $p\$" "$MEDIA/dists/trixie/main/binary-amd64/Packages" || { echo "Paquet hors ligne manquant : $p" >&2; exit 1; }
+done
+echo "    $(ls "$MEDIA/pool/main" | wc -l) paquets, $(du -sh "$MEDIA/pool" | cut -f1)"
+
 echo "==> Génération des images"
 "$DISTRO/scripts/render-assets.sh" "$WORK/config/includes.chroot" "$WORK/boot-assets"
 
