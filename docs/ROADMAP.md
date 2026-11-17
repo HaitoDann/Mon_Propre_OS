@@ -1,13 +1,16 @@
 # Roadmap
 
-| Phase | Contenu | Durée indicative |
-|---|---|---|
-| 0 — Fondations | Monorepo, ADR, CI, branding, dépôt APT signé | 2–3 sem. |
-| 1 — Remaster thémé | ISO live-build Trixie, Plasma minimal thémé, Firefox ESR, Calamares — ✅ ISO construite en CI et démarrée en machine virtuelle ([distro/](../distro)) | 3–4 sem. |
-| 2 — Design system | Maquette web (`prototype/`) ✅ finalisée, guide UX ([UX.md](UX.md)) ✅, composants QML | 4–6 sem. |
-| 3 — Shell v0.1 | Socle + design system QML ✅, barre ✅, dock ✅, session ✅, notifications ✅, recherche ✅, espaces de travail ✅, widgets ✅ ([shell/](../shell)) | 3–4 mois |
-| 4 — Paramètres + premier démarrage | v0.1 ✅ (`vinx-settings`, `vinx-welcome`) ; pages natives réseau, écrans, comptes à venir | 2–3 mois |
-| 5 — Store v0.1 | Packs Flathub ✅ (`vinx-store`) ; paquets APT via PackageKit, mises à jour à venir | 2–3 mois |
-| 6 — Stabilisation 1.0 | Matériel, accessibilité, i18n, performances | 2 mois |
+État au 17 novembre 2026 — shell 0.16, ISO 0.16 (construite et testée automatiquement jusqu'au bureau).
 
-Les phases 0 et 2 avancent en parallèle.
+| Phase | Contenu | État |
+|---|---|---|
+| 0 — Fondations | Monorepo, ADR, CI, branding, licence (GPL-3) | ✅ |
+| 1 — ISO | live-build trixie, Calamares (chiffrement, Secure Boot), Plymouth, GRUB, SDDM VinX | ✅ |
+| 2 — Design | Identité industrielle claire et verte, tokens, icônes, IBM Plex Sans (ADR 0018) | ✅ |
+| 3 — Shell | Barre, dock (bas ou gauche, masquage), centre de contrôle, notifications, recherche, widgets, menu global, verrouillage, relance automatique | ✅ |
+| 4 — Paramètres | Pages natives : écrans, Wi-Fi, son, énergie, imprimantes, pilotes, utilisateurs, sauvegarde, dépannage, mises à jour, accessibilité, clavier | ✅ à valider sur matériel réel |
+| 5 — Store | Flathub + dépôt Debian, fiches, mises à jour en arrière-plan | ✅ à valider sur matériel réel |
+| 5 bis — Fichiers | Interface VinX sur KIO, onglets, glisser-déposer, conflits | ✅ |
+| A2 — Dépôt APT | Scripts et workflow prêts ; **activation par l'utilisateur en attente** (docs/APT.md) | ⏳ |
+| 6 — Validation | Usage quotidien sur portable, corrections issues des retours | ⏳ en cours |
+| 7 — Version publique 1.0 | Site de présentation, ISO signée, traduction anglaise, guide nouveaux utilisateurs | à venir |

@@ -1,6 +1,6 @@
 # ADR 0015 — Identité graphique « OS minimal »
 
-- **Statut** : accepté
+- **Statut** : remplacé par l'ADR 0018 (couleurs, icônes, fond) ; formes douces conservées
 - **Date** : 2026-11-15
 
 ## Choix de l'utilisateur

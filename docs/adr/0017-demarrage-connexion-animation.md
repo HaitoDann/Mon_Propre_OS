@@ -1,6 +1,6 @@
 # ADR 0017 — Démarrage, connexion et animation signature
 
-- **Statut** : accepté
+- **Statut** : accepté ; visuels (fond, couleurs) mis à jour par l'ADR 0018 — la carte et la barre ne sont plus biseautées, l'animation reste
 - **Date** : 2026-11-16
 
 ## Décision

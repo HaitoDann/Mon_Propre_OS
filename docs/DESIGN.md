@@ -1,65 +1,87 @@
 # Règles de design de VinX OS
 
-Ces règles s'appliquent à toute interface de VinX OS : shell, applications système, maquette.
-Elles traduisent les recommandations des grands systèmes de design (Apple HIG, Microsoft Fluent 2,
-GNOME HIG) et des critères d'accessibilité WCAG. Les valeurs sont dans [`branding/tokens.toml`](../branding/tokens.toml).
+Identité en vigueur : **design industriel et tech sobre, vert du logo, thème clair** (ADR 0018).
+Ces règles s'appliquent à toute interface : shell, applications VinX, écrans de démarrage et de
+connexion, installateur. Les valeurs exactes sont dans [`branding/tokens.toml`](../branding/tokens.toml)
+(source unique, générée en `Theme.qml`) ; ce document en donne le sens.
 
-## 1. Couleur : une base neutre, un accent rare
+## 1. Couleurs
 
-| Règle | Application |
-|---|---|
-| **Base neutre** pour 90 % de la surface : fonds, fenêtres, barres, menus. | Gris légèrement froids (`#141517` → `#232427` en sombre). Jamais de fond teinté de couleur. |
-| **Un seul accent**, sobre, réservé à : action principale, état actif (interrupteur, tuile), sélection, focus clavier. | Violet du logo atténué `#7358BD` (clair : `#6548AE`). Pas de dégradé d'accent. |
-| **Pas de noir pur** en thème sombre (éblouissement, halo autour du texte). | Fond `#141517`, texte `#ECECEE`. |
-| **Profondeur par la luminosité**, pas par la couleur : plus une surface est élevée, plus elle est claire (sombre) ou blanche et ombrée (clair). | Fond < fenêtre < menu/panneau. |
-| **Couleurs d'état** réservées à leur sens (succès, alerte, danger), désaturées. | `#3FA66B`, `#D4A13C`, `#E5484D`. |
-| **La couleur de marque reste au logo.** | Le violet `#A855F7` n'apparaît que dans le logo, l'écran de démarrage et l'installateur. |
+| Rôle | Clair (défaut) | Sombre | Usage |
+|---|---|---|---|
+| Fond | `#ECEBE6` blanc cassé chaud | `#121413` | Bureau, arrière-plans |
+| Surfaces | `#F8F7F4` | `#1A1C1B` / `#1E2120` | Fenêtres, panneaux, menus |
+| Encre (texte) | `#141414` | `#ECECEA` | Texte principal |
+| Texte secondaire | `#5F5E5A` | `#A3A6A3` | Sous-titres, descriptions |
+| Bordures | `#D8D6CF` | blanc 8 % | Séparations, contours |
+| **Accent : vert du logo** | `#10DD8C` | `#10DD8C` | Bouton principal, interrupteurs, curseurs, sélection, trait signature |
+| Encre sur l'accent | `#06130D` | `#06130D` | Texte posé sur le vert (**jamais de blanc sur le vert**) |
+| Vert foncé (texte, focus) | `#0A7F51` | `#10DD8C` | Liens, texte vert, anneau de focus, bord des contrôles actifs |
+| États | succès `#3FA66B` · alerte `#D4A13C` · danger `#E5484D` | idem | Uniquement pour leur sens |
+
+Règles :
+- **Un seul accent, le vert du logo**, utilisé avec parcimonie. Jamais de dégradé.
+- **Le logo est vert** (`#10DD8C`) partout : barre, démarrage, connexion, installateur, fond d'écran.
+- **Thème clair par défaut** ; le sombre est disponible (Paramètres → Apparence).
+- Plus aucune trace de l'ancien violet ou de l'indigo (abandonnés, voir ADR 0015 → 0018).
 
 ## 2. Contraste (WCAG 2.2 AA)
 
-- Texte courant : **≥ 4,5:1** ; grand texte (≥ 18 px, ou 14 px gras) : **≥ 3:1**.
-- Composants et icônes porteurs d'information (bordure de champ, interrupteur, icône d'état) : **≥ 3:1**.
-- Valeurs vérifiées pour la palette actuelle (sombre / clair) :
+| Paire | Rapport |
+|---|---|
+| Encre `#06130D` sur vert `#10DD8C` | 10,6:1 |
+| Vert foncé `#0A7F51` sur surface claire | 4,7:1 |
+| Vert `#10DD8C` sur surface sombre | 9,6:1 |
+| Texte secondaire clair `#5F5E5A` sur surface | 6,1:1 |
 
-| Paire | Sombre | Clair |
-|---|---|---|
-| Texte principal / fond | 15,5:1 | 15,5:1 |
-| Texte secondaire / fenêtre | 6,6:1 | 5,3:1 |
-| Texte tertiaire (indications) / fenêtre | 3,8:1 | 3,3:1 |
-| Texte blanc / bouton d'accent | 5,1:1 | 6,1:1 |
-| Accent (texte, focus) / fond | 5,5:1 | 6,1:1 |
+Le vert clair sur fond clair n'atteint que 1,7:1 : les interrupteurs et curseurs actifs ont donc
+un **bord vert foncé**, et l'état se lit aussi par la position ou le texte (jamais la couleur seule).
 
-## 3. Hiérarchie et typographie
+## 3. Typographie
 
-- **Une police** (Inter), hiérarchie par **taille et graisse**, pas par la couleur.
-- Échelle courte : 11 / 12 / 13 (corps) / 15 / 20 / 56 px.
-- Trois niveaux de texte seulement : principal, secondaire, tertiaire.
-- Titres de section en petites capitales espacées, couleur secondaire.
+- **IBM Plex Sans** pour toute l'interface (fournie avec `vinx-shell`, licence SIL OFL).
+- Hiérarchie par **taille et graisse**, pas par la couleur. Échelle : 11 / 12 / 13 (corps) / 15 / 20 / 56 px.
+- **Pas d'étiquettes en police technique** (pas de monospace décoratif, pas de petites capitales
+  à la machine à écrire). Les titres de section sont en petites capitales espacées, couleur secondaire.
 
 ## 4. Formes, espacements, mouvement
 
-- Grille de **4 px** (4, 8, 12, 16, 24, 32).
-- Rayons modestes et cohérents : 5–7 px (contrôles), 10–12 px (cartes, fenêtres), 16 px (dock).
-- Bordures fines (1 px, blanc ou noir à 7–12 %) plutôt qu'ombres marquées ; ombres douces.
-- Animations **courtes** (120–320 ms), décélérées, jamais décoratives ; respect du réglage « réduire les animations ».
+- **Formes douces** : coins arrondis partout (`Theme.shapeStyle = "soft"`). Rayons 5–7 px
+  (contrôles), 10–12 px (cartes, panneaux), 16 px (dock), 24 % du côté (tuiles d'icônes).
+- Le **biseau** (angle coupé du logo) n'est plus une forme d'interface : il ne subsiste que comme
+  option cachée (`appearance/shape = bevel`).
+- Grille de **4 px** (4, 8, 12, 16, 24, 32). Bordures fines plutôt qu'ombres marquées.
+- **Animation signature** : un panneau arrive en glissant le long de la diagonale depuis son coin
+  haut-droit, puis un **court trait vert** se dessine sur son bord haut, près du coin.
+- Animations courtes (120–320 ms), décélérées ; « Réduire les animations » les supprime.
 
-## 5. Ergonomie bureautique
+## 5. Icônes
 
-- **Densité confortable** : cibles cliquables ≥ 24 px (barre), ≥ 28 px (contrôles), ≥ 44 px (tactile).
-- **Tout au clavier** : ordre de tabulation logique, focus toujours visible (anneau d'accent 2 px),
+- **Applications VinX et outils système** : tuile neutre arrondie (`#E3E1DB`, sombre `#2A2D2B`),
+  **pictogramme à l'encre au trait**, **un point de couleur** en haut à droite qui identifie l'app.
+- **Applications tierces** (Firefox, LibreOffice, Thunderbird…) : **leur logo officiel**, posé sur
+  la même tuile neutre pour un dock homogène.
+- Dossiers et types de fichiers : même tuile + pictogramme + point (thème d'icônes « VinX »,
+  généré par `branding/icon-theme/gen_icons.py`, hérite de Breeze pour le reste).
+- Pictogrammes d'interface : jeu `branding/icons/` au trait 1,8 px, grille 24 px.
+
+## 6. Fond d'écran et écrans système
+
+- Fond par défaut **« VinX Logo »** : blanc cassé, grille de points discrète, **logo vert en grand,
+  décalé à droite**. Variante « VinX Logo (sombre) ».
+- Démarrage (Plymouth), menu GRUB, connexion (SDDM), verrouillage : même fond clair à points,
+  logo vert, cartes claires, IBM Plex Sans.
+
+## 7. Ergonomie
+
+- **Densité confortable** : cibles ≥ 24 px (barre), ≥ 28 px (contrôles).
+- **Tout au clavier** : ordre de tabulation logique, focus visible (anneau vert foncé 2 px),
   raccourcis affichés dans les menus, `Échap` ferme l'élément le plus haut.
-- **Prévisibilité** : un même geste produit le même effet partout ; pas de mode caché.
-- **Calme visuel** : rien ne clignote ni ne bouge sans action de l'utilisateur ; notifications discrètes,
-  regroupées, désactivables (Ne pas déranger).
-- **Lisibilité des états** : un état ne repose jamais sur la seule couleur (icône ou texte en plus).
-- **Icônes** : pictogrammes au trait, grille 24 px. Icônes d'applications et de fichiers : silhouette
-  de l'objet (dossier, page, enveloppe, globe…) en teinte unie désaturée de luminosité proche,
-  pictogramme blanc au trait (ADR 0015).
 - **Barre minimale** : un indicateur n'apparaît que s'il apporte une information.
+- **Calme** : rien ne clignote ni ne bouge sans action de l'utilisateur.
+- **Pages natives VinX** pour les réglages courants ; un lien « Avancé… » vers KDE pour les cas rares.
 
-## Sources
+## Historique de l'identité
 
-- Apple — Human Interface Guidelines, [Color](https://developer.apple.com/design/human-interface-guidelines/color.md) et [Dark Mode](https://developer.apple.com/design/human-interface-guidelines/dark-mode.md)
-- Microsoft — [Fluent 2, Color](https://fluent2.microsoft.design/color) ; [Office Add-ins, color guidelines](https://learn.microsoft.com/en-us/office/dev/add-ins/design/add-in-color)
-- GNOME — [Human Interface Guidelines](https://developer.gnome.org/hig) et [UI Styling](https://developer.gnome.org/hig/guidelines/ui-styling.html)
-- Accessibilité et thème sombre : [Uxcel — Dark Mode Design](https://uxcel.com/blog/12-principles-of-dark-mode-design-627), [LogRocket — Dark mode UI best practices](https://blog.logrocket.com/ux-design/dark-mode-ui-design-best-practices-and-examples/), [Accessibility Checker — Dark Mode Accessibility](https://www.accessibilitychecker.org/blog/dark-mode-accessibility/)
+Gris foncé + violet (abandonné : générique) → biseau partout (abandonné : trop chargé) →
+**industriel clair et vert** (en vigueur). Détails : ADR 0015, 0017, 0018.

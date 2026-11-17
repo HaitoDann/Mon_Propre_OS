@@ -1,30 +1,31 @@
-# Source de vérité de l'identité visuelle.
-# Ces valeurs alimentent prototype/tokens.css aujourd'hui, puis le design system QML.
+# Résumé de l'identité visuelle (ADR 0018). Les valeurs détaillées de l'interface sont dans
+# tokens.toml (source de Theme.qml) ; les règles d'usage dans docs/DESIGN.md.
 [identity]
 name = "VinX OS"
-version = "0.14"
+version = "0.16"
 tagline = "Simple. Ergonomique. Stable."
 
 [logo]
 svg = "logo/vinx-logo.svg"
 white = "logo/vinx-logo-white.svg"
 gradient = "logo/vinx-logo-gradient.svg"
-wallpaper = "wallpaper/vinx-graphite.svg"
+wallpaper = "wallpaper/vinx-logo-clair.svg"
+wallpaper_dark = "wallpaper/vinx-logo-sombre.svg"
 
 [colors]
-logo = "#10DD8C"            # violet du logo — réservé au logo (voir docs/DESIGN.md)
-accent = "#10DD8C"          # accent de l'interface (violet du logo atténué)
-accent_light_theme = "#0A7F51"
+logo = "#10DD8C"            # vert du logo
+accent = "#10DD8C"          # accent de l'interface : le même vert (encre #06130D posée dessus)
+accent_text = "#0A7F51"     # vert foncé pour le texte et le focus sur fond clair
 logo_gradient = ["#10DD8C", "#10DD8C"]
-background_dark = "#141517"
-background_light = "#F5F5F7"
-success = "#22C55E"
-warning = "#F59E0B"
-danger = "#EF4444"
+background_light = "#ECEBE6" # thème par défaut
+background_dark = "#121413"
+success = "#3FA66B"
+warning = "#D4A13C"
+danger = "#E5484D"
 
 [typography]
-family = "Inter"
-fallback = "system-ui, sans-serif"
+family = "IBM Plex Sans"    # fournie dans branding/fonts (SIL OFL)
+fallback = "Inter, system-ui, sans-serif"
 
 [shape]
 radius_window = 14

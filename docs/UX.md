@@ -1,15 +1,16 @@
 # Guide UX du Desktop Shell
 
-Ce document fige les règles d'expérience validées dans la maquette (`prototype/`).
-Il sert de cahier des charges pour l'implémentation native Qt 6 / QML (phase 3).
+Règles d'expérience du bureau, issues de la maquette (`prototype/`, ancienne charte violette,
+conservée pour mémoire) et appliquées dans le shell Qt 6 / QML (`shell/`). Pour le visuel, la
+référence est [DESIGN.md](DESIGN.md).
 
 ## Principes
 
 1. **Chaque élément a une utilité.** Rien de décoratif sans fonction.
 2. **Le bureau reste calme.** Widgets optionnels et désactivables, notifications discrètes, animations courtes (120–360 ms).
 3. **Tout est accessible au clavier** et à la souris ; chaque action de menu affiche son raccourci.
-4. **Une seule source de style** : les tokens de `branding/brand.toml`. Aucun composant ne code de couleur en dur.
-5. **Clair et sombre** sont deux thèmes de premier rang ; le sombre est le défaut.
+4. **Une seule source de style** : les tokens de `branding/tokens.toml`. Aucun composant ne code de couleur en dur.
+5. **Clair et sombre** sont deux thèmes de premier rang ; le **clair** est le défaut (ADR 0018).
 
 ## Composants et correspondance native
 

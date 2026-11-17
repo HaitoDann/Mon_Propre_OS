@@ -1,0 +1,85 @@
+# VinX OS — contexte de reprise
+
+Ce fichier est lu au début de chaque conversation. Il résume le projet, les préférences de
+l'utilisateur et la façon de travailler. Détails : `README.md`, `docs/`.
+
+## Le projet
+
+Distribution **Debian 13 « trixie »** (amd64) de bureautique, avec son **propre bureau** (« VinX »)
+écrit en **Qt 6 / QML / C++** sur l'infrastructure KDE Plasma 6 (KWin Wayland, kscreenlocker,
+libtaskmanager, KIO, appmenu ; `plasmashell` est remplacé par `vinx-shell`).
+Piliers : simplicité, ergonomie, stabilité. Licence GPL-3.0-or-later (ADR 0012).
+
+L'utilisateur **utilise VinX au quotidien sur son portable** et le fait évoluer avec `vinx-dev`.
+Il construit les ISO en local sur une machine **Debian 13** (`sudo ./distro/build.sh`).
+
+## Préférences de l'utilisateur (à respecter)
+
+- **Toujours répondre en français**, interface en français.
+- Qualité plutôt que vitesse ; architecture propre, documentée, modulaire ; **un ADR par décision**
+  structurante (`docs/adr/NNNN-*.md`).
+- **Pas de changement d'architecture majeur sans validation.** Pour le design : montrer des
+  **maquettes ou captures avant/après** et laisser choisir (il aime voir avant de décider).
+- **Économiser les minutes GitHub Actions** : commiter en local, **pousser une fois par lot**.
+  Ne mettre **`[iso]`** dans un message de commit que si une ISO est demandée.
+- Rapporter honnêtement ce qui n'a **pas** pu être testé (pas de matériel réel ici).
+
+## Identité visuelle (ADR 0018 — en vigueur)
+
+Thème **clair** par défaut, **vert du logo `#10DD8C`** comme seul accent (encre `#06130D` dessus,
+`#0A7F51` pour le texte vert), **IBM Plex Sans** (fournie dans `branding/fonts`), formes douces,
+icônes « tuile neutre + pictogramme à l'encre + point de couleur », logos officiels pour les
+applications tierces, fond « VinX Logo » (logo vert sur grille de points). Règles complètes :
+**`docs/DESIGN.md`**. Valeurs : **`branding/tokens.toml`** → `Theme.qml` (généré).
+Abandonnés (ne pas réintroduire) : violet/indigo, biseau partout, étiquettes en police technique.
+
+## Organisation du code
+
+| Chemin | Contenu |
+|---|---|
+| `shell/qml/Vinx/Theme` | `Theme.qml` généré par `shell/tools/gen_theme.py` |
+| `shell/qml/Vinx/Controls` | Composants : Button, Switch, Slider, Bevel (forme), Surface, Popover, Menu, AppIcon… |
+| `shell/qml/Vinx/System` | Singletons C++ : Network, Wifi (nmcli), Audio (wpctl), Bluetooth, Battery, Session, Preferences, Notifications, Flatpak, DebianPackages, Updates, Printers, Drivers, Accounts, Diagnostics, MenuBridge… ; analyseurs testés `sysparse.h`, `diagparse.h`, `updateparse.h`, `wpctl.h` |
+| `shell/qml/Vinx/Shell` | Bureau : TopBar, Dock, ControlCenter, Toasts, Panels, Search, WifiNetworks, DisplayHotplug… |
+| `shell/src/main.cpp` | Process `vinx-shell` (fenêtres layer-shell par écran) |
+| `shell/apps/` | `settings` (pages *Page.qml), `store`, `files` (KIO), `welcome` |
+| `shell/system/` | `vinx-admin` (pkexec, polkit), `vinx-update`, `vinx-snapshots`, `vinx-dev` |
+| `shell/session/` | Session `vinx.desktop`, `vinx-session`, autostart avec relance |
+| `shell/sddm/vinx`, `shell/lockscreen` | Connexion et verrouillage |
+| `shell/tests/` | Tests QML (qmltestrunner) et C++ (QtTest) |
+| `distro/` | ISO : `build.sh`, `live/` (live-build), hooks, `scripts/` (APT, assets), `tests/boot-test.sh` |
+| `.github/workflows/` | `shell.yml` (paquet + tests, à chaque poussée sur shell/), `iso.yml` (ISO + test de démarrage QEMU, seulement avec `[iso]`), `apt-repo.yml` (étiquette `shell-v*`), `checks.yml` |
+
+Préférences utilisateur : `~/.config/vinx/shell.ini` (QSettings, clés `section/clé`).
+
+## Conventions pour chaque modification
+
+1. Coder, puis **construire et tester en local** :
+   `cmake -S shell -B <scratchpad>/shell-build && cmake --build <scratchpad>/shell-build -j8 && (cd <scratchpad>/shell-build && ctest)`.
+2. Vérifier visuellement : `QT_QPA_PLATFORM=offscreen ./src/vinx-shell --demo --open control --screenshot x.png`,
+   `./apps/settings/vinx-settings --page <page> --screenshot x.png`, `./apps/store/vinx-store --search debian:gimp --screenshot x.png`.
+   Pour simuler du matériel (nmcli, kscreen-doctor, lpstat, lspci…), mettre de fausses commandes en tête de `PATH`.
+3. **Monter la version** : `shell/CMakeLists.txt` (VERSION) + entrée en tête de `shell/debian/changelog`.
+4. ADR si décision structurante ; mettre à jour `docs/` concernés.
+5. Commit en français avec les lignes d'attribution demandées ; **une poussée par lot** sur la branche
+   de travail ; vérifier ensuite le workflow `shell.yml` (Debian 13) et corriger s'il échoue.
+
+## Pièges connus
+
+- Local : Ubuntu, **Qt 6.4**, **sans KIO ni LayerShellQt** (code compilé seulement en CI Debian, Qt 6.8).
+  Le code KIO de Fichiers et layer-shell du dock ne se vérifie qu'en CI.
+- Les dépôts Debian (`deb.debian.org`) sont bloqués ici : impossible d'installer des paquets trixie localement.
+- Vérifier les **noms de paquets Debian** (ex. `kde-config-gtk-style`, pas `kde-gtk-config` ;
+  `fonts-ibm-plex` indisponible → police fournie dans le dépôt).
+- Tests : `VINX_TASKS_BACKEND=preview`, `XDG_CONFIG_HOME` isolé, `LANG=C.UTF-8`.
+- Qt 6.4 : import explicite du module courant pour les types C++ ; pas de `Qt.alpha` (utiliser `Qt.rgba`).
+- L'agent ne peut ni déclencher `workflow_dispatch`, ni pousser d'étiquette, ni créer de secret GitHub.
+
+## En attente
+
+- **Dépôt APT** : l'utilisateur doit créer la clé (`distro/scripts/create-apt-key.sh`), ajouter le
+  secret `APT_SIGNING_KEY`, activer GitHub Pages, pousser une étiquette `shell-vX.Y.Z` (docs/APT.md).
+- **Retours de test sur le portable** (jamais testé sur matériel réel) : Wi-Fi natif, écrans et
+  bulle de branchement, imprimantes, utilisateurs, pilotes, dépannage, recherche Debian du Store,
+  fiche détaillée d'application, mises à jour en arrière-plan, couleurs du menu GRUB.
+- Ensuite : version publique 1.0 (site, ISO signée, traduction anglaise, guide).
