@@ -4,7 +4,7 @@
 |---|---|---|
 | Tests du shell (`shell/tests`) | À chaque poussée touchant `shell/` (workflow vinx-shell) | Composants QML, analyseurs (Wi-Fi, imprimantes, mises à jour, dépannage…), Fichiers, comptes, relance du shell |
 | Paquet Debian | Idem | Construction, installation et captures de la galerie sous Debian 13 |
-| **Démarrage de l'ISO** | Avec l'ISO (`[iso]`, étiquette `v*` ou lancement manuel) | L'ISO démarre dans QEMU jusqu'au bureau VinX |
+| **Démarrage de l'ISO** | Lancement manuel uniquement (onglet Actions) | L'ISO démarre dans QEMU jusqu'au bureau VinX |
 
 ## Test de démarrage de l'ISO
 

@@ -21,7 +21,8 @@ Il construit les ISO en local sur une machine **Debian 13** (`sudo ./distro/buil
 - **Pas de changement d'architecture majeur sans validation.** Pour le design : montrer des
   **maquettes ou captures avant/après** et laisser choisir (il aime voir avant de décider).
 - **Économiser les minutes GitHub Actions** : commiter en local, **pousser une fois par lot**.
-  Ne mettre **`[iso]`** dans un message de commit que si une ISO est demandée.
+  **Plus aucune ISO construite par GitHub Actions** (`iso.yml` seulement à la demande manuelle de
+  l'utilisateur) : l'utilisateur construit l'ISO en local et met à jour son portable avec `vinx-dev`.
 - Rapporter honnêtement ce qui n'a **pas** pu être testé (pas de matériel réel ici).
 
 ## Identité visuelle (ADR 0018 — en vigueur)
@@ -49,7 +50,7 @@ Abandonnés (ne pas réintroduire) : violet/indigo, biseau partout, étiquettes 
 | `shell/sddm/vinx`, `shell/lockscreen` | Connexion et verrouillage |
 | `shell/tests/` | Tests QML (qmltestrunner) et C++ (QtTest) |
 | `distro/` | ISO : `build.sh`, `live/` (live-build), hooks, `scripts/` (APT, assets), `tests/boot-test.sh` |
-| `.github/workflows/` | `shell.yml` (paquet + tests, à chaque poussée sur shell/), `iso.yml` (ISO + test de démarrage QEMU, seulement avec `[iso]`), `apt-repo.yml` (étiquette `shell-v*`), `checks.yml` |
+| `.github/workflows/` | `shell.yml` (paquet + tests, à chaque poussée sur shell/), `iso.yml` (ISO + test de démarrage QEMU, déclenchement manuel uniquement), `apt-repo.yml` (étiquette `shell-v*`), `checks.yml` |
 
 Préférences utilisateur : `~/.config/vinx/shell.ini` (QSettings, clés `section/clé`).
 
