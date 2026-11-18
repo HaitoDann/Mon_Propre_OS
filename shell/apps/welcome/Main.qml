@@ -4,21 +4,25 @@ import Vinx.Controls
 import Vinx.System
 import Vinx.Shell
 
-// Assistant de premier démarrage : bienvenue, apparence, applications, raccourcis.
-// Lancé une fois par vinx-shell (préférence welcome/done), relançable depuis le menu.
+// Assistant de premier démarrage (ADR 0030) : quatre étapes simples — bienvenue, Internet,
+// apparence, gestes essentiels. Aucun réglage technique : les instantanés sont activés
+// automatiquement et LibreOffice enregistre au format Microsoft Office par défaut.
+// Lancé une fois par vinx-shell (préférence welcome/done), relançable depuis la recherche.
 Window {
     id: win
-    width: 720; height: 520
-    minimumWidth: 720; minimumHeight: 520
-    maximumWidth: 720; maximumHeight: 520
+    width: 760; height: 560
+    minimumWidth: 760; minimumHeight: 560
+    maximumWidth: 760; maximumHeight: 560
     visible: true
     title: qsTr("Bienvenue dans VinX OS")
     color: Theme.surfaceWindow
     AppearanceSync {}
 
-    property int step: 0
-    readonly property int steps: 7
+    property string startStep: ""
+    property int step: Math.max(0, Math.min(3, parseInt(startStep) || 0))
+    readonly property int steps: 4
     function finish() { Preferences.setValue("welcome/done", true); Qt.quit() }
+    function pref(k, d) { Preferences.revision; return Preferences.value(k, d) }
 
     Item {
         anchors { left: parent.left; right: parent.right; top: parent.top; bottom: footer.top; margins: Theme.space6 }
@@ -28,158 +32,119 @@ Window {
             visible: win.step === 0
             anchors.centerIn: parent
             spacing: Theme.space4
-            Icon { name: "vinx"; width: 112; height: 80; color: Theme.logo; anchors.horizontalCenter: parent.horizontalCenter }
+            Icon { name: "vinx"; width: 120; height: 86; color: Theme.logo; anchors.horizontalCenter: parent.horizontalCenter }
             Label { text: qsTr("Bienvenue dans VinX OS"); font.pixelSize: 28; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
             Label {
-                width: 460; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
-                text: qsTr("Votre système est prêt : navigateur, bureautique et messagerie sont installés. Quelques réglages pour commencer.")
+                width: 480; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
+                text: qsTr("Votre ordinateur est prêt : navigateur, bureautique et messagerie sont installés. Trois petits réglages pour commencer.")
                 level: Label.Secondary
                 anchors.horizontalCenter: parent.horizontalCenter
             }
         }
 
-        // 2. Apparence
+        // 2. Internet
         Column {
             visible: win.step === 1
             anchors.centerIn: parent
+            width: 440
+            spacing: Theme.space3
+            Label { text: qsTr("Connexion à Internet"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
+            Label {
+                width: parent.width; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
+                level: Label.Secondary
+                text: !Network.available ? qsTr("Le réseau n'est pas disponible pour le moment. Vous pourrez vous connecter plus tard depuis la barre du haut.")
+                    : Network.connected ? qsTr("Vous êtes connecté : %1.").arg(Network.connectionName)
+                    : qsTr("Choisissez un réseau Wi-Fi ou branchez un câble.")
+            }
+            Loader {
+                active: win.step === 1 && Wifi.available
+                width: parent.width
+                sourceComponent: WifiNetworks { width: parent ? parent.width : 440; listHeight: 250 }
+            }
+        }
+
+        // 3. Apparence
+        Column {
+            visible: win.step === 2
+            anchors.centerIn: parent
             spacing: Theme.space5
-            Label { text: qsTr("Choisissez une apparence"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
+            Label { text: qsTr("Votre apparence"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
             Row {
                 spacing: Theme.space5
                 anchors.horizontalCenter: parent.horizontalCenter
                 Repeater {
-                    model: [{ dark: false, label: qsTr("Claire"), bg: "#F5F5F7", bar: "#FFFFFF", fg: "#1D1D1F" },
-                            { dark: true, label: qsTr("Sombre"), bg: "#141517", bar: "#1C1D20", fg: "#ECECEE" }]
+                    model: [{ dark: false, label: qsTr("Clair") }, { dark: true, label: qsTr("Sombre") }]
                     Column {
+                        id: themeCard
                         required property var modelData
                         spacing: Theme.space2
                         Rectangle {
-                            width: 220; height: 140; radius: Theme.radiusLg
-                            color: modelData.bg
-                            border.width: Theme.dark === modelData.dark ? 2 : 1
-                            border.color: Theme.dark === modelData.dark ? Theme.accentForeground : Theme.border
-                            Rectangle { x: 1; y: 1; width: parent.width - 2; height: 14; radius: Theme.radiusLg; color: modelData.bar }
-                            Rectangle { anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: 10 } width: 110; height: 18; radius: 6; color: modelData.bar }
-                            Rectangle { x: 30; y: 34; width: 120; height: 70; radius: 6; color: modelData.bar; border.width: 1; border.color: "#1A000000" }
-                            MouseArea { anchors.fill: parent; onClicked: Preferences.setValue("appearance/dark", parent.parent.modelData.dark) }
+                            width: 200; height: 120; radius: Theme.radiusMd
+                            border.width: 2
+                            border.color: Theme.dark === themeCard.modelData.dark ? Theme.accentForeground : Theme.border
+                            clip: true
+                            LogoWallpaper { anchors { fill: parent; margins: 2 } dark: themeCard.modelData.dark }
+                            Rectangle { x: 2; y: 2; width: parent.width - 4; height: 12; color: themeCard.modelData.dark ? "#1A1C1B" : "#F8F7F4"; opacity: 0.95 }
+                            MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: Preferences.setValue("appearance/dark", themeCard.modelData.dark) }
                         }
-                        Label { text: modelData.label; anchors.horizontalCenter: parent.horizontalCenter; font.weight: Theme.dark === modelData.dark ? Font.DemiBold : Font.Normal }
+                        Label { text: themeCard.modelData.label; anchors.horizontalCenter: parent.horizontalCenter }
+                    }
+                }
+            }
+            Label { text: qsTr("Couleur d'accent"); level: Label.Secondary; anchors.horizontalCenter: parent.horizontalCenter }
+            Row {
+                spacing: Theme.space2
+                anchors.horizontalCenter: parent.horizontalCenter
+                Repeater {
+                    model: Theme.accents
+                    Rectangle {
+                        required property var modelData
+                        readonly property bool current: Theme.accentId === modelData.id && String(win.pref("appearance/accent", "")) !== "auto"
+                        width: 30; height: 30; radius: 15
+                        color: modelData.fill
+                        Rectangle { anchors.centerIn: parent; width: 38; height: 38; radius: 19; color: "transparent"; border.width: 2; border.color: Theme.text; visible: parent.current }
+                        MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: Preferences.setValue("appearance/accent", parent.modelData.id) }
+                        Accessible.role: Accessible.RadioButton
+                        Accessible.name: modelData.name
                     }
                 }
             }
         }
 
-        // 3. Réseau
-        Column {
-            visible: win.step === 2
-            anchors.centerIn: parent
-            spacing: Theme.space4
-            AppIcon { size: 64; iconName: "globe"; tint: "#55657A"; anchors.horizontalCenter: parent.horizontalCenter }
-            Label { text: qsTr("Connexion à Internet"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
-            Label {
-                width: 460; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
-                text: !Network.available ? qsTr("Le réseau n'est pas disponible pour le moment.")
-                    : Network.connected ? qsTr("Vous êtes connecté : %1.").arg(Network.connectionName)
-                    : qsTr("Vous n'êtes pas connecté. Choisissez un réseau Wi-Fi ou branchez un câble.")
-                level: Label.Secondary
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-            Row {
-                visible: Network.wireless
-                spacing: Theme.space3
-                anchors.horizontalCenter: parent.horizontalCenter
-                Label { text: qsTr("Wi-Fi"); anchors.verticalCenter: parent.verticalCenter }
-                Switch { checked: Network.wirelessEnabled; onToggled: (c) => Network.wirelessEnabled = c }
-            }
-            Button {
-                visible: Network.available && !Network.connected
-                text: qsTr("Choisir un réseau…")
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: Session.launch("systemsettings", ["kcm_networkmanagement"])
-            }
-        }
-
-        // 4. Comptes en ligne
+        // 4. Gestes essentiels
         Column {
             visible: win.step === 3
             anchors.centerIn: parent
             spacing: Theme.space4
-            AppIcon { size: 64; iconName: "mail"; tint: "#3F7896"; anchors.horizontalCenter: parent.horizontalCenter }
-            Label { text: qsTr("Vos comptes en ligne"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
-            Label {
-                width: 460; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
-                text: qsTr("Ajoutez un compte Google, Nextcloud ou autre pour retrouver vos fichiers et agendas. Votre messagerie se configure au premier lancement de Thunderbird.")
-                level: Label.Secondary
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-            Button { text: qsTr("Ajouter un compte…"); anchors.horizontalCenter: parent.horizontalCenter; onClicked: Session.launch("systemsettings", ["kcm_kaccounts"]) }
-        }
-
-        // 5. Sauvegarde du système
-        Column {
-            visible: win.step === 4
-            anchors.centerIn: parent
-            spacing: Theme.space4
-            AppIcon { size: 64; iconName: "restart"; tint: "#3E8460"; anchors.horizontalCenter: parent.horizontalCenter }
-            Label { text: qsTr("Revenir en arrière en cas de problème"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
-            Label {
-                width: 460; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
-                text: qsTr("VinX peut prendre un instantané du système avant chaque mise à jour. Vos documents ne sont pas concernés : pensez à les sauvegarder sur un disque externe.")
-                level: Label.Secondary
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-            Button {
-                text: Session.fileExists("/etc/timeshift/timeshift.json") ? qsTr("Instantanés activés ✓") : qsTr("Activer les instantanés…")
-                enabled: !Session.fileExists("/etc/timeshift/timeshift.json")
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: Session.launch("pkexec", ["/usr/lib/vinx/vinx-snapshots", "enable"])
-            }
-        }
-
-        // 6. Applications
-        Column {
-            visible: win.step === 5
-            anchors.centerIn: parent
-            spacing: Theme.space4
-            AppIcon { size: 64; iconName: "bag"; tint: "#10DD8C"; anchors.horizontalCenter: parent.horizontalCenter }
-            Label { text: qsTr("Ajoutez ce dont vous avez besoin"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
-            Label {
-                width: 460; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
-                text: qsTr("Le Store propose des packs prêts à l'emploi : développement, graphisme, multimédia, jeux, communication.")
-                level: Label.Secondary
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-            Button { text: qsTr("Ouvrir le Store"); anchors.horizontalCenter: parent.horizontalCenter; onClicked: Session.launch("vinx-store") }
-        }
-
-        // 7. Raccourcis
-        Column {
-            visible: win.step === 6
-            anchors.centerIn: parent
-            spacing: Theme.space4
-            Label { text: qsTr("Les raccourcis essentiels"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
+            Label { text: qsTr("Les gestes essentiels"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; anchors.horizontalCenter: parent.horizontalCenter }
             Column {
-                spacing: Theme.space3
+                spacing: Theme.space2
                 anchors.horizontalCenter: parent.horizontalCenter
                 Repeater {
                     model: [[qsTr("Méta"), qsTr("Rechercher une application, un fichier, un réglage")],
-                            [qsTr("Méta + W"), qsTr("Vue d'ensemble des fenêtres et des bureaux")],
-                            [qsTr("Méta + ← / →"), qsTr("Placer la fenêtre sur une moitié d'écran")],
-                            [qsTr("Méta + ↑"), qsTr("Agrandir la fenêtre")],
-                            [qsTr("Ctrl + Méta + ← / →"), qsTr("Bureau précédent / suivant")]]
+                            [qsTr("Méta + W"), qsTr("Voir toutes les fenêtres")],
+                            [qsTr("Méta + ← / →"), qsTr("Placer une fenêtre sur une moitié d'écran")],
+                            [qsTr("Clic sur une icône du dock"), qsTr("Ouvrir, ramener ou réduire")]]
                     Row {
                         required property var modelData
-                        spacing: Theme.space4
+                        spacing: Theme.space3
                         Rectangle {
-                            width: 160; height: 28; radius: Theme.radiusSm
+                            width: 190; height: 28; radius: Theme.radiusSm
                             color: Theme.surfaceSunken
                             border.width: 1; border.color: Theme.borderStrong
                             Label { anchors.centerIn: parent; text: modelData[0]; font.weight: Font.Medium; font.pixelSize: Theme.fsSm }
                         }
-                        Label { text: modelData[1]; height: 28; width: 330 }
+                        Label { text: modelData[1]; height: 28; verticalAlignment: Text.AlignVCenter; width: 360 }
                     }
                 }
             }
+            Label {
+                width: 520; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap
+                level: Label.Secondary
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("Besoin d'un logiciel ? Le Store en propose des centaines, en un clic.")
+            }
+            Button { text: qsTr("Ouvrir le Store"); anchors.horizontalCenter: parent.horizontalCenter; onClicked: Session.launch("vinx-store") }
         }
     }
 
@@ -195,9 +160,8 @@ Window {
                 model: win.steps
                 Rectangle {
                     required property int index
-                    width: index === win.step ? 18 : 6; height: 6; radius: 3
-                    color: index === win.step ? Theme.text : Theme.textTertiary
-                    Behavior on width { NumberAnimation { duration: Theme.durNormal } }
+                    width: 28; height: 4; radius: 2
+                    color: index <= win.step ? Theme.accent : Theme.border
                 }
             }
         }
@@ -207,6 +171,7 @@ Window {
             Button { text: qsTr("Passer"); variant: Button.Ghost; visible: win.step < win.steps - 1; onClicked: win.finish() }
             Button { text: qsTr("Précédent"); visible: win.step > 0; onClicked: win.step-- }
             Button {
+                objectName: "nextButton"
                 text: win.step === win.steps - 1 ? qsTr("Commencer") : qsTr("Suivant")
                 variant: Button.Primary
                 onClicked: win.step === win.steps - 1 ? win.finish() : win.step++
