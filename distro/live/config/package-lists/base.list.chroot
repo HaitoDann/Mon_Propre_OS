@@ -3,6 +3,8 @@ live-boot
 live-config
 live-config-systemd
 sudo
+curl
+wget
 locales
 console-setup
 keyboard-configuration
