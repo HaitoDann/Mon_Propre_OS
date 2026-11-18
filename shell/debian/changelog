@@ -1,3 +1,11 @@
+vinx-shell (0.22.0) trixie; urgency=medium
+
+  * Compatibilité Microsoft Office : polices Carlito, Caladea, Liberation ;
+    LibreOffice enregistre en .docx/.xlsx/.pptx par défaut ; Paramètres →
+    Bureautique (ADR 0029).
+
+ -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 03:00:00 +0000
+
 vinx-shell (0.21.1) trixie; urgency=medium
 
   * Agent polkit VinX toujours construit (dépendance libpolkit-qt6-1-dev).
