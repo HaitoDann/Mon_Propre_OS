@@ -49,6 +49,25 @@ int main(int argc, char **argv)
             return 1;
         }
     }
+    // Pastilles des applications GTK à barre de titre intégrée (Firefox, Thunderbird).
+    if (!parser.isSet(output)) {
+        const QString block = windowtheme::gtkCss(colors);
+        for (const char *dirName : {"gtk-3.0", "gtk-4.0"}) {
+            const QString cssDir = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('/') + QLatin1String(dirName);
+            QDir().mkpath(cssDir);
+            QFile in(cssDir + QStringLiteral("/gtk.css"));
+            const QString existing = in.open(QIODevice::ReadOnly) ? QString::fromUtf8(in.readAll()) : QString();
+            in.close();
+            const QString merged = windowtheme::mergeGtkCss(existing, block);
+            if (merged != existing) {
+                QSaveFile out(in.fileName());
+                if (out.open(QIODevice::WriteOnly)) {
+                    out.write(merged.toUtf8());
+                    out.commit();
+                }
+            }
+        }
+    }
     if (parser.isSet(reconfigure)) {
         // Plasma réécrit Breeze dans kwinrc à l'ouverture de session (après vinx-session) : on impose
         // la décoration VinX ici, une fois la session démarrée (ADR 0024).

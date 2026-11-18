@@ -1,3 +1,10 @@
+vinx-shell (0.20.1) trixie; urgency=medium
+
+  * Pastilles aussi pour les applications GTK à barre de titre intégrée (Firefox,
+    Thunderbird) : bloc VinX dans ~/.config/gtk-3.0 et gtk-4.0/gtk.css.
+
+ -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 01:20:00 +0000
+
 vinx-shell (0.20.0) trixie; urgency=medium
 
   * Pastilles des fenêtres toujours en couleur : réduire orange, agrandir vert,

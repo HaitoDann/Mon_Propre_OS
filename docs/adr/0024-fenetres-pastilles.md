@@ -43,3 +43,10 @@ reconfigurer KWin.
 Choix de l'utilisateur après le premier essai : pastilles **toujours en couleur** sur la fenêtre
 active — réduire orange `#FEBC2E`, agrandir vert `#28C840`, fermer rouge `#FF5F57` —, pictogrammes
 (–, +, ×) au survol, grises sur une fenêtre inactive. La fermeture ne suit plus l'accent.
+
+## Complément : applications GTK (Firefox, Thunderbird)
+
+Elles dessinent leur barre de titre (onglets intégrés) et leurs boutons avec GTK, pas avec KWin.
+`vinx-window-theme` ajoute aux feuilles `~/.config/gtk-3.0/gtk.css` et `gtk-4.0/gtk.css` un bloc
+délimité (remplacé à chaque passage, le reste du fichier — écrit par KDE — est conservé) qui
+dessine les boutons en pastilles orange, vert, rouge, grises en arrière-plan.

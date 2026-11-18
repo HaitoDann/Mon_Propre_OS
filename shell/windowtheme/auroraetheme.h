@@ -187,4 +187,48 @@ inline QMap<QString, QByteArray> themeFiles(const Colors &c)
     };
 }
 
+// Applications GTK à barre de titre intégrée (Firefox, Thunderbird…) : elles dessinent leurs propres
+// boutons ; on leur donne les mêmes pastilles par la feuille de style utilisateur de GTK.
+inline const char *gtkBlockBegin() { return "/* VinX : pastilles des fenêtres (début, géré par vinx-window-theme) */"; }
+inline const char *gtkBlockEnd() { return "/* VinX : pastilles des fenêtres (fin) */"; }
+
+inline QString gtkCss(const Colors &c)
+{
+    const Palette p = palette(c);
+    return QStringLiteral(
+        "%1\n"
+        "headerbar button.titlebutton, .titlebar button.titlebutton, window.csd button.titlebutton {\n"
+        "  min-width: 14px; min-height: 14px; padding: 0; margin: 0 4px; border: none; border-radius: 50%;\n"
+        "  box-shadow: none; background-image: none; color: transparent; -gtk-icon-shadow: none;\n"
+        "}\n"
+        "button.titlebutton.minimize { background-color: %2; }\n"
+        "button.titlebutton.maximize { background-color: %3; }\n"
+        "button.titlebutton.close { background-color: %4; }\n"
+        "button.titlebutton:hover, button.titlebutton:active { color: %5; }\n"
+        "button.titlebutton:backdrop, button.titlebutton.minimize:backdrop, button.titlebutton.maximize:backdrop,\n"
+        "button.titlebutton.close:backdrop { background-color: %6; color: transparent; }\n"
+        "%7\n")
+        .arg(QString::fromUtf8(gtkBlockBegin()), p.minimize, p.maximize, p.close, p.glyphOnColor, p.neutralInactive,
+             QString::fromUtf8(gtkBlockEnd()));
+}
+
+// Remplace (ou ajoute) le bloc VinX dans une feuille gtk.css existante, sans toucher au reste
+// (KDE y écrit ses propres règles de couleurs).
+inline QString mergeGtkCss(const QString &existing, const QString &block)
+{
+    const QString begin = QString::fromUtf8(gtkBlockBegin()), end = QString::fromUtf8(gtkBlockEnd());
+    const qsizetype a = existing.indexOf(begin);
+    const qsizetype b = a >= 0 ? existing.indexOf(end, a) : -1;
+    if (a >= 0 && b >= 0) {
+        qsizetype after = b + end.size();
+        if (after < existing.size() && existing.at(after) == QLatin1Char('\n'))
+            ++after;
+        return existing.left(a) + block + existing.mid(after);
+    }
+    QString out = existing;
+    if (!out.isEmpty() && !out.endsWith(QLatin1Char('\n')))
+        out += QLatin1Char('\n');
+    return out + block;
+}
+
 } // namespace windowtheme

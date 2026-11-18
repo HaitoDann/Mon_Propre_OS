@@ -45,6 +45,21 @@ private slots:
         QVERIFY(svg.elementExists("inactive-center"));
     }
 
+    void gtkPastilles()
+    {
+        const QString css = gtkCss({});
+        QVERIFY(css.contains("button.titlebutton.close { background-color: #FF5F57; }"));
+        QVERIFY(css.contains("border-radius: 50%;"));
+        // Fusion : le reste de la feuille de KDE est conservé, le bloc VinX remplacé sans doublon.
+        const QString kde = "@import 'colors.css';\n";
+        const QString once = mergeGtkCss(kde, css);
+        QVERIFY(once.startsWith(kde));
+        QCOMPARE(mergeGtkCss(once, css), once);
+        QCOMPARE(once.count(QString::fromUtf8(gtkBlockBegin())), 1);
+        const QString after = mergeGtkCss(once + "window { }\n", css);
+        QVERIFY(after.endsWith("window { }\n"));
+        QCOMPARE(after.count(QString::fromUtf8(gtkBlockBegin())), 1);
+    }
     void darkThemeChangesBarAndText()
     {
         Colors c;
