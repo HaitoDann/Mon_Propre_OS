@@ -36,6 +36,7 @@ Depends: ${shlibs:Depends},
          rsync,
          xdg-user-dirs
 Recommends: plasma-workspace,
+            orca,
             network-manager-openvpn,
             fonts-crosextra-carlito,
             fonts-crosextra-caladea,

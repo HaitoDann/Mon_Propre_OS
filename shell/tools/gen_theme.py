@@ -65,8 +65,16 @@ def main() -> None:
         out.append(f"    readonly property color {camel(key)}: {qml_color(val)}")
 
     out += ["", "    // Couleurs liées au thème"]
+    hc = t.get("themed_high_contrast", {})
+    out.insert(out.index("    // Couleurs liées au thème"), "    // Contraste élevé (Accessibilité) : couleurs plus marquées pour le texte, les bordures et les fonds.")
+    out.insert(out.index("    // Couleurs liées au thème"), "    property bool highContrast: false")
     for key, (dark, light) in t["themed"].items():
-        out.append(f"    readonly property color {camel(key)}: dark ? {qml_color(dark)} : {qml_color(light)}")
+        normal = f"(dark ? {qml_color(dark)} : {qml_color(light)})"
+        if key in hc:
+            hd, hl = hc[key]
+            out.append(f"    readonly property color {camel(key)}: highContrast ? (dark ? {qml_color(hd)} : {qml_color(hl)}) : {normal}")
+        else:
+            out.append(f"    readonly property color {camel(key)}: {normal}")
 
     out += ["", "    // Accessibilité (réglées par AppearanceSync depuis les préférences)",
             "    property bool reduceMotion: false",

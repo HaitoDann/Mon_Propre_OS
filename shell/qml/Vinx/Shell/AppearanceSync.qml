@@ -12,6 +12,7 @@ QtObject {
         Theme.dark = truthy(Preferences.value("appearance/dark"), false)   // thème clair par défaut
         Theme.accentId = resolveAccent(String(Preferences.value("appearance/accent", "")))
         Theme.reduceMotion = truthy(Preferences.value("accessibility/reduceMotion"), false)
+        Theme.highContrast = truthy(Preferences.value("accessibility/highContrast"), false)
         Theme.shapeStyle = String(Preferences.value("appearance/shape", "soft"))
         Theme.textScale = Number(Preferences.value("accessibility/textScale", 1.0)) || 1.0
         // Accent résolu (« auto » compris) pour les applications C++ (Terminal VinX).

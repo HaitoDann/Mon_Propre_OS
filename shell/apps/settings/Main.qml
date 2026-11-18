@@ -786,11 +786,9 @@ Window {
             Column {
                 visible: win.page === "accessibility"
                 width: parent.width
-                SettingsRow {
-                    title: qsTr("Réduire les animations")
-                    description: qsTr("Ouvre panneaux et menus sans transition.")
-                    Switch { checked: win.on("accessibility/reduceMotion", false); onToggled: (c) => Preferences.setValue("accessibility/reduceMotion", c) }
-                }
+                // Accessibilité (ADR 0033) : vue, lecture, mouvement.
+                function kw(file, group, key, value) { Session.run("kwriteconfig6", ["--file", file, "--group", group, "--key", key, String(value)]) }
+                Label { text: qsTr("VOIR"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 24; verticalAlignment: Text.AlignBottom }
                 SettingsRow {
                     title: qsTr("Taille du texte")
                     SegmentedControl {
@@ -799,6 +797,67 @@ Window {
                         currentIndex: Math.max(0, scales.indexOf(Number(win.pref("accessibility/textScale", 1.0))))
                         onActivated: (i) => Preferences.setValue("accessibility/textScale", scales[i])
                     }
+                }
+                SettingsRow {
+                    title: qsTr("Contraste élevé")
+                    description: qsTr("Textes et bordures plus marqués, fonds unis.")
+                    Switch { checked: win.on("accessibility/highContrast", false); onToggled: (c) => Preferences.setValue("accessibility/highContrast", c) }
+                }
+                SettingsRow {
+                    title: qsTr("Loupe")
+                    description: qsTr("Méta + = pour agrandir, Méta + − pour réduire, autour du pointeur.")
+                    Switch {
+                        checked: win.on("accessibility/magnifier", false)
+                        onToggled: (c) => {
+                            Preferences.setValue("accessibility/magnifier", c)
+                            parent.parent.parent.kw("kwinrc", "Plugins", "zoomEnabled", c)
+                            Session.callDBus("org.kde.KWin", "/Effects", "org.kde.kwin.Effects", c ? "loadEffect" : "unloadEffect", ["zoom"])
+                        }
+                    }
+                }
+                SettingsRow {
+                    title: qsTr("Taille du pointeur")
+                    description: qsTr("Pris en compte à la prochaine ouverture de session.")
+                    SegmentedControl {
+                        readonly property var sizes: [24, 36, 48]
+                        model: [qsTr("Normale"), qsTr("Grande"), qsTr("Très grande")]
+                        currentIndex: Math.max(0, sizes.indexOf(Number(win.pref("accessibility/cursorSize", 24))))
+                        onActivated: (i) => {
+                            Preferences.setValue("accessibility/cursorSize", sizes[i])
+                            parent.parent.parent.kw("kcminputrc", "Mouse", "cursorSize", sizes[i])
+                        }
+                    }
+                }
+                Label { text: qsTr("ENTENDRE"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 40; verticalAlignment: Text.AlignBottom; bottomPadding: 4 }
+                SettingsRow {
+                    readonly property bool installed: Session.fileExists("/usr/bin/orca")
+                    title: qsTr("Lecteur d'écran")
+                    description: installed ? qsTr("Lit à voix haute ce qui est à l'écran (Orca). Démarre aussi à chaque ouverture de session.")
+                                           : qsTr("Le lecteur d'écran Orca n'est pas installé.")
+                    Switch {
+                        visible: parent.parent.installed
+                        checked: win.on("accessibility/screenReader", false)
+                        onToggled: (c) => {
+                            Preferences.setValue("accessibility/screenReader", c)
+                            if (c) {
+                                Session.run("sh", ["-c", "mkdir -p \"$HOME/.config/autostart\" && printf '[Desktop Entry]\\nType=Application\\nName=Orca\\nExec=orca --replace\\nNoDisplay=true\\n' > \"$HOME/.config/autostart/orca.desktop\""])
+                                Session.launch("orca", ["--replace"])
+                            } else {
+                                Session.run("sh", ["-c", "rm -f \"$HOME/.config/autostart/orca.desktop\"; pkill -x orca || true"])
+                            }
+                        }
+                    }
+                    Button {
+                        visible: !parent.parent.installed
+                        text: qsTr("Installer"); variant: Button.Primary; enabled: !DebianPackages.busy
+                        onClicked: DebianPackages.install("orca", qsTr("Lecteur d'écran"))
+                    }
+                }
+                Label { text: qsTr("BOUGER"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 40; verticalAlignment: Text.AlignBottom; bottomPadding: 4 }
+                SettingsRow {
+                    title: qsTr("Réduire les animations")
+                    description: qsTr("Ouvre panneaux et menus sans transition.")
+                    Switch { checked: win.on("accessibility/reduceMotion", false); onToggled: (c) => Preferences.setValue("accessibility/reduceMotion", c) }
                 }
             }
 
