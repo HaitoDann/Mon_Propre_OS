@@ -56,6 +56,18 @@ private Q_SLOTS:
         QCOMPARE(parseVinxRelease("X=1\nVINX_VERSION=0.18\n"), QString("0.18"));
         QCOMPARE(parseVinxRelease(""), QString());
     }
+    void timeshiftList()
+    {
+        const QVariantList l = parseTimeshiftList(QStringLiteral(
+            "Device : /dev/nvme0n1p2\nMode   : BTRFS\nDevice is OK\n2 snapshots, 380.2 GB free\n\n"
+            "Num     Name                 Tags  Description\n------------------------------\n"
+            "0    >  2026-11-15_10-02-01  O     Avant mise à jour\n1    >  2026-11-17_18-40-01  D     \n"));
+        QCOMPARE(l.size(), 2);
+        QCOMPARE(l[0].toMap().value("name").toString(), QString("2026-11-17_18-40-01"));   // le plus récent d'abord
+        QCOMPARE(l[0].toMap().value("date").toString(), QString("2026-11-17 18:40"));
+        QCOMPARE(l[0].toMap().value("tags").toString(), QString("D"));
+        QCOMPARE(l[1].toMap().value("comment").toString(), QString("Avant mise à jour"));
+    }
 };
 
 QTEST_GUILESS_MAIN(TestUpdates)

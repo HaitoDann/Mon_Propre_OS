@@ -9,3 +9,7 @@ export QT_QPA_PLATFORM = offscreen
 # /etc/xdg doit rester sous /etc (et non /usr/etc).
 override_dh_auto_configure:
 	dh_auto_configure -- -DBUILD_TESTING=ON -DCMAKE_INSTALL_SYSCONFDIR=/etc
+
+# Activation automatique des instantanés au premier démarrage (btrfs seulement, ADR 0031).
+override_dh_installsystemd:
+	dh_installsystemd --name=vinx-snapshots-firstboot

@@ -46,6 +46,11 @@ public:
     Q_INVOKABLE QVariantMap versions() const;
     // Opérations passées (journal d'APT), la plus récente d'abord.
     Q_INVOKABLE QVariantList history() const;
+    // Instantanés du système (ADR 0031) : activés ?, liste [{ name, date, tags, comment }].
+    Q_INVOKABLE bool snapshotsEnabled() const;
+    Q_INVOKABLE QVariantList snapshots() const;
+    // Actions administrateur (pkexec /usr/lib/vinx/vinx-snapshots) : enable, disable, create, restore.
+    Q_INVOKABLE void snapshotAction(const QString &action, const QString &argument = {});
     // appsOnly : seulement les applications Flatpak (aucun mot de passe ; mises à jour automatiques).
     Q_INVOKABLE void applyAll(bool appsOnly = false);
 
@@ -53,6 +58,7 @@ Q_SIGNALS:
     void stateChanged();
     void listChanged();
     void finished(bool success, const QString &message);
+    void snapshotFinished(const QString &action, bool success);
 
 private:
     enum Step { Idle, Check, Apply };

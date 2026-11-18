@@ -19,6 +19,7 @@ Window {
     readonly property var pages: [
         { id: "overview", title: qsTr("Vue d'ensemble"), icon: "restart" },
         { id: "history", title: qsTr("Historique"), icon: "list" },
+        { id: "snapshots", title: qsTr("Instantanés"), icon: "shield" },
         { id: "settings", title: qsTr("Réglages"), icon: "sliders" }
     ]
     property string page: pages.some(p => p.id === startPage) ? startPage : "overview"
@@ -250,6 +251,124 @@ Window {
                     }
                 }
                 Label { visible: win.history.length === 0; text: qsTr("Aucune opération enregistrée pour l'instant."); level: Label.Secondary }
+            }
+
+            // ---------- Instantanés (ADR 0031) ----------
+            Column {
+                id: snaps
+                visible: win.page === "snapshots"
+                width: parent.width
+                spacing: 0
+                property bool enabledState: Updates.snapshotsEnabled()
+                property var list: Updates.snapshots()
+                property string confirm: ""          // instantané dont on confirme le retour
+                property string busy: ""             // action en cours
+                property string message: ""
+                property bool restored: false
+                function reload() { enabledState = Updates.snapshotsEnabled(); list = Updates.snapshots() }
+                onVisibleChanged: if (visible) reload()
+                Connections {
+                    target: Updates
+                    function onSnapshotFinished(action, ok) {
+                        snaps.busy = ""
+                        snaps.reload()
+                        if (action === "restore" && ok) snaps.restored = true
+                        snaps.message = ok ? (action === "create" ? qsTr("Instantané créé.") : action === "restore" ? "" : "")
+                                           : qsTr("L'opération n'a pas abouti (mot de passe refusé ou erreur).")
+                    }
+                }
+
+                Label { text: qsTr("Instantanés"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; bottomPadding: Theme.space3 }
+                Item {
+                    width: parent.width; height: Math.max(56, snapTexts.implicitHeight + Theme.space3 * 2)
+                    Column {
+                        id: snapTexts
+                        anchors { left: parent.left; right: snapSwitch.left; rightMargin: Theme.space4; verticalCenter: parent.verticalCenter }
+                        Label { text: qsTr("Instantané avant chaque mise à jour"); width: parent.width }
+                        Label { width: parent.width; wrapMode: Text.WordWrap; level: Label.Secondary; font.pixelSize: Theme.fsSm
+                                text: qsTr("Le système (pas vos documents) est enregistré juste avant d'installer, un par jour au plus. En cas de problème, vous revenez à l'état d'avant.") }
+                    }
+                    Switch {
+                        id: snapSwitch
+                        anchors { right: parent.right; verticalCenter: parent.verticalCenter }
+                        checked: snaps.enabledState
+                        enabled: snaps.busy === ""
+                        onToggled: (c) => { snaps.busy = c ? "enable" : "disable"; Updates.snapshotAction(c ? "enable" : "disable") }
+                    }
+                    Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+                }
+
+                // Redémarrage après un retour arrière
+                Rectangle {
+                    visible: snaps.restored
+                    width: parent.width; height: 64; radius: Theme.radiusMd
+                    color: Theme.surfaceSunken; border.width: 1; border.color: Theme.accentForeground
+                    Label { anchors { left: parent.left; leftMargin: Theme.space4; verticalCenter: parent.verticalCenter; right: rebootBtn.left; rightMargin: Theme.space3 }
+                            wrapMode: Text.WordWrap; text: qsTr("Le système a été remis dans l'état choisi. Redémarrez pour terminer.") }
+                    Button { id: rebootBtn; anchors { right: parent.right; rightMargin: Theme.space4; verticalCenter: parent.verticalCenter }
+                             text: qsTr("Redémarrer maintenant"); variant: Button.Primary; onClicked: Session.reboot() }
+                }
+
+                Item {
+                    visible: snaps.enabledState
+                    width: parent.width; height: 44
+                    Label { text: qsTr("États enregistrés"); font.weight: Font.DemiBold; anchors { left: parent.left; bottom: parent.bottom; bottomMargin: Theme.space2 } }
+                    Button { anchors { right: parent.right; bottom: parent.bottom; bottomMargin: 4 }
+                             text: snaps.busy === "create" ? qsTr("Création…") : qsTr("Créer maintenant"); enabled: snaps.busy === ""
+                             onClicked: { snaps.busy = "create"; Updates.snapshotAction("create", qsTr("Créé à la main")) } }
+                }
+                Label {
+                    visible: snaps.enabledState && snaps.list.length === 0
+                    width: parent.width; wrapMode: Text.WordWrap; level: Label.Secondary; topPadding: Theme.space2
+                    text: qsTr("Aucun instantané pour l'instant : le premier sera pris avant la prochaine mise à jour, ou tout de suite avec « Créer maintenant ».")
+                }
+                Repeater {
+                    model: snaps.enabledState ? snaps.list : []
+                    Column {
+                        id: snapRow
+                        required property var modelData
+                        required property int index
+                        width: snaps.width
+                        Item {
+                            width: parent.width; height: 58
+                            Rectangle { x: 0; anchors.verticalCenter: parent.verticalCenter; width: 10; height: 10; radius: 5; color: snapRow.index === 0 ? Theme.accent : Theme.border }
+                            Column {
+                                anchors { left: parent.left; leftMargin: Theme.space5; right: backBtn.left; rightMargin: Theme.space3; verticalCenter: parent.verticalCenter }
+                                Label { font.weight: Font.DemiBold; text: win.day(snapRow.modelData.date) }
+                                Label { level: Label.Tertiary; font.pixelSize: Theme.fsSm; width: parent.width; elide: Text.ElideRight
+                                        text: snapRow.modelData.comment || (snapRow.modelData.tags.indexOf("D") >= 0 ? qsTr("Instantané quotidien")
+                                              : snapRow.modelData.tags.indexOf("W") >= 0 ? qsTr("Instantané hebdomadaire") : qsTr("Instantané")) }
+                            }
+                            Button { id: backBtn; anchors { right: parent.right; verticalCenter: parent.verticalCenter }
+                                     text: qsTr("Revenir à cet état…"); enabled: snaps.busy === ""
+                                     onClicked: snaps.confirm = snaps.confirm === snapRow.modelData.name ? "" : snapRow.modelData.name }
+                            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+                        }
+                        // Confirmation sur place
+                        Rectangle {
+                            visible: snaps.confirm === snapRow.modelData.name
+                            width: parent.width; height: confirmCol.implicitHeight + Theme.space4 * 2
+                            radius: Theme.radiusMd; color: Theme.surfaceSunken
+                            Column {
+                                id: confirmCol
+                                x: Theme.space4; y: Theme.space4; width: parent.width - Theme.space4 * 2
+                                spacing: Theme.space3
+                                Label { width: parent.width; wrapMode: Text.WordWrap; font.weight: Font.DemiBold
+                                        text: qsTr("Revenir au %1 ?").arg(win.day(snapRow.modelData.date)) }
+                                Label { width: parent.width; wrapMode: Text.WordWrap; level: Label.Secondary; font.pixelSize: Theme.fsSm
+                                        text: qsTr("Les programmes et réglages du système reviennent à cet état. Vos documents, photos et téléchargements ne sont pas touchés. L'ordinateur devra redémarrer.") }
+                                Row {
+                                    spacing: Theme.space2
+                                    Button { text: qsTr("Annuler"); onClicked: snaps.confirm = "" }
+                                    Button { text: snaps.busy === "restore" ? qsTr("Retour en cours…") : qsTr("Revenir à cet état"); variant: Button.Primary
+                                             enabled: snaps.busy === ""
+                                             onClicked: { snaps.busy = "restore"; Updates.snapshotAction("restore", snapRow.modelData.name); snaps.confirm = "" } }
+                                }
+                            }
+                        }
+                    }
+                }
+                Label { visible: snaps.message !== ""; text: snaps.message; level: Label.Secondary; topPadding: Theme.space3 }
             }
 
             // ---------- Réglages ----------

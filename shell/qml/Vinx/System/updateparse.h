@@ -105,3 +105,21 @@ inline QString parseVinxRelease(const QString &text)
     static const QRegularExpression re(QStringLiteral("^VINX_VERSION=\"?([^\"\\n]*)\"?"), QRegularExpression::MultilineOption);
     return re.match(text).captured(1).trimmed();
 }
+
+// « timeshift --list --scripted » : lignes « 0    >  2026-11-15_10-02-01  O     Avant mise à jour »
+// → [{ name, date: "2026-11-15 10:02", tags, comment }], le plus récent d'abord.
+inline QVariantList parseTimeshiftList(const QString &out)
+{
+    static const QRegularExpression re(QStringLiteral("^\\s*\\d+\\s+>\\s+(\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2})\\s*([OBHDWM]*)\\s*(.*)$"));
+    QVariantList list;
+    for (const QString &line : out.split(QLatin1Char('\n'))) {
+        const auto m = re.match(line);
+        if (!m.hasMatch())
+            continue;
+        const QString name = m.captured(1);
+        const QString date = name.left(10) + QLatin1Char(' ') + name.mid(11, 5).replace(QLatin1Char('-'), QLatin1Char(':'));
+        list.prepend(QVariantMap{{QStringLiteral("name"), name}, {QStringLiteral("date"), date},
+                                 {QStringLiteral("tags"), m.captured(2)}, {QStringLiteral("comment"), m.captured(3).trimmed()}});
+    }
+    return list;
+}

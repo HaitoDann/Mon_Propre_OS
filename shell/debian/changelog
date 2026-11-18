@@ -1,3 +1,13 @@
+vinx-shell (0.23.0) trixie; urgency=medium
+
+  * Mises à jour → Instantanés : liste, création, retour à un état précédent ;
+    activation automatique sur btrfs (ADR 0031).
+  * Bienvenue en 4 étapes simples (ADR 0030).
+  * Paramètres sans KDE : bureaux virtuels, fréquence et orientation des écrans,
+    VPN et adresse IP fixe, options d'impression (ADR 0030).
+
+ -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 09:30:00 +0000
+
 vinx-shell (0.22.0) trixie; urgency=medium
 
   * Compatibilité Microsoft Office : polices Carlito, Caladea, Liberation ;

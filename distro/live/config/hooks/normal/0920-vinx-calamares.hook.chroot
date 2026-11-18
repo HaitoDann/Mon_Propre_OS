@@ -20,12 +20,31 @@ if [ -f /etc/calamares/settings.conf ]; then
 fi
 
 # Partitionnement : ext4, partition EFI de 512 Mio, chiffrement proposé, fichier d'échange.
-set_key $M/partition.conf defaultFileSystemType '"ext4"'
-set_key $M/partition.conf availableFileSystemTypes '["ext4", "btrfs", "xfs"]'
+# btrfs par défaut (ADR 0031) : instantanés instantanés et retour arrière depuis le menu de démarrage.
+set_key $M/partition.conf defaultFileSystemType '"btrfs"'
+set_key $M/partition.conf availableFileSystemTypes '["btrfs", "ext4", "xfs"]'
 set_key $M/partition.conf enableLuksAutomatedPartitioning true
 set_key $M/partition.conf userSwapChoices '[none, file]'
 set_key $M/partition.conf initialSwapChoice file
 set_key $M/partition.conf efiSystemPartitionSize 512M
+
+# Sous-volumes btrfs attendus par Timeshift (@ et @home) ; fichier d'échange dans son propre sous-volume.
+if [ -f $M/mount.conf ]; then
+	sed -i '/^btrfsSubvolumes:/,/^[^ -]/{/^btrfsSubvolumes:/d;/^[ -]/d}' $M/mount.conf
+	sed -i '/^btrfsSwapSubvol:/d' $M/mount.conf
+	cat >> $M/mount.conf <<'MOUNT'
+btrfsSubvolumes:
+    - mountPoint: /
+      subvolume: /@
+    - mountPoint: /home
+      subvolume: /@home
+    - mountPoint: /var/cache
+      subvolume: /@cache
+    - mountPoint: /var/log
+      subvolume: /@log
+btrfsSwapSubvol: /@swap
+MOUNT
+fi
 
 # Comptes : l'utilisateur créé est administrateur (sudo), pas de mot de passe root séparé.
 set_key $M/users.conf setRootPassword false

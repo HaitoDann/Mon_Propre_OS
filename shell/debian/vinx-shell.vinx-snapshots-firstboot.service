@@ -1,0 +1,19 @@
+# Instantanés activés automatiquement sur une installation en btrfs (ADR 0031) : une seule fois,
+# au premier démarrage du système installé (pas en session live). En ext4, rien n'est fait :
+# l'utilisateur peut les activer dans « Mises à jour » → Instantanés.
+[Unit]
+Description=VinX OS : activation des instantanés du système
+ConditionPathExists=!/etc/timeshift/timeshift.json
+ConditionPathExists=!/run/live/medium
+ConditionPathExists=/usr/bin/timeshift
+After=local-fs.target
+
+[Service]
+Type=oneshot
+Environment=VINX_SNAPSHOTS_NO_FIRST=1
+ExecCondition=/bin/sh -c '[ "$(findmnt -no FSTYPE /)" = btrfs ]'
+ExecStart=/usr/lib/vinx/vinx-snapshots enable
+ExecStartPost=/usr/lib/vinx/vinx-snapshots create "Premier instantané VinX"
+
+[Install]
+WantedBy=multi-user.target

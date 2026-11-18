@@ -1,0 +1,22 @@
+#!/bin/sh
+# Retour arrière depuis le menu de démarrage (ADR 0031) : grub-btrfs ajoute une entrée
+# « VinX OS — revenir à un état précédent » listant les instantanés Timeshift (installations btrfs).
+set -e
+if apt-get install -y --no-install-recommends grub-btrfs inotify-tools; then
+	DAEMON=$(command -v grub-btrfsd || true)
+	if [ -n "$DAEMON" ]; then
+		mkdir -p /etc/systemd/system/grub-btrfsd.service.d
+		cat > /etc/systemd/system/grub-btrfsd.service.d/vinx-timeshift.conf <<CONF
+# Surveille les instantanés de Timeshift (et non /.snapshots de Snapper).
+[Service]
+ExecStart=
+ExecStart=$DAEMON --syslog --timeshift-auto
+CONF
+		systemctl enable grub-btrfsd.service || true
+	fi
+	# Libellé du sous-menu en français.
+	[ -f /etc/default/grub-btrfs/config ] && sed -i 's/^#\?GRUB_BTRFS_SUBMENUNAME=.*/GRUB_BTRFS_SUBMENUNAME="VinX OS — revenir à un état précédent"/' /etc/default/grub-btrfs/config || true
+else
+	echo "grub-btrfs indisponible : pas d'entrée de retour arrière dans le menu de démarrage" >&2
+fi
+exit 0

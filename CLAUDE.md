@@ -88,6 +88,8 @@ Préférences utilisateur : `~/.config/vinx/shell.ini` (QSettings, clés `sectio
   bulle de branchement, imprimantes, utilisateurs, pilotes, dépannage, recherche Debian du Store,
   fiche détaillée d'application, mises à jour en arrière-plan, couleurs du menu GRUB.
 - **Lot 2 « sans KDE »** : fait (ADR 0028) — extinction et bulles reprises par vinx-shell (services D-Bus KDE),
-  agent polkit VinX (libpolkit-qt6-1-dev). Reste : boutons « Avancé… » des
-  Paramètres qui ouvrent encore des modules KDE.
+  agent polkit VinX (libpolkit-qt6-1-dev). Boutons « Avancé… » remplacés (ADR 0030) ;
+  restent : comptes en ligne et réseau expert (802.1X, proxy).
+- **À vérifier sur une nouvelle ISO** : installation en btrfs, instantanés automatiques, entrée « revenir à un
+  état précédent » du menu de démarrage (grub-btrfs, ADR 0031).
 - Ensuite : version publique 1.0 (site, ISO signée, traduction anglaise, guide).

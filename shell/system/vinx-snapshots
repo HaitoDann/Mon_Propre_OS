@@ -4,10 +4,16 @@
 #   disable     arrête les instantanés automatiques (les instantanés existants sont conservés)
 #   pre-update  appelé par APT avant une mise à jour : un instantané par jour au plus
 #   status      affiche « enabled » ou « disabled »
+#   create TEXTE   instantané immédiat (« Créé à la main »)
+#   list        met à jour la liste lisible par tous (/var/lib/vinx/snapshots.list)
+#   restore NOM revient à l'instantané NOM (redémarrage nécessaire ensuite)
 # Les dossiers personnels ne sont jamais inclus : ce n'est pas une sauvegarde des documents.
 set -eu
 CONF=/etc/timeshift/timeshift.json
 STAMP=/var/lib/vinx/last-snapshot
+LIST=/var/lib/vinx/snapshots.list
+# Liste publique des instantanés (l'application « Mises à jour » la lit sans droits administrateur).
+publish() { mkdir -p "$(dirname "$LIST")"; timeshift --list --scripted > "$LIST.tmp" 2>/dev/null && mv "$LIST.tmp" "$LIST" && chmod 644 "$LIST" || rm -f "$LIST.tmp"; }
 log() { logger -t vinx-snapshots "$*" 2>/dev/null || true; echo "$*"; }
 
 case "${1:-status}" in
@@ -47,12 +53,12 @@ enable)
 }
 JSON
 	log "Instantanés activés (disque $UUID, btrfs : $BTRFS)"
-	# Premier instantané en arrière-plan (plusieurs minutes en mode rsync).
-	(timeshift --create --comments "Premier instantané VinX" --tags D --scripted >/dev/null 2>&1 && date +%F > "$STAMP") &
+	# Premier instantané en arrière-plan (plusieurs minutes en mode rsync), sauf si l'appelant s'en charge.
+	[ "${VINX_SNAPSHOTS_NO_FIRST:-0}" = 1 ] || (timeshift --create --comments "Premier instantané VinX" --tags D --scripted >/dev/null 2>&1 && date +%F > "$STAMP"; publish) &
 	;;
 disable)
 	[ "$(id -u)" = 0 ] || { echo "À lancer en administrateur (pkexec)." >&2; exit 1; }
-	rm -f "$CONF"
+	rm -f "$CONF" "$LIST"
 	log "Instantanés automatiques désactivés"
 	;;
 pre-update)
@@ -61,10 +67,29 @@ pre-update)
 	log "Instantané avant mise à jour"
 	if timeshift --create --comments "Avant mise à jour" --tags O --scripted >/dev/null 2>&1; then
 		date +%F > "$STAMP"
+		publish
 	else
 		log "Échec de l'instantané (mise à jour poursuivie)"
 	fi
 	;;
+create)
+	[ "$(id -u)" = 0 ] || { echo "À lancer en administrateur (pkexec)." >&2; exit 1; }
+	[ -f "$CONF" ] || { echo "Les instantanés ne sont pas activés." >&2; exit 1; }
+	timeshift --create --comments "${2:-Créé à la main}" --tags O --scripted >/dev/null 2>&1 || { echo "Échec de l'instantané." >&2; exit 1; }
+	publish
+	log "Instantané créé : ${2:-Créé à la main}"
+	;;
+list)
+	[ "$(id -u)" = 0 ] || { echo "À lancer en administrateur (pkexec)." >&2; exit 1; }
+	publish ;;
+restore)
+	[ "$(id -u)" = 0 ] || { echo "À lancer en administrateur (pkexec)." >&2; exit 1; }
+	NAME=${2:?nom de l'instantané manquant}
+	case "$NAME" in *[!0-9_-]*) echo "Nom d'instantané invalide." >&2; exit 2 ;; esac
+	log "Retour à l'instantané $NAME"
+	# Restauration du système (pas des dossiers personnels) ; le chargeur de démarrage n'est pas touché.
+	timeshift --restore --snapshot "$NAME" --scripted --yes --skip-grub || { echo "Échec du retour arrière." >&2; exit 1; }
+	;;
 *)
-	echo "usage : vinx-snapshots enable|disable|pre-update|status" >&2; exit 2 ;;
+	echo "usage : vinx-snapshots enable|disable|pre-update|status|create [texte]|list|restore NOM" >&2; exit 2 ;;
 esac

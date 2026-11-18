@@ -5,6 +5,7 @@
 #include <QDBusInterface>
 
 #include <QCoreApplication>
+#include <QProcess>
 #include <QStandardPaths>
 #include <QSysInfo>
 #include <QFile>
@@ -180,4 +181,27 @@ QVariantMap Updates::versions() const
 QVariantList Updates::history() const
 {
     return parseAptHistory(readText(QStringLiteral("/var/log/apt/history.log")));
+}
+
+bool Updates::snapshotsEnabled() const
+{
+    return QFile::exists(QStringLiteral("/etc/timeshift/timeshift.json"));
+}
+
+QVariantList Updates::snapshots() const
+{
+    return parseTimeshiftList(readText(QStringLiteral("/var/lib/vinx/snapshots.list")));
+}
+
+void Updates::snapshotAction(const QString &action, const QString &argument)
+{
+    QStringList args{QStringLiteral("/usr/lib/vinx/vinx-snapshots"), action};
+    if (!argument.isEmpty())
+        args << argument;
+    auto *p = new QProcess(this);
+    connect(p, &QProcess::finished, this, [=](int code, QProcess::ExitStatus st) {
+        p->deleteLater();
+        Q_EMIT snapshotFinished(action, st == QProcess::NormalExit && code == 0);
+    });
+    p->start(QStringLiteral("pkexec"), args);
 }
