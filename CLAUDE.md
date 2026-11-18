@@ -47,7 +47,8 @@ Abandonnés (ne pas réintroduire) : violet/indigo, biseau partout, étiquettes 
 | `shell/apps/` | `settings` (pages *Page.qml), `store`, `files` (KIO), `welcome`, `updates` (Mises à jour), `terminal` (Qt Widgets + QTermWidget, compilé seulement en CI Debian) |
 | `shell/windowtheme/` | `vinx-window-theme` : décoration de fenêtre Aurorae « pastilles » générée (accent, clair/sombre) |
 | `shell/polkitagent/` | `vinx-polkit-agent` : fenêtre de mot de passe administrateur (polkit-qt6, facultatif) |
-| `shell/system/` | `vinx-admin` (pkexec, polkit), `vinx-update`, `vinx-snapshots`, `vinx-dev` |
+| `shell/system/` | `vinx-admin` (pkexec, polkit), `vinx-update`, `vinx-snapshots`, `vinx-backup` (documents), `vinx-dev` |
+| `shell/translations/`, `shell/common/vinxi18n.h` | Traduction anglaise : `vinx_en.ts` + dictionnaires `en_*.py` ; **tout nouveau texte doit être traduit** (`tools/update_translations.sh`, test `translations-complete`, docs/TRADUCTION.md) |
 | `shell/session/` | Session `vinx.desktop`, `vinx-session`, autostart avec relance |
 | `shell/sddm/vinx`, `shell/lockscreen` | Connexion et verrouillage |
 | `shell/tests/` | Tests QML (qmltestrunner) et C++ (QtTest) |
@@ -92,4 +93,5 @@ Préférences utilisateur : `~/.config/vinx/shell.ini` (QSettings, clés `sectio
   restent : comptes en ligne et réseau expert (802.1X, proxy).
 - **À vérifier sur une nouvelle ISO** : installation en btrfs, instantanés automatiques, entrée « revenir à un
   état précédent » du menu de démarrage (grub-btrfs, ADR 0031).
-- Ensuite : version publique 1.0 (site, ISO signée, traduction anglaise, guide).
+- Ensuite : version publique 1.0 (site, ISO signée, guide). Traduction anglaise faite (ADR 0034) ; reste le
+  catalogue du Store, les noms d'accents et les messages des scripts.

@@ -1,3 +1,14 @@
+vinx-shell (0.24.0) trixie; urgency=medium
+
+  * Sauvegarde des documents : vinx-backup (une version par jour, 30 gardées,
+    restauration à part), Paramètres → Sauvegarde (ADR 0032).
+  * Terminal VinX : glisser-déposer (récupérer, copier), activité des onglets.
+  * Accessibilité : contraste élevé, loupe, taille du pointeur, lecteur
+    d'écran Orca (ADR 0033).
+  * Traduction anglaise complète et choix de la langue (ADR 0034).
+
+ -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 10:30:00 +0000
+
 vinx-shell (0.23.0) trixie; urgency=medium
 
   * Mises à jour → Instantanés : liste, création, retour à un état précédent ;
