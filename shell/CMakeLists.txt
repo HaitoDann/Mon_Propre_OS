@@ -24,6 +24,10 @@ set(VINX_QML_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/qt6/qml" CACHE PATH "Dossier d
 # Tous les modules QML sont produits dans build/qml/ (chemin d'import pour la galerie et les tests).
 set(QT_QML_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml")
 
+# En-têtes communs (langue de l'interface) et dossier des traductions compilées (développement).
+include_directories("${PROJECT_SOURCE_DIR}/common")
+add_compile_definitions(VINX_BUILD_TRANSLATIONS_DIR="${CMAKE_BINARY_DIR}/translations")
+add_subdirectory(translations)
 add_subdirectory(qml/Vinx/Theme)
 add_subdirectory(qml/Vinx/Controls)
 add_subdirectory(qml/Vinx/System)

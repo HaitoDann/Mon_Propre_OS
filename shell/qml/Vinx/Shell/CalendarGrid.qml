@@ -37,7 +37,8 @@ Column {
         readonly property int daysPrev: new Date(cal.shown.getFullYear(), cal.shown.getMonth(), 0).getDate()
 
         Repeater {
-            model: [qsTr("L"), qsTr("M"), qsTr("M"), qsTr("J"), qsTr("V"), qsTr("S"), qsTr("D")]
+            // Initiales des jours (lundi → dimanche) dans la langue de l'interface.
+            model: [1, 2, 3, 4, 5, 6, 0].map(d => Qt.locale().dayName(d, Locale.NarrowFormat).toUpperCase())
             Label {
                 width: grid.cell; height: 24
                 horizontalAlignment: Text.AlignHCenter

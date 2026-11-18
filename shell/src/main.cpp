@@ -4,6 +4,7 @@
 // Ailleurs (X11, développement, --preview) : une seule fenêtre d'aperçu.
 
 #include <QCommandLineParser>
+#include "vinxi18n.h"
 #include <QDir>
 #include <QHash>
 #include <QPointer>
@@ -58,6 +59,7 @@ int main(int argc, char *argv[])
     // QApplication (et non QGuiApplication) : les menus d'application importés en DBusMenu
     // (menu global) sont des QMenu, qui exigent une application « widgets ».
     QApplication app(argc, argv);
+    vinxInstallTranslator(app);
     app.setApplicationName(QStringLiteral("vinx-shell"));
     app.setApplicationVersion(QStringLiteral(VINX_VERSION));
     app.setDesktopFileName(QStringLiteral("org.vinx.shell"));

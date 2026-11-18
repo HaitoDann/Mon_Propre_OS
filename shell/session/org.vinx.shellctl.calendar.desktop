@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Calendrier VinX
+Name[en]=VinX Calendar
 Exec=vinx-shellctl calendar
 NoDisplay=true
 OnlyShowIn=KDE;

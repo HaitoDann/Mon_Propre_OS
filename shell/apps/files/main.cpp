@@ -1,4 +1,5 @@
 #include <QApplication>
+#include "vinxi18n.h"
 #include <QCommandLineParser>
 #include <QDir>
 #include <QIcon>
@@ -15,6 +16,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    vinxInstallTranslator(app);
     app.setApplicationName(QStringLiteral("vinx-files"));
     app.setApplicationDisplayName(QObject::tr("Fichiers"));
     app.setApplicationVersion(QStringLiteral(VINX_VERSION));

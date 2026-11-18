@@ -1,10 +1,14 @@
 [Desktop Entry]
 Type=Application
 Name=Mises à jour
+Name[en]=Updates
 GenericName=Mises à jour du système
+GenericName[en]=System updates
 Comment=Version de VinX OS et mises à jour du système, du bureau et des applications
+Comment[en]=VinX OS version and updates for the system, the desktop and applications
 Exec=vinx-updates
 Icon=vinx-logo
 Terminal=false
 Categories=System;Settings;
 Keywords=mise à jour;update;version;debian;apt;système;
+Keywords[en]=update;upgrade;version;debian;apt;system;

@@ -1,6 +1,7 @@
 // Terminal VinX (ADR 0025) : remplace Konsole dans la session VinX.
 //   vinx-terminal [--workdir DOSSIER] [-e COMMANDE…]
 #include "terminalwindow.h"
+#include "vinxi18n.h"
 
 #include <qtermwidget.h>
 
@@ -11,6 +12,7 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    vinxInstallTranslator(app);
     QApplication::setApplicationName(QStringLiteral("vinx-terminal"));
     QApplication::setApplicationDisplayName(QObject::tr("Terminal"));
     QApplication::setDesktopFileName(QStringLiteral("org.vinx.terminal"));

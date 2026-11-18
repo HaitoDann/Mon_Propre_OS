@@ -1,13 +1,17 @@
 [Desktop Entry]
 Type=Application
 Name=Terminal
+Name[en]=Terminal
 GenericName=Terminal
+GenericName[en]=Terminal
 Comment=Lignes de commande
+Comment[en]=Command line
 Exec=vinx-terminal
 Icon=utilities-terminal
 Terminal=false
 Categories=System;TerminalEmulator;
 Keywords=console;shell;bash;commande;ligne de commande;
+Keywords[en]=console;shell;bash;command;command line;
 StartupWMClass=vinx-terminal
 X-ExecArg=-e
 X-TerminalArgExec=-e

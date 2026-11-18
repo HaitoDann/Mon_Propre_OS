@@ -1,5 +1,6 @@
 // vinx-polkit-agent : agent d'authentification polkit de la session VinX (ADR 0028).
 #include "agent.h"
+#include "vinxi18n.h"
 
 #include <PolkitQt1/Subject>
 
@@ -15,6 +16,7 @@ int main(int argc, char **argv)
     if (qEnvironmentVariableIntValue("VINX_SESSION") != 1 && qEnvironmentVariableIntValue("VINX_POLKIT_FORCE") != 1)
         return 0;
     QGuiApplication app(argc, argv);
+    vinxInstallTranslator(app);
     app.setApplicationName(QStringLiteral("vinx-polkit-agent"));
     app.setQuitOnLastWindowClosed(false);
 

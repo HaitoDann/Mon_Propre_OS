@@ -3,6 +3,7 @@
 // Démarrage commun des applications VinX (Paramètres, Store, Bienvenue).
 
 #include <QCommandLineParser>
+#include "vinxi18n.h"
 #include <QDir>
 #include <QGuiApplication>
 #include <QIcon>
@@ -14,6 +15,7 @@ inline int vinxAppMain(int argc, char *argv[], const char *appName, const char *
                        const QList<QCommandLineOption> &extraOptions = {}, const QStringList &stringProperties = {})
 {
     QGuiApplication app(argc, argv);
+    vinxInstallTranslator(app);
     app.setApplicationName(QString::fromLatin1(appName));
     app.setApplicationVersion(QStringLiteral(VINX_VERSION));
     app.setDesktopFileName(QString::fromLatin1(desktopId));

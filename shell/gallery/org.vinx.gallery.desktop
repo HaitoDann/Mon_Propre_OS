@@ -2,6 +2,7 @@
 Type=Application
 Name=VinX Design System
 Comment=Galerie des composants de l'interface VinX OS
+Comment[en]=Gallery of the VinX OS interface components
 Exec=vinx-gallery
 Icon=vinx-logo
 Categories=Development;

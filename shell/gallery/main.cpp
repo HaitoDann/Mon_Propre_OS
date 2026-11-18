@@ -1,4 +1,5 @@
 #include <QCommandLineParser>
+#include "vinxi18n.h"
 #include <QDir>
 #include <QQuickWindow>
 #include <QTimer>
@@ -8,6 +9,7 @@
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+    vinxInstallTranslator(app);
     app.setApplicationName(QStringLiteral("vinx-gallery"));
     app.setApplicationDisplayName(QStringLiteral("VinX — Design system"));
     app.setApplicationVersion(QStringLiteral(VINX_VERSION));

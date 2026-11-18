@@ -100,3 +100,9 @@ find_program(RSYNC rsync)
 if(RSYNC)
     add_test(NAME backup COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/backup-test.sh" "${PROJECT_SOURCE_DIR}/system/vinx-backup")
 endif()
+
+# Traduction anglaise complète : tout texte de l'interface doit avoir sa traduction (ADR 0034).
+find_program(LUPDATE NAMES lupdate HINTS "${QT6_INSTALL_PREFIX}/${QT6_INSTALL_BINS}" /usr/lib/qt6/bin)
+if(LUPDATE)
+    add_test(NAME translations-complete COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/translations-test.sh" "${LUPDATE}" "${PROJECT_SOURCE_DIR}")
+endif()

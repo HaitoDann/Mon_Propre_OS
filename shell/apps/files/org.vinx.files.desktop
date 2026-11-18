@@ -1,12 +1,16 @@
 [Desktop Entry]
 Type=Application
 Name=Fichiers
+Name[en]=Files
 GenericName=Gestionnaire de fichiers
+GenericName[en]=File manager
 Comment=Parcourir et organiser vos fichiers
+Comment[en]=Browse and organize your files
 Exec=vinx-files %U
 Icon=system-file-manager
 Terminal=false
 Categories=Qt;System;FileTools;FileManager;
 MimeType=inode/directory;
 Keywords=fichiers;dossiers;explorateur;files;folders;
+Keywords[en]=files;folders;explorer;
 StartupNotify=true

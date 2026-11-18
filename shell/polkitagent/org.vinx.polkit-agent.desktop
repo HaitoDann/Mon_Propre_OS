@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Agent d'authentification VinX
+Name[en]=VinX authentication agent
 Exec=/usr/libexec/vinx-polkit-agent
 NoDisplay=true
 OnlyShowIn=KDE;

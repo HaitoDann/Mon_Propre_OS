@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Centre de contrôle VinX
+Name[en]=VinX Control Center
 Exec=vinx-shellctl control
 NoDisplay=true
 OnlyShowIn=KDE;

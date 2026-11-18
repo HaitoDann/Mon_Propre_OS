@@ -1,9 +1,13 @@
 [Desktop Entry]
 Type=Application
 Name=Store
+Name[en]=Store
 GenericName=Logithèque
+GenericName[en]=Software center
 Comment=Ajouter des applications et des packs (développement, jeux, multimédia…)
+Comment[en]=Add applications from Debian and Flathub
 Exec=vinx-store
 Icon=system-software-install
 Keywords=store;logiciels;applications;installer;flatpak;packs;
+Keywords[en]=store;software;applications;install;flatpak;
 Categories=System;PackageManager;

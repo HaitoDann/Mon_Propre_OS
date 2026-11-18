@@ -112,6 +112,23 @@ Window {
             Column {
                 visible: win.page === "appearance"
                 width: parent.width
+                // Langue de l'interface (ADR 0034) : VinX tout de suite à la réouverture des applications ;
+                // KDE et les autres applications à la prochaine ouverture de session.
+                SettingsRow {
+                    title: qsTr("Langue")
+                    description: qsTr("Applications VinX : à leur prochaine ouverture. Reste du système : à la prochaine ouverture de session.")
+                    SegmentedControl {
+                        readonly property var codes: ["", "fr", "en"]
+                        model: [qsTr("Automatique"), "Français", "English"]
+                        currentIndex: Math.max(0, codes.indexOf(String(win.pref("interface/language", ""))))
+                        onActivated: (i) => {
+                            Preferences.setValue("interface/language", codes[i])
+                            const kde = codes[i] === "en" ? "en_GB:en" : codes[i] === "fr" ? "fr_FR:fr" : ""
+                            if (kde) Session.run("kwriteconfig6", ["--file", "plasma-localerc", "--group", "Translations", "--key", "LANGUAGE", kde])
+                            else Session.run("kwriteconfig6", ["--file", "plasma-localerc", "--group", "Translations", "--key", "LANGUAGE", "--delete"])
+                        }
+                    }
+                }
                 SettingsRow {
                     title: qsTr("Thème")
                     description: qsTr("S'applique à la barre, au dock et aux fenêtres des applications.")

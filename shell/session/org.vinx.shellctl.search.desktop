@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Recherche VinX
+Name[en]=VinX Search
 Exec=vinx-shellctl search
 NoDisplay=true
 OnlyShowIn=KDE;
