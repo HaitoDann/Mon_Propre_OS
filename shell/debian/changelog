@@ -1,3 +1,11 @@
+vinx-shell (0.26.2) trixie; urgency=medium
+
+  * Consolidation 1.0 (ADR 0039) : « vinx-dev rapport » (captures de toutes
+    les pages sur le matériel réel, journaux, matériel) pour la recette.
+  * Adresses du dépôt mises à jour (HaitoDann/VinX_OS).
+
+ -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 18:00:00 +0000
+
 vinx-shell (0.26.1) trixie; urgency=medium
 
   * Store : logos des logiciels à nouveau affichés (icônes du thème pour les

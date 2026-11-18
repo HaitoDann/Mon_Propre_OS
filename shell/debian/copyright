@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: vinx-shell
-Source: https://github.com/haitodann/mon_propre_os
+Source: https://github.com/HaitoDann/VinX_OS
 
 Files: *
 Copyright: 2026 HaitoDann et les contributeurs de VinX OS

@@ -11,9 +11,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Scripts shell (shellcheck)
         run: shellcheck distro/*.sh distro/scripts/*.sh distro/live/auto/* distro/live/config/hooks/normal/*
-      - name: JavaScript de la maquette et de la disposition Plasma
+      - name: JavaScript des outils et de la disposition Plasma
         run: |
-          for f in prototype/js/*.js shell/tools/*.js distro/live/config/includes.chroot/usr/share/plasma/look-and-feel/*/contents/layouts/*.js; do
+          for f in shell/tools/*.js distro/live/config/includes.chroot/usr/share/plasma/look-and-feel/*/contents/layouts/*.js; do
             node --check "$f"
           done
       - name: Générateur de thème

@@ -53,6 +53,7 @@ Abandonnés (ne pas réintroduire) : violet/indigo, biseau partout, étiquettes 
 | `shell/sddm/vinx`, `shell/lockscreen` | Connexion et verrouillage |
 | `shell/tests/` | Tests QML (qmltestrunner) et C++ (QtTest) |
 | `distro/` | ISO : `build.sh`, `live/` (live-build), hooks, `scripts/` (APT, assets), `tests/boot-test.sh` |
+| `web/vinx-os/` | Site de présentation (à copier dans le dépôt `vinx-labs`, voir `web/README.md`) |
 | `.github/workflows/` | `shell.yml` (paquet + tests, à chaque poussée sur shell/), `iso.yml` (ISO + test de démarrage QEMU, déclenchement manuel uniquement), `apt-repo.yml` (étiquette `shell-v*`), `checks.yml` |
 
 Préférences utilisateur : `~/.config/vinx/shell.ini` (QSettings, clés `section/clé`).
@@ -82,6 +83,9 @@ Préférences utilisateur : `~/.config/vinx/shell.ini` (QSettings, clés `sectio
 - L'agent ne peut ni déclencher `workflow_dispatch`, ni pousser d'étiquette, ni créer de secret GitHub.
 
 ## En attente
+
+- **Phase de consolidation 1.0** (ADR 0039, gel des fonctions) : suivre `docs/ROADMAP.md` et `docs/RECETTE.md` ;
+  l'utilisateur envoie ses retours avec `vinx-dev rapport`. Branche principale : `main`.
 
 - **Dépôt APT** : l'utilisateur doit créer la clé (`distro/scripts/create-apt-key.sh`), ajouter le
   secret `APT_SIGNING_KEY`, activer GitHub Pages, pousser une étiquette `shell-vX.Y.Z` (docs/APT.md).

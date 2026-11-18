@@ -1,7 +1,7 @@
 # Guide UX du Desktop Shell
 
-Règles d'expérience du bureau, issues de la maquette (`prototype/`, ancienne charte violette,
-conservée pour mémoire) et appliquées dans le shell Qt 6 / QML (`shell/`). Pour le visuel, la
+Règles d'expérience du bureau, issues de la maquette web d'origine (ancienne charte violette, retirée du dépôt,
+consultable dans l'historique git) et appliquées dans le shell Qt 6 / QML (`shell/`). Pour le visuel, la
 référence est [DESIGN.md](DESIGN.md).
 
 ## Principes
@@ -40,4 +40,3 @@ référence est [DESIGN.md](DESIGN.md).
 - **Outils du quotidien** : **Ctrl+Échap** moniteur système (ADR 0035) ; **Méta+Maj+S** capture d'une zone, d'une fenêtre ou d'un écran avec annotation, **Impr. écran** capture de tout l'écran (ADR 0036) ; **Méta+V** historique du presse-papiers (ADR 0037). Les images s'ouvrent dans **Images** (ADR 0038). Toute capture est copiée aussitôt.
 - **Échap** ferme toujours l'élément le plus haut : menu, recherche, vue d'ensemble, puis plein écran.
 
-Raccourcis : voir [`prototype/README.md`](../prototype/README.md).

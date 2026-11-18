@@ -16,9 +16,10 @@ Aucune ISO n'est nécessaire pour la faire évoluer.
 | `vinx-dev preview` | Ouvre le bureau VinX dans une fenêtre de test, la session reste intacte. |
 | `vinx-dev status` | Version installée, branche, versions gardées. |
 | `vinx-dev log` | Journal du shell (plantages, erreurs). |
+| `vinx-dev rapport` | Rapport de recette : capture de chaque page des Paramètres, du bureau et des applications **avec le vrai matériel**, journaux, plantages et matériel, dans `~/.cache/vinx-dev/rapport-…tar.gz`. À joindre à la conversation avec Claude ([RECETTE.md](RECETTE.md)). |
 
 Options : `--no-pull` (travailler sur ses modifications locales sans récupérer), `--repo CHEMIN`.
-Par défaut le dépôt est `~/Mon_Propre_OS` et les 5 dernières versions construites sont gardées
+Par défaut le dépôt est `~/Mon_Propre_OS` (ou `VINX_DEV_REPO`). Branche suivie : celle du dépôt local, normalement `main` et les 5 dernières versions construites sont gardées
 dans `~/.cache/vinx-dev/builds`. Le journal de construction est `~/Mon_Propre_OS/.vinx-dev-build.log`.
 
 La première fois, `vinx-dev` installe les outils de construction (mot de passe administrateur).

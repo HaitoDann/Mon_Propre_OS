@@ -9,6 +9,7 @@
 #   vinx-dev preview     ouvre le bureau VinX dans une fenêtre de test (session intacte)
 #   vinx-dev status      version installée, branche, historique des versions construites
 #   vinx-dev log         dernières lignes du journal du shell
+#   vinx-dev rapport     captures de toutes les pages + journaux + matériel, dans une archive à partager
 #
 # Options : --no-pull (ne pas faire « git pull »), --repo CHEMIN (dépôt, défaut ~/Mon_Propre_OS).
 # Variables : VINX_DEV_REPO (dépôt), VINX_DEV_KEEP (versions gardées, défaut 5).
@@ -24,8 +25,8 @@ while [ $# -gt 0 ]; do
 	case $1 in
 	--no-pull) PULL=0 ;;
 	--repo) shift; REPO=${1:?chemin manquant} ;;
-	-h|--help) sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
-	update|build|install|rollback|restart|preview|status|log) CMD=$1 ;;
+	-h|--help) sed -n '2,16p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+	update|build|install|rollback|restart|preview|status|log|rapport) CMD=$1 ;;
 	*) echo "vinx-dev : option inconnue « $1 » (vinx-dev --help)" >&2; exit 2 ;;
 	esac
 	shift
@@ -144,6 +145,42 @@ status)
 	echo "Shell en cours   : $(pgrep -x vinx-shell >/dev/null 2>&1 && echo oui || echo non)"
 	echo "Versions gardées :"
 	builds | while read -r f; do echo "  $(basename "$f")"; done
+	;;
+rapport)
+	# Rapport de recette (docs/RECETTE.md) : ce que voit l'utilisateur, sur son matériel réel.
+	# Les captures sont rendues hors écran (rien ne s'ouvre) avec les vraies données du système.
+	out=${XDG_CACHE_HOME:-$HOME/.cache}/vinx-dev/rapport-$(date +%Y%m%d-%H%M%S)
+	mkdir -p "$out/captures"
+	shot() { name=$1; shift; QT_QPA_PLATFORM=offscreen timeout 30 "$@" --screenshot "$out/captures/$name.png" >>"$out/captures.log" 2>&1 || echo "échec : $name" >>"$out/captures.log"; }
+	say "Captures des Paramètres"
+	for p in appearance wallpaper desktop dock notifications office displays sound power network printers drivers \
+		accessibility keyboard datetime users backup troubleshoot updates about; do
+		shot "parametres-$p" vinx-settings --page "$p"
+	done
+	say "Captures du bureau et des applications"
+	for p in control system calendar; do shot "bureau-$p" vinx-shell --preview --open "$p"; done
+	shot bureau vinx-shell --preview
+	for a in vinx-store vinx-files vinx-updates vinx-welcome vinx-monitor; do
+		command -v "$a" >/dev/null 2>&1 && shot "$a" "$a"
+	done
+	say "Journaux et matériel"
+	{
+		echo "== Versions"; echo "vinx-shell $(installed_version)"; uname -a; grep PRETTY /etc/os-release
+		echo "== Session"; echo "XDG_SESSION_TYPE=${XDG_SESSION_TYPE:-?} XDG_CURRENT_DESKTOP=${XDG_CURRENT_DESKTOP:-?}"
+		echo "== Matériel"; lscpu 2>/dev/null | sed -n '1,15p'; lspci -nnk 2>/dev/null; lsusb 2>/dev/null
+		echo "== Écrans"; kscreen-doctor -o 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g'
+		echo "== Réseau"; nmcli -t device 2>/dev/null
+		echo "== Son"; wpctl status 2>/dev/null | sed -n '1,40p'
+		echo "== Disques"; lsblk -f 2>/dev/null; findmnt / 2>/dev/null
+		echo "== Instantanés"; ls /.snapshots 2>/dev/null | tail -5
+		echo "== Dépôts APT"; ls /etc/apt/sources.list.d/ 2>/dev/null
+	} >"$out/systeme.txt" 2>&1
+	journalctl --user -b -t vinx-shell --no-pager >"$out/journal-shell.txt" 2>&1 || true
+	journalctl --user -b -p warning --no-pager | tail -400 >"$out/journal-avertissements.txt" 2>&1 || true
+	coredumpctl list --no-pager 2>/dev/null | tail -20 >"$out/plantages.txt" || true
+	tar -czf "$out.tar.gz" -C "$(dirname "$out")" "$(basename "$out")"
+	say "Rapport prêt : $out.tar.gz ($(ls "$out/captures" | wc -l) captures)"
+	echo "Dossier : $out — joindre les captures ou l'archive à la conversation avec Claude."
 	;;
 log)
 	journalctl --user -t vinx-shell -n 50 --no-pager 2>/dev/null || echo "Journal indisponible."

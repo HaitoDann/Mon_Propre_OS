@@ -18,10 +18,10 @@ strings:
     versionedName:       "VinX OS 0.1"
     shortVersionedName:  "VinX 0.1"
     bootloaderEntryName: "VinX OS"
-    productUrl:          "https://github.com/haitodann/mon_propre_os"
-    supportUrl:          "https://github.com/haitodann/mon_propre_os/issues"
-    knownIssuesUrl:      "https://github.com/haitodann/mon_propre_os/issues"
-    releaseNotesUrl:     "https://github.com/haitodann/mon_propre_os"
+    productUrl:          "https://github.com/HaitoDann/VinX_OS"
+    supportUrl:          "https://github.com/HaitoDann/VinX_OS/issues"
+    knownIssuesUrl:      "https://github.com/HaitoDann/VinX_OS/issues"
+    releaseNotesUrl:     "https://github.com/HaitoDann/VinX_OS"
 
 images:
     productLogo:         "logo.png"

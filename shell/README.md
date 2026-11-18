@@ -1,7 +1,7 @@
 # vinx-shell — shell de bureau de VinX OS
 
 Interface native de VinX OS, en **Qt 6 / QML**, au-dessus du compositeur **KWin** ([ADR 0002](../docs/adr/0002-qt6-qml-kwin.md)).
-Référence UX : la [maquette](../prototype/) et le [guide UX](../docs/UX.md).
+Référence UX : le [guide UX](../docs/UX.md).
 
 ## État
 
@@ -80,8 +80,7 @@ Le paquet est aussi intégré à l'ISO : *VinX Design System* apparaît dans le 
 ## Modifier le style
 
 - Couleurs, tailles, durées : `branding/tokens.toml`, puis recompiler.
-- Icônes : `branding/icons/*.svg` (trait `currentColor`, grille 24 px). `node shell/tools/export_icons.js`
-  régénère ce dossier depuis le jeu d'icônes de la maquette.
+- Icônes : `branding/icons/*.svg` (trait `currentColor`, grille 24 px), édités directement.
 
 ## Tester la session sur l'ISO
 

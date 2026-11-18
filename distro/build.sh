@@ -67,7 +67,7 @@ if [ -f "$KEYRING" ]; then
 	gpg --dearmor < "$KEYRING" > "$WORK/config/includes.chroot/usr/share/keyrings/vinx-archive-keyring.gpg"
 	cat > "$WORK/config/includes.chroot/etc/apt/sources.list.d/vinx.sources" <<SRC
 Types: deb
-URIs: ${VINX_APT_URL:-https://haitodann.github.io/mon_propre_os/apt}
+URIs: ${VINX_APT_URL:-https://haitodann.github.io/VinX_OS/apt}
 Suites: trixie
 Components: main
 Signed-By: /usr/share/keyrings/vinx-archive-keyring.gpg

@@ -25,7 +25,7 @@ ainsi les nouvelles versions par le Store (onglet Mises à jour), sans réinstal
    git tag shell-v0.8.0 && git push origin shell-v0.8.0
    ```
    Le workflow « Dépôt APT » construit le paquet, signe le dépôt et le publie sur
-   `https://haitodann.github.io/mon_propre_os/apt`. C'est le seul moment où il consomme des minutes.
+   `https://haitodann.github.io/VinX_OS/apt`. C'est le seul moment où il consomme des minutes.
 
 ## Côté système
 
@@ -33,7 +33,7 @@ Les ISO construites après l'étape 3 contiennent `/etc/apt/sources.list.d/vinx.
 `/usr/share/keyrings/vinx-archive-keyring.gpg`. Sur un système déjà installé sans ce dépôt :
 
 ```bash
-curl -fsSL https://haitodann.github.io/mon_propre_os/apt/vinx-archive-keyring.asc | sudo gpg --dearmor -o /usr/share/keyrings/vinx-archive-keyring.gpg
-printf 'Types: deb\nURIs: https://haitodann.github.io/mon_propre_os/apt\nSuites: trixie\nComponents: main\nSigned-By: /usr/share/keyrings/vinx-archive-keyring.gpg\n' | sudo tee /etc/apt/sources.list.d/vinx.sources
+curl -fsSL https://haitodann.github.io/VinX_OS/apt/vinx-archive-keyring.asc | sudo gpg --dearmor -o /usr/share/keyrings/vinx-archive-keyring.gpg
+printf 'Types: deb\nURIs: https://haitodann.github.io/VinX_OS/apt\nSuites: trixie\nComponents: main\nSigned-By: /usr/share/keyrings/vinx-archive-keyring.gpg\n' | sudo tee /etc/apt/sources.list.d/vinx.sources
 sudo apt update && sudo apt upgrade
 ```
