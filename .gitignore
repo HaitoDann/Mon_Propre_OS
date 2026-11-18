@@ -8,3 +8,6 @@ vinx-apt-signing-key.SECRET.asc
 
 *.log
 .vinx-dev-build.log
+__pycache__/
+*.pyc
+shell/debian/*.debhelper
