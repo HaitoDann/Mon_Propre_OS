@@ -1,4 +1,6 @@
 #include "printers.h"
+
+#include <QProcess>
 #include "syscmd.h"
 #include "sysparse.h"
 
@@ -91,4 +93,20 @@ void Printers::cancelJobs(const QString &name)
         Q_EMIT finished(ok, ok ? tr("Impressions annulées.") : tr("Impossible d'annuler les impressions."));
         refresh();
     });
+}
+
+QVariantMap Printers::options(const QString &name) const
+{
+    QProcess p;
+    p.start(QStringLiteral("lpoptions"), {QStringLiteral("-p"), name});
+    return parseLpoptions(p.waitForFinished(3000) ? QString::fromUtf8(p.readAllStandardOutput()) : QString());
+}
+
+void Printers::setOption(const QString &name, const QString &key, const QString &value)
+{
+    // Préférence de l'utilisateur (~/.cups/lpoptions), sans droits administrateur.
+    runCommand(this, QStringLiteral("lpoptions"), {QStringLiteral("-p"), name, QStringLiteral("-o"), key + QLatin1Char('=') + value},
+               [this](bool ok, const QString &, const QString &) {
+                   Q_EMIT finished(ok, ok ? tr("Réglage enregistré.") : tr("Impossible d'enregistrer le réglage."));
+               });
 }

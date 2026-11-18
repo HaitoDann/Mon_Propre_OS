@@ -30,7 +30,43 @@ Column {
                 Button { visible: !modelData.isDefault; text: qsTr("Par défaut"); variant: Button.Ghost; onClicked: Printers.setDefault(modelData.name) }
                 Button { text: qsTr("Page de test"); variant: Button.Secondary; onClicked: Printers.printTestPage(modelData.name) }
                 Button { visible: modelData.status === "printing"; text: qsTr("Annuler"); variant: Button.Ghost; onClicked: Printers.cancelJobs(modelData.name) }
+                Button { text: qsTr("Options"); variant: Button.Ghost; onClicked: page.optionsFor = page.optionsFor === modelData.name ? "" : modelData.name }
                 Button { text: qsTr("Supprimer"); variant: Button.Ghost; enabled: !Printers.busy; onClicked: Printers.remove(modelData.name) }
+            }
+        }
+    }
+    // Options par défaut de l'imprimante choisie (papier, recto verso, couleur).
+    property string optionsFor: ""
+    Column {
+        id: opts
+        visible: page.optionsFor !== ""
+        width: parent.width
+        property var values: page.optionsFor ? Printers.options(page.optionsFor) : ({})
+        onVisibleChanged: if (visible) values = Printers.options(page.optionsFor)
+        Label { text: qsTr("Options de %1").arg(page.optionsFor.replace(/_/g, " ")); font.weight: Font.DemiBold; topPadding: Theme.space2 }
+        SettingsRow {
+            title: qsTr("Format du papier")
+            SegmentedControl {
+                model: ["A4", "Lettre US"]
+                currentIndex: opts.values.media === "letter" ? 1 : 0
+                onActivated: (i) => Printers.setOption(page.optionsFor, "media", i === 1 ? "Letter" : "A4")
+            }
+        }
+        SettingsRow {
+            title: qsTr("Recto verso")
+            SegmentedControl {
+                readonly property var values: ["one-sided", "two-sided-long-edge", "two-sided-short-edge"]
+                model: [qsTr("Non"), qsTr("Bord long"), qsTr("Bord court")]
+                currentIndex: Math.max(0, values.indexOf(opts.values.sides))
+                onActivated: (i) => Printers.setOption(page.optionsFor, "sides", values[i])
+            }
+        }
+        SettingsRow {
+            title: qsTr("Couleur")
+            SegmentedControl {
+                model: [qsTr("Couleur"), qsTr("Noir et blanc")]
+                currentIndex: opts.values.color === "monochrome" ? 1 : 0
+                onActivated: (i) => Printers.setOption(page.optionsFor, "print-color-mode", i === 1 ? "monochrome" : "color")
             }
         }
     }
@@ -65,7 +101,7 @@ Column {
     }
     SettingsRow {
         title: qsTr("Imprimante ancienne ou non détectée")
-        description: qsTr("Ajout manuel avec choix du pilote.")
-        Button { text: qsTr("Avancé…"); variant: Button.Ghost; onClicked: Session.launch("systemsettings", ["kcm_printer_manager"]) }
+        description: qsTr("Ajout manuel avec choix du pilote, dans la page d'administration de l'impression (navigateur).")
+        Button { text: qsTr("Ouvrir…"); variant: Button.Ghost; onClicked: Qt.openUrlExternally("http://localhost:631/admin") }
     }
 }

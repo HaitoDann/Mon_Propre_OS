@@ -14,6 +14,10 @@ QtObject {
     // Bureaux virtuels simulés.
     property int desktopCount: 3
     property int currentDesktopIndex: 0
+    property var desktopNames: ["Bureau 1", "Bureau 2", "Bureau 3"]
+    function addDesktop() { desktopNames = desktopNames.concat(["Bureau " + (desktopCount + 1)]); desktopCount++ }
+    function removeDesktop() { if (desktopCount > 1) { desktopCount--; desktopNames = desktopNames.slice(0, desktopCount); currentDesktopIndex = Math.min(currentDesktopIndex, desktopCount - 1) } }
+    function renameDesktop(i, name) { const n = desktopNames.slice(); n[i] = name; desktopNames = n }
     function activateDesktop(i) { if (i >= 0 && i < desktopCount) currentDesktopIndex = i }
 
     // false : fenêtres purement simulées (démonstration, tests) — aucune application n'est lancée.

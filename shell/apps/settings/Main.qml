@@ -3,6 +3,7 @@ import Vinx.Theme
 import Vinx.Controls
 import Vinx.System
 import Vinx.Shell
+import QtQuick.Dialogs
 
 // Paramètres de VinX OS. Les réglages sont enregistrés dans les préférences partagées :
 // le shell les applique immédiatement.
@@ -276,10 +277,40 @@ Window {
                 SettingsRow { title: qsTr("Widget Horloge"); Switch { checked: win.on("widgets/clock", true); onToggled: (c) => Preferences.setValue("widgets/clock", c) } }
                 SettingsRow { title: qsTr("Widget Calendrier"); Switch { checked: win.on("widgets/calendar", false); onToggled: (c) => Preferences.setValue("widgets/calendar", c) } }
                 SettingsRow { title: qsTr("Widget Note rapide"); Switch { checked: win.on("widgets/note", false); onToggled: (c) => Preferences.setValue("widgets/note", c) } }
+                // Bureaux virtuels (ADR 0030) : nombre et noms, sans le module KDE.
                 SettingsRow {
-                    title: qsTr("Espaces de travail et fenêtres")
-                    description: qsTr("Nombre de bureaux, raccourcis et magnétisme des fenêtres.")
-                    Button { text: qsTr("Réglages avancés…"); onClicked: Session.launch("systemsettings", ["kcm_kwin_virtualdesktops"]) }
+                    title: qsTr("Bureaux virtuels")
+                    description: qsTr("Plusieurs bureaux pour ranger vos fenêtres (Ctrl + Méta + ← / → pour passer de l'un à l'autre).")
+                    Row {
+                        spacing: Theme.space2
+                        Button { text: "−"; enabled: Tasks.backend.desktopCount > 1; onClicked: Tasks.backend.removeDesktop() }
+                        Label { objectName: "desktopCount"; text: Tasks.backend.desktopCount; width: 24; horizontalAlignment: Text.AlignHCenter; anchors.verticalCenter: parent.verticalCenter; font.weight: Font.DemiBold }
+                        Button { text: "+"; enabled: Tasks.backend.desktopCount < 6; onClicked: Tasks.backend.addDesktop() }
+                    }
+                }
+                Repeater {
+                    model: Tasks.backend.desktopNames || []
+                    SettingsRow {
+                        required property string modelData
+                        required property int index
+                        title: qsTr("Nom du bureau %1").arg(index + 1)
+                        Rectangle {
+                            width: 220; height: 32; radius: Theme.radiusSm
+                            color: Theme.surfaceSunken
+                            border.width: nameField.activeFocus ? 2 : 1
+                            border.color: nameField.activeFocus ? Theme.accentForeground : Theme.border
+                            TextInput {
+                                id: nameField
+                                anchors { fill: parent; leftMargin: Theme.space2; rightMargin: Theme.space2 }
+                                verticalAlignment: TextInput.AlignVCenter
+                                text: modelData
+                                color: Theme.text
+                                font.pixelSize: Theme.fsMd
+                                selectByMouse: true
+                                onEditingFinished: if (text.trim() && text !== modelData) Tasks.backend.renameDesktop(index, text.trim())
+                            }
+                        }
+                    }
                 }
             }
 
@@ -446,6 +477,8 @@ Window {
             // Réseau
             Column {
                 visible: win.page === "network"
+                onVisibleChanged: if (visible) NetConfig.refresh()
+                Component.onCompleted: if (visible) NetConfig.refresh()
                 width: parent.width
                 SettingsRow {
                     title: qsTr("État")
@@ -457,9 +490,94 @@ Window {
                     title: qsTr("Bluetooth")
                     Switch { checked: Bluetooth.powered; onToggled: (c) => Bluetooth.powered = c }
                 }
+                // VPN et adresse IP fixe (ADR 0030), sans le module réseau de KDE.
+                Item {
+                    width: parent.width; height: 36
+                    Label { text: qsTr("VPN"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; anchors.bottom: parent.bottom; anchors.bottomMargin: 4 }
+                    Button { anchors { right: parent.right; bottom: parent.bottom } text: qsTr("Importer…"); variant: Button.Ghost; onClicked: vpnDialog.open() }
+                }
+                Label {
+                    visible: NetConfig.vpns.length === 0
+                    width: parent.width; wrapMode: Text.WordWrap; level: Label.Secondary; font.pixelSize: Theme.fsSm
+                    text: qsTr("Aucun VPN. Importez le fichier fourni par votre entreprise ou votre fournisseur (WireGuard .conf, OpenVPN .ovpn).")
+                }
+                Repeater {
+                    model: NetConfig.vpns
+                    SettingsRow {
+                        required property var modelData
+                        title: modelData.name
+                        description: modelData.kind + (modelData.active ? qsTr(" · connecté") : "")
+                        Row {
+                            spacing: Theme.space2
+                            Button { text: qsTr("Supprimer"); variant: Button.Ghost; onClicked: NetConfig.removeVpn(modelData.name) }
+                            Switch { checked: modelData.active; onToggled: (c) => NetConfig.setVpnActive(modelData.name, c) }
+                        }
+                    }
+                }
+                Label { visible: netMessage.text !== ""; id: netMessage; width: parent.width; wrapMode: Text.WordWrap; font.pixelSize: Theme.fsSm; topPadding: Theme.space2
+                        property bool ok: true; color: ok ? Theme.accentForeground : Theme.danger }
+                Connections { target: NetConfig; function onFinished(ok, msg) { netMessage.ok = ok; netMessage.text = msg } }
+                FileDialog {
+                    id: vpnDialog
+                    title: qsTr("Importer un VPN")
+                    nameFilters: [qsTr("Fichiers VPN (*.conf *.ovpn)")]
+                    onAccepted: NetConfig.importVpn(String(selectedFile))
+                }
+
+                Label { text: qsTr("ADRESSE IP"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 36; verticalAlignment: Text.AlignBottom; bottomPadding: 4; visible: NetConfig.activeConnection !== "" }
                 SettingsRow {
-                    title: qsTr("VPN, réseau filaire et appareils Bluetooth")
-                    description: qsTr("Réglages avancés.")
+                    visible: NetConfig.activeConnection !== ""
+                    title: qsTr("Adresse de « %1 »").arg(NetConfig.activeConnection)
+                    description: qsTr("Automatique dans presque tous les cas. Une adresse fixe sert à un serveur ou à une imprimante partagée.")
+                    SegmentedControl {
+                        model: [qsTr("Automatique"), qsTr("Fixe")]
+                        currentIndex: ipForm.manual ? 1 : 0
+                        onActivated: (i) => { if (i === 0) { ipForm.manual = false; NetConfig.setAutomaticIp() } else ipForm.manual = true }
+                    }
+                }
+                Column {
+                    id: ipForm
+                    property bool manual: NetConfig.ipv4.manual === true
+                    visible: manual && NetConfig.activeConnection !== ""
+                    width: parent.width
+                    spacing: Theme.space2
+                    Repeater {
+                        id: ipFields
+                        model: [{ key: "address", label: qsTr("Adresse"), hint: "192.168.1.50" },
+                                { key: "prefix", label: qsTr("Masque (longueur)"), hint: "24" },
+                                { key: "gateway", label: qsTr("Passerelle"), hint: "192.168.1.1" },
+                                { key: "dns", label: qsTr("Serveur DNS"), hint: "1.1.1.1" }]
+                        SettingsRow {
+                            required property var modelData
+                            property alias value: field.text
+                            title: modelData.label
+                            Rectangle {
+                                width: 200; height: 32; radius: Theme.radiusSm
+                                color: Theme.surfaceSunken
+                                border.width: field.activeFocus ? 2 : 1
+                                border.color: field.activeFocus ? Theme.accentForeground : Theme.border
+                                TextInput {
+                                    id: field
+                                    anchors { fill: parent; leftMargin: Theme.space2; rightMargin: Theme.space2 }
+                                    verticalAlignment: TextInput.AlignVCenter
+                                    text: NetConfig.ipv4[modelData.key] !== undefined ? String(NetConfig.ipv4[modelData.key]) : ""
+                                    color: Theme.text; font.pixelSize: Theme.fsMd; selectByMouse: true
+                                    Label { visible: !field.text; text: modelData.hint; level: Label.Tertiary; anchors.verticalCenter: parent.verticalCenter }
+                                }
+                            }
+                        }
+                    }
+                    Button {
+                        anchors.right: parent.right
+                        text: qsTr("Enregistrer l'adresse")
+                        variant: Button.Primary
+                        onClicked: NetConfig.setManualIp(ipFields.itemAt(0).value, parseInt(ipFields.itemAt(1).value) || 24,
+                                                         ipFields.itemAt(2).value, ipFields.itemAt(3).value)
+                    }
+                }
+                SettingsRow {
+                    title: qsTr("Réseaux d'entreprise (802.1X), proxy et cas particuliers")
+                    description: qsTr("Réglages experts.")
                     Button { text: qsTr("Avancé…"); variant: Button.Ghost; onClicked: Session.launch("systemsettings", ["kcm_networkmanagement"]) }
                 }
             }

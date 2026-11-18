@@ -82,6 +82,33 @@ private Q_SLOTS:
         QCOMPARE(l[0].toMap().value("iconCached").toString(), QStringLiteral("64x64/gimp_org.gimp.GIMP.png"));
         QVERIFY(!l[1].toMap().contains("iconCached"));
     }
+    void nmcliVpnAndIp()
+    {
+        const QVariantList v = parseNmcliVpns(QStringLiteral(
+            "Livebox-4A2C:802-11-wireless:yes:wlp2s0\nBureau\\: siège:vpn:no:\nwg0:wireguard:yes:wg0\nFilaire:802-3-ethernet:no:\n"));
+        QCOMPARE(v.size(), 2);
+        QCOMPARE(v[0].toMap().value("name").toString(), QString("Bureau: siège"));
+        QCOMPARE(v[0].toMap().value("active").toBool(), false);
+        QCOMPARE(v[1].toMap().value("kind").toString(), QString("WireGuard"));
+        const QVariantMap ip = parseNmcliIpv4(QStringLiteral("ipv4.method:manual\nipv4.addresses:192.168.1.50/24\nipv4.gateway:192.168.1.1\nipv4.dns:1.1.1.1,9.9.9.9\n"));
+        QCOMPARE(ip.value("manual").toBool(), true);
+        QCOMPARE(ip.value("address").toString(), QString("192.168.1.50"));
+        QCOMPARE(ip.value("prefix").toInt(), 24);
+        QCOMPARE(ip.value("gateway").toString(), QString("192.168.1.1"));
+        QCOMPARE(ip.value("dns").toString(), QString("1.1.1.1"));
+        QCOMPARE(parseNmcliIpv4(QStringLiteral("ipv4.method:auto\nipv4.gateway:--\n")).value("manual").toBool(), false);
+    }
+    void lpoptions()
+    {
+        const QVariantMap o = parseLpoptions(QStringLiteral("copies=1 device-uri=ipp://x job-sheets='none none' media=iso_a4_210x297mm sides=two-sided-long-edge print-color-mode=monochrome"));
+        QCOMPARE(o.value("media").toString(), QString("a4"));
+        QCOMPARE(o.value("sides").toString(), QString("two-sided-long-edge"));
+        QCOMPARE(o.value("color").toString(), QString("monochrome"));
+        const QVariantMap d = parseLpoptions(QStringLiteral("media=na_letter_8.5x11in"));
+        QCOMPARE(d.value("media").toString(), QString("letter"));
+        QCOMPARE(d.value("sides").toString(), QString("one-sided"));
+        QCOMPARE(d.value("color").toString(), QString("color"));
+    }
     void appstreamIconCache()
     {
         QTemporaryDir root;

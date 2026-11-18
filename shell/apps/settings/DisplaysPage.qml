@@ -187,9 +187,40 @@ Column {
                 onActivated: (i) => page.apply(["output." + page.current.name + ".scale." + scales[i]])
             }
         }
+        // Fréquence : modes de même définition que le mode courant (60 Hz, 120 Hz…).
         SettingsRow {
-            title: qsTr("Fréquence, orientation, couleurs")
-            Button { text: qsTr("Avancé…"); variant: Button.Ghost; onClicked: Session.launch("systemsettings", ["kcm_kscreen"]) }
+            id: rateRow
+            readonly property var cur: page.current ? (page.current.modes || []).find(x => x.id === page.current.currentModeId) : null
+            readonly property var rates: {
+                if (!cur) return []
+                const seen = {}, out = []
+                for (const m of page.current.modes || [])
+                    if (m.size.width === cur.size.width && m.size.height === cur.size.height) {
+                        const hz = Math.round(m.refreshRate)
+                        if (!seen[hz]) { seen[hz] = true; out.push({ hz: hz, id: m.id }) }
+                    }
+                return out.sort((a, b) => a.hz - b.hz)
+            }
+            visible: page.current && page.current.enabled && rates.length > 1
+            title: qsTr("Fréquence de rafraîchissement")
+            description: qsTr("Une fréquence plus élevée rend les mouvements plus fluides.")
+            SegmentedControl {
+                model: rateRow.rates.map(r => r.hz + " Hz")
+                currentIndex: rateRow.cur ? Math.max(0, rateRow.rates.findIndex(r => r.hz === Math.round(rateRow.cur.refreshRate))) : 0
+                onActivated: (i) => page.apply(["output." + page.current.name + ".mode." + rateRow.rates[i].id])
+            }
+        }
+        // Orientation (kscreen-doctor : 1 normale, 2 gauche, 4 retournée, 8 droite).
+        SettingsRow {
+            visible: page.current && page.current.enabled
+            title: qsTr("Orientation")
+            SegmentedControl {
+                readonly property var values: [1, 2, 8, 4]
+                readonly property var names: ["none", "left", "right", "inverted"]
+                model: [qsTr("Normale"), qsTr("Gauche"), qsTr("Droite"), qsTr("Retournée")]
+                currentIndex: page.current ? Math.max(0, values.indexOf(page.current.rotation || 1)) : 0
+                onActivated: (i) => page.apply(["output." + page.current.name + ".rotation." + names[i]])
+            }
         }
     }
 }

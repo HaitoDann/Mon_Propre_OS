@@ -4,6 +4,7 @@
 #include <QImageReader>
 
 #include <QDBusConnection>
+#include <QDBusMessage>
 #include <QDBusInterface>
 #include <QDir>
 #include <QFile>
@@ -143,4 +144,12 @@ bool Session::run(const QString &program, const QStringList &arguments) const
         return false;
     }
     return p.exitStatus() == QProcess::NormalExit && p.exitCode() == 0;
+}
+
+void Session::callDBus(const QString &service, const QString &path, const QString &interface,
+                       const QString &method, const QVariantList &arguments) const
+{
+    QDBusMessage msg = QDBusMessage::createMethodCall(service, path, interface, method);
+    msg.setArguments(arguments);
+    QDBusConnection::sessionBus().call(msg, QDBus::NoBlock);
 }

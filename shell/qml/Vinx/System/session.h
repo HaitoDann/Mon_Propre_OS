@@ -33,6 +33,9 @@ public:
     // Accent le plus proche de la teinte dominante d'une image ({id, fill} de Theme.accents ; ADR 0021).
     Q_INVOKABLE QString pickAccent(const QString &imagePath, const QVariantList &accents, const QString &neutral) const;
     Q_INVOKABLE QString kernelVersion() const;
+    // Appel D-Bus de session sans réponse attendue (ex. renommer un bureau virtuel dans KWin).
+    Q_INVOKABLE void callDBus(const QString &service, const QString &path, const QString &interface,
+                              const QString &method, const QVariantList &arguments = {}) const;
     Q_INVOKABLE QString hostName() const;
     // Exécute une commande courte et renvoie sa sortie standard (vide en cas d'échec ;
     // délai maximal 3 s). Réservé aux lectures rapides (timedatectl show…).

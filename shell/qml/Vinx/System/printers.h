@@ -31,6 +31,9 @@ public:
     Q_INVOKABLE void setDefault(const QString &name);
     Q_INVOKABLE void printTestPage(const QString &name);
     Q_INVOKABLE void cancelJobs(const QString &name);
+    // Options par défaut de l'utilisateur pour une imprimante : { media, sides, color } (lpoptions).
+    Q_INVOKABLE QVariantMap options(const QString &name) const;
+    Q_INVOKABLE void setOption(const QString &name, const QString &key, const QString &value);
 
 Q_SIGNALS:
     void changed();

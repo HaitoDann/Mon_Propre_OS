@@ -312,3 +312,63 @@ inline QStringList appstreamIconRoots()
             QStringLiteral("/var/lib/swcatalog/icons"), QStringLiteral("/var/cache/app-info/icons"),
             QStringLiteral("/var/lib/app-info/icons"), QStringLiteral("/usr/share/app-info/icons")};
 }
+
+// « lpoptions -p IMPRIMANTE » : « copies=1 media=iso_a4_210x297mm sides=one-sided job-sheets='none none' … »
+// → { media: "a4" | "letter" | …, sides, color: "color" | "monochrome" } (valeurs CUPS normalisées).
+inline QVariantMap parseLpoptions(const QString &out)
+{
+    QVariantMap m;
+    static const QRegularExpression tok(QStringLiteral("([\\w-]+)=('[^']*'|\\S+)"));
+    auto it = tok.globalMatch(out);
+    while (it.hasNext()) {
+        const auto t = it.next();
+        QString v = t.captured(2);
+        if (v.startsWith(QLatin1Char('\''))) v = v.mid(1, v.size() - 2);
+        m.insert(t.captured(1), v);
+    }
+    QVariantMap r;
+    const QString media = m.value(QStringLiteral("media")).toString().toLower();
+    r.insert(QStringLiteral("media"), media.contains(QLatin1String("letter")) ? QStringLiteral("letter")
+                                      : media.contains(QLatin1String("a4")) || media.isEmpty() ? QStringLiteral("a4") : media);
+    r.insert(QStringLiteral("sides"), m.value(QStringLiteral("sides"), QStringLiteral("one-sided")));
+    const QString color = m.value(QStringLiteral("print-color-mode"), m.value(QStringLiteral("ColorModel"))).toString().toLower();
+    r.insert(QStringLiteral("color"), color.contains(QLatin1String("mono")) || color.contains(QLatin1String("gray")) ? QStringLiteral("monochrome") : QStringLiteral("color"));
+    return r;
+}
+
+// « nmcli -t -f NAME,TYPE,ACTIVE,DEVICE connection show » → VPN : [{ name, kind, active }]
+inline QVariantList parseNmcliVpns(const QString &out)
+{
+    QVariantList list;
+    for (const QString &line : out.split(QLatin1Char('\n'), Qt::SkipEmptyParts)) {
+        const QStringList f = splitNmcliTerse(line);
+        if (f.size() < 3)
+            continue;
+        const QString type = f.at(1);
+        if (type != QLatin1String("vpn") && type != QLatin1String("wireguard"))
+            continue;
+        list.append(QVariantMap{{QStringLiteral("name"), f.at(0)},
+                                {QStringLiteral("kind"), type == QLatin1String("wireguard") ? QStringLiteral("WireGuard") : QStringLiteral("VPN")},
+                                {QStringLiteral("active"), f.at(2) == QLatin1String("yes")}});
+    }
+    return list;
+}
+
+// « nmcli -t -f ipv4.method,ipv4.addresses,ipv4.gateway,ipv4.dns connection show NOM »
+// → { manual, address, prefix, gateway, dns }
+inline QVariantMap parseNmcliIpv4(const QString &out)
+{
+    QVariantMap m{{QStringLiteral("manual"), false}};
+    for (const QString &line : out.split(QLatin1Char('\n'), Qt::SkipEmptyParts)) {
+        const QString key = line.section(QLatin1Char(':'), 0, 0), value = line.section(QLatin1Char(':'), 1).trimmed();
+        if (key == QLatin1String("ipv4.method")) m.insert(QStringLiteral("manual"), value == QLatin1String("manual"));
+        else if (key == QLatin1String("ipv4.addresses")) {
+            const QString first = value.section(QLatin1Char(','), 0, 0).trimmed();
+            m.insert(QStringLiteral("address"), first.section(QLatin1Char('/'), 0, 0));
+            m.insert(QStringLiteral("prefix"), first.contains(QLatin1Char('/')) ? first.section(QLatin1Char('/'), 1).toInt() : 24);
+        }
+        else if (key == QLatin1String("ipv4.gateway")) m.insert(QStringLiteral("gateway"), value == QLatin1String("--") ? QString() : value);
+        else if (key == QLatin1String("ipv4.dns")) m.insert(QStringLiteral("dns"), value == QLatin1String("--") ? QString() : value.section(QLatin1Char(','), 0, 0));
+    }
+    return m;
+}
