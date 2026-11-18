@@ -165,12 +165,13 @@ int main(int argc, char *argv[])
     QObject::connect(&app, &QGuiApplication::screenRemoved, &app, removeScreen);
 
     // ---------- Écran principal : dock et bulles de notification ----------
-    QPointer<QWindow> dock, toasts;
+    QPointer<QWindow> dock, toasts, osd;
     std::function<void()> placeOnPrimaryRef;
     const auto placeOnPrimary = [&]() {
         QScreen *primary = QGuiApplication::primaryScreen();
         if (dock) dock->deleteLater();
         if (toasts) toasts->deleteLater();
+        if (osd) osd->deleteLater();
         dock = create("DockWindow", {{QStringLiteral("screen"), QVariant::fromValue(primary)}});
         toasts = create("ToastWindow", {{QStringLiteral("screen"), QVariant::fromValue(primary)}});
         if (!dock || !toasts)
@@ -203,6 +204,15 @@ int main(int argc, char *argv[])
                        LSW::KeyboardInteractivityNone, QStringLiteral("vinx-notifications"));
         dock->show();
         toasts->show();
+        // Bulles volume/luminosité (ADR 0028) : en bas au centre, au-dessus du dock (sa zone réservée
+        // est respectée), par-dessus les fenêtres ; aucun clic ni clavier (zone de saisie minimale).
+        osd = create("OsdWindow", {{QStringLiteral("screen"), QVariant::fromValue(primary)}});
+        if (osd) {
+            configureLayer(osd, LSW::LayerOverlay, LSW::Anchors(LSW::AnchorBottom), 0,
+                           LSW::KeyboardInteractivityNone, QStringLiteral("vinx-osd"));
+            osd->setMask(QRegion(0, 0, 1, 1));
+            osd->show();
+        }
     };
     placeOnPrimaryRef = placeOnPrimary;
     placeOnPrimary();

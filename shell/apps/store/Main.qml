@@ -5,325 +5,339 @@ import Vinx.System
 import Vinx.Shell
 import "Catalog.js" as Catalog
 
-// Store de VinX OS : packs thématiques d'applications Flathub, installés pour l'utilisateur.
+// Store de VinX OS (ADR 0027) : vitrine avec rayons à gauche, « Sélection VinX », logiciels Debian
+// et Flathub mélangés (badge de source ; Debian d'abord quand les deux existent), logos AppStream.
 Window {
     id: win
-    width: 980; height: 680
-    minimumWidth: 760; minimumHeight: 500
+    width: 1080; height: 720
+    minimumWidth: 820; minimumHeight: 520
     visible: true
     title: qsTr("Store")
     color: Theme.surfaceWindow
     AppearanceSync {}
 
-    property var selected: null          // pack affiché en détail (null : accueil)
+    // Page : "home", "search", "installed" ou "cat:<rayon>"
     property string startPage: ""
-    readonly property var tabs: ["discover", "search", "installed", "updates"]
-    property int tab: Math.max(0, tabs.indexOf(startPage))
     property string startQuery: ""
+    property string page: startPage === "search" ? "search" : startPage === "installed" ? "installed" : "home"
+    // Logiciel mis en avant (tiré au sort à l'ouverture).
+    readonly property var pick: Catalog.selection[Math.floor(Math.random() * Catalog.selection.length)]
+
     Component.onCompleted: {
-        if (tab === 3) Updates.check()
+        if (startPage === "updates") Session.launch("vinx-updates")
+        DebianPackages.lookup(Catalog.packages())
         if (startQuery) {
-            tab = 1
-            searchSource = startQuery.startsWith("debian:") ? 1 : 0
+            page = "search"
             query.text = startQuery.replace(/^debian:/, "")
         }
     }
 
+    // Fiche affichable d'un logiciel du catalogue : Debian si le dépôt le connaît, sinon Flathub.
+    function resolve(entry) {
+        if (!entry) return null
+        const deb = entry.pkg ? DebianPackages.catalog[entry.pkg] : undefined
+        if (deb)
+            return { source: "debian", name: entry.name, summary: entry.summary, package: entry.pkg, id: deb.id,
+                     iconUrl: deb.iconUrl || "", icon: deb.icon || "", installed: deb.installed === true, tint: entry.tint }
+        if (entry.flatpak && Flatpak.available)
+            return { source: "flathub", name: entry.name, summary: entry.summary, id: entry.flatpak,
+                     iconUrl: Flatpak.iconUrl(entry.flatpak), installed: Flatpak.installed.indexOf(entry.flatpak) >= 0, tint: entry.tint }
+        return null
+    }
+    function resolveAll(entries) {
+        DebianPackages.catalog; Flatpak.installed   // dépendances de la liaison
+        return entries.map(e => resolve(e)).filter(a => a !== null)
+    }
     function showApp(a) { detail.open(a) }
-    function installedCount(pack) { return pack.apps.filter(a => Flatpak.installed.indexOf(a.id) >= 0).length }
 
-    // ---------- En-tête ----------
-    Item {
-        id: header
-        anchors { left: parent.left; right: parent.right; top: parent.top; margins: Theme.space6; bottomMargin: 0 }
-        height: 56
-        Row {
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: Theme.space3
-            IconButton { visible: win.selected !== null; iconName: "chevron-l"; toolTip: qsTr("Retour"); onClicked: win.selected = null; anchors.verticalCenter: parent.verticalCenter }
-            Column {
-                anchors.verticalCenter: parent.verticalCenter
-                Label { text: win.selected ? win.selected.name : qsTr("Store"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold }
-                Label { text: win.selected ? win.selected.summary : qsTr("Applications Flathub et logiciels Debian, en un clic."); level: Label.Secondary }
-            }
-        }
-        SegmentedControl {
-            visible: !Flatpak.busy && !DebianPackages.busy
-            anchors { right: parent.right; verticalCenter: parent.verticalCenter }
-            model: [qsTr("Découvrir"), qsTr("Rechercher"), qsTr("Installées"),
-                    Updates.count > 0 ? qsTr("Mises à jour (%1)").arg(Updates.count) : qsTr("Mises à jour")]
-            currentIndex: win.tab
-            onActivated: (i) => { win.tab = i; win.selected = null; if (i === 3 && !Updates.lastCheck.getTime()) Updates.check() }
-        }
-        // Tâche en cours
-        Row {
-            visible: Flatpak.busy || DebianPackages.busy
-            anchors { right: parent.right; verticalCenter: parent.verticalCenter }
-            spacing: Theme.space3
-            Label { text: Flatpak.busy ? Flatpak.task + (Flatpak.progress >= 0 ? " · " + Flatpak.progress + " %" : "") : DebianPackages.task + (DebianPackages.progress >= 0 ? " · " + DebianPackages.progress + " %" : ""); level: Label.Secondary; anchors.verticalCenter: parent.verticalCenter }
-            Rectangle {
-                width: 140; height: 6; radius: 3; color: Theme.surfaceActive
-                anchors.verticalCenter: parent.verticalCenter
-                Rectangle { width: parent.width * Math.max(0.04, (Flatpak.busy ? Flatpak.progress : DebianPackages.progress) / 100); height: parent.height; radius: 3; color: Theme.accent }
-            }
-        }
-    }
-
-    Label {
-        visible: !Flatpak.available && win.tab !== 3 && win.tab !== 1
-        anchors.centerIn: parent
-        text: qsTr("Flatpak n'est pas installé sur ce système : le Store est indisponible.")
-        level: Label.Secondary
-    }
-
-    // ---------- Accueil : grille des packs ----------
-    Flickable {
-        visible: Flatpak.available && win.tab === 0 && win.selected === null
-        anchors { left: parent.left; right: parent.right; top: header.bottom; bottom: parent.bottom; margins: Theme.space6 }
-        contentHeight: grid.height
-        clip: true
-        Grid {
-            id: grid
-            width: parent.width
-            columns: Math.max(1, Math.floor((width + Theme.space4) / (290 + Theme.space4)))
-            spacing: Theme.space4
+    // ---------- Rayons ----------
+    Rectangle {
+        id: nav
+        width: 220
+        anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
+        color: Theme.surfaceSunken
+        Rectangle { anchors { right: parent.right; top: parent.top; bottom: parent.bottom } width: 1; color: Theme.border }
+        Column {
+            anchors { left: parent.left; right: parent.right; top: parent.top; margins: Theme.space3; topMargin: Theme.space5 }
+            spacing: 2
+            Label { text: qsTr("Store"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold; leftPadding: Theme.space2; bottomPadding: Theme.space3 }
             Repeater {
-                model: Catalog.packs
-                Surface {
-                    id: card
+                model: [
+                    { id: "home", title: qsTr("À la une"), icon: "grid" },
+                    { id: "search", title: qsTr("Rechercher"), icon: "search" },
+                    { id: "installed", title: qsTr("Installées"), icon: "check" },
+                    { id: "updates", title: qsTr("Mises à jour"), icon: "restart", count: Updates.count }
+                ].concat([{ section: qsTr("Catégories") }]).concat(Catalog.categories.map(c => ({ id: "cat:" + c.id, title: c.name, tint: c.tint })))
+                Item {
                     required property var modelData
-                    readonly property int done: Flatpak.installed.length >= 0 ? win.installedCount(modelData) : 0
-                    kind: Surface.Sunken
-                    elevation: 0
-                    width: (grid.width - (grid.columns - 1) * grid.spacing) / grid.columns
-                    height: 168
-                    radius: Theme.radiusLg
-                    Column {
-                        anchors { fill: parent; margins: Theme.space4 }
-                        spacing: Theme.space2
-                        Row {
-                            spacing: Theme.space3
-                            AppIcon { size: 44; iconName: card.modelData.glyph; tint: card.modelData.tint }
-                            Column {
-                                anchors.verticalCenter: parent.verticalCenter
-                                Label { text: card.modelData.name; font.pixelSize: Theme.fsLg; font.weight: Font.DemiBold }
-                                Label { text: qsTr("%1 applications").arg(card.modelData.apps.length); level: Label.Tertiary; font.pixelSize: Theme.fsSm }
-                            }
-                        }
-                        Label { text: card.modelData.summary; level: Label.Secondary; font.pixelSize: Theme.fsSm; width: parent.width; wrapMode: Text.WordWrap; maximumLineCount: 2; elide: Text.ElideRight; height: 34 }
-                        Row {
-                            spacing: Theme.space2
-                            Button {
-                                text: card.done === card.modelData.apps.length ? qsTr("Installé") : card.done > 0 ? qsTr("Compléter") : qsTr("Installer le pack")
-                                // Actions d'égale priorité sur une grille : boutons neutres (cf. docs/DESIGN.md).
-                                variant: Button.Secondary
-                                enabled: !Flatpak.busy && card.done < card.modelData.apps.length
-                                onClicked: Flatpak.install(Catalog.ids(card.modelData), qsTr("Pack %1").arg(card.modelData.name))
-                            }
-                            Button { text: qsTr("Détails"); variant: Button.Ghost; onClicked: win.selected = card.modelData }
-                        }
+                    width: parent.width
+                    height: modelData.section ? 34 : 32
+                    Label {
+                        visible: !!modelData.section
+                        anchors { left: parent.left; leftMargin: Theme.space2; bottom: parent.bottom; bottomMargin: 4 }
+                        text: (modelData.section || "").toUpperCase(); level: Label.Tertiary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.6
                     }
-                }
-            }
-        }
-    }
-
-    // ---------- Détail d'un pack ----------
-    Column {
-        visible: Flatpak.available && win.tab === 0 && win.selected !== null
-        anchors { left: parent.left; right: parent.right; top: header.bottom; margins: Theme.space6 }
-        Repeater {
-            model: win.selected ? win.selected.apps : []
-            AppRow {
-                required property var modelData
-                appId: modelData.id; name: modelData.name
-                summary: modelData.summary + " · " + modelData.id
-                onClicked: win.showApp({ source: "flathub", id: modelData.id, name: modelData.name, summary: modelData.summary,
-                                         glyph: win.selected ? win.selected.glyph : "bag", tint: win.selected ? win.selected.tint : "#10DD8C" })
-                glyph: win.selected ? win.selected.glyph : "bag"
-                tint: win.selected ? win.selected.tint : "#10DD8C"
-            }
-        }
-    }
-
-    // ---------- Recherche : Flathub ou dépôt Debian ----------
-    property int searchSource: 0          // 0 : applications Flathub, 1 : logiciels Debian
-    property bool searchTools: false
-    function runSearch() {
-        if (searchSource === 0) Flatpak.search(query.text)
-        else DebianPackages.search(query.text, searchTools)
-    }
-    Column {
-        visible: win.tab === 1
-        anchors { left: parent.left; right: parent.right; top: header.bottom; bottom: parent.bottom; margins: Theme.space6 }
-        spacing: Theme.space3
-        onVisibleChanged: if (visible) query.forceActiveFocus()
-        Rectangle {
-            width: parent.width; height: 36
-            radius: Theme.radiusSm
-            color: Theme.surfaceSunken
-            border.width: query.activeFocus ? 2 : 1
-            border.color: query.activeFocus ? Theme.accentForeground : Theme.border
-            Icon { id: glass; name: "search"; color: Theme.textSecondary; anchors { left: parent.left; leftMargin: Theme.space3; verticalCenter: parent.verticalCenter } }
-            TextInput {
-                id: query
-                anchors { left: glass.right; right: parent.right; margins: Theme.space2; verticalCenter: parent.verticalCenter }
-                color: Theme.text
-                font.pixelSize: Theme.fsMd
-                selectByMouse: true
-                Accessible.name: qsTr("Rechercher une application")
-                onTextChanged: searchDelay.restart()
-                Label { visible: !query.text; text: win.searchSource === 0 ? qsTr("Rechercher une application sur Flathub…") : qsTr("Rechercher un logiciel dans le dépôt Debian…"); level: Label.Tertiary; anchors.verticalCenter: parent.verticalCenter }
-            }
-            Timer { id: searchDelay; interval: 400; onTriggered: win.runSearch() }
-        }
-        Row {
-            spacing: Theme.space3
-            SegmentedControl {
-                model: [qsTr("Applications (Flathub)"), qsTr("Logiciels Debian")]
-                currentIndex: win.searchSource
-                onActivated: (i) => { win.searchSource = i; win.runSearch() }
-            }
-            Row {
-                visible: win.searchSource === 1
-                spacing: Theme.space2
-                anchors.verticalCenter: parent.verticalCenter
-                Switch { checked: win.searchTools; onToggled: (c) => { win.searchTools = c; win.runSearch() } }
-                Label { text: qsTr("Inclure les outils techniques"); level: Label.Secondary; anchors.verticalCenter: parent.verticalCenter }
-            }
-        }
-        Label {
-            readonly property bool busy: win.searchSource === 0 ? Flatpak.searching : DebianPackages.searching
-            readonly property int n: win.searchSource === 0 ? Flatpak.searchResults.length : DebianPackages.results.length
-            visible: busy || (query.text.length >= 2 && n === 0)
-            text: busy ? qsTr("Recherche…") : qsTr("Aucun résultat.")
-            level: Label.Secondary
-        }
-        // Résultats du dépôt Debian : icône, nom, résumé, état installé.
-        ListView {
-            visible: win.searchSource === 1
-            width: parent.width
-            height: parent.height - 36 - 32 - Theme.space3 * 3 - 20
-            clip: true
-            model: DebianPackages.results
-            delegate: Item {
-                id: deb
-                required property var modelData
-                width: ListView.view.width; height: 64
-                MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                    onClicked: win.showApp(Object.assign({ source: "debian" }, deb.modelData)) }
-                Row {
-                    anchors { left: parent.left; verticalCenter: parent.verticalCenter }
-                    spacing: Theme.space3
-                    Item {
-                        width: 40; height: 40
-                        Image { id: dIcon; anchors.fill: parent; source: deb.modelData.icon ? "image://theme/" + deb.modelData.icon : "image://theme/" + deb.modelData.package
-                                sourceSize: Qt.size(80, 80); visible: status === Image.Ready && implicitWidth > 1 }
-                        AppIcon { anchors.fill: parent; size: 40; visible: !dIcon.visible; iconName: deb.modelData.icon ? "bag" : "terminal"; tint: "#8A8983" }
-                    }
-                    Column {
-                        anchors.verticalCenter: parent.verticalCenter
-                        Label { text: deb.modelData.name; font.weight: Font.DemiBold }
-                        Label { text: deb.modelData.summary || ""; level: Label.Secondary; font.pixelSize: Theme.fsSm; elide: Text.ElideRight; width: deb.width - 260 }
-                    }
-                }
-                Row {
-                    anchors { right: parent.right; verticalCenter: parent.verticalCenter }
-                    spacing: Theme.space2
-                    Label { visible: deb.modelData.installed; text: qsTr("Installé"); level: Label.Secondary; anchors.verticalCenter: parent.verticalCenter }
-                    Button {
-                        visible: !deb.modelData.installed
-                        text: qsTr("Installer"); variant: Button.Primary
-                        enabled: !DebianPackages.busy
-                        onClicked: DebianPackages.install(deb.modelData.package, deb.modelData.name)
-                    }
-                }
-                Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
-            }
-        }
-        ListView {
-            visible: win.searchSource === 0
-            width: parent.width
-            height: parent.height - 36 - 32 - Theme.space3 * 3 - 20
-            clip: true
-            model: Flatpak.searchResults
-            delegate: AppRow {
-                required property var modelData
-                width: ListView.view.width
-                appId: modelData.id; name: modelData.name; summary: modelData.summary
-                onClicked: win.showApp({ source: "flathub", id: modelData.id, name: modelData.name, summary: modelData.summary })
-            }
-        }
-    }
-
-    // ---------- Applications installées ----------
-    ListView {
-        visible: Flatpak.available && win.tab === 2
-        anchors { left: parent.left; right: parent.right; top: header.bottom; bottom: parent.bottom; margins: Theme.space6 }
-        clip: true
-        model: Flatpak.installedApps
-        delegate: AppRow {
-            required property var modelData
-            width: ListView.view.width
-            appId: modelData.id; name: modelData.name
-            summary: (modelData.version ? qsTr("Version %1 · ").arg(modelData.version) : "") + modelData.id
-            onClicked: win.showApp({ source: "flathub", id: modelData.id, name: modelData.name, summary: modelData.id })
-        }
-        Label { visible: parent.count === 0; text: qsTr("Aucune application Flatpak installée."); level: Label.Secondary }
-    }
-
-    // ---------- Mises à jour ----------
-    Item {
-        visible: win.tab === 3
-        anchors { left: parent.left; right: parent.right; top: header.bottom; bottom: parent.bottom; margins: Theme.space6 }
-        Item {
-            id: updHead
-            width: parent.width; height: 48
-            Column {
-                anchors.verticalCenter: parent.verticalCenter
-                Label {
-                    text: Updates.applying ? qsTr("Installation des mises à jour")
-                        : Updates.status ? Updates.status
-                        : Updates.count > 0 ? qsTr("%n mise(s) à jour disponible(s)", "", Updates.count)
-                        : Updates.lastCheck.getTime() ? qsTr("Le système est à jour.") : qsTr("Pas encore vérifié.")
-                    font.weight: Font.DemiBold
-                }
-                // Installation en arrière-plan : progression en direct.
-                Column {
-                    visible: Updates.applying
-                    spacing: 4
-                    Label { text: Updates.stepLabel + (Updates.progress >= 0 ? " · " + Updates.progress + " %" : ""); level: Label.Secondary; font.pixelSize: Theme.fsSm }
                     Rectangle {
-                        width: 320; height: 5; radius: 2.5; color: Theme.surfaceActive
-                        Rectangle { height: parent.height; radius: 2.5; color: Theme.accent; width: parent.width * Math.max(0.03, Math.max(0, Updates.progress) / 100)
-                                    Behavior on width { NumberAnimation { duration: Theme.durNormal } } }
+                        visible: !modelData.section
+                        anchors.fill: parent
+                        radius: Theme.radiusSm
+                        color: win.page === modelData.id ? Theme.surfaceWindow : navMouse.containsMouse ? Theme.surfaceHover : "transparent"
+                        Row {
+                            anchors { left: parent.left; leftMargin: Theme.space2; verticalCenter: parent.verticalCenter }
+                            spacing: Theme.space2
+                            Icon { visible: !!modelData.icon; name: modelData.icon || "grid"; color: Theme.textSecondary; anchors.verticalCenter: parent.verticalCenter }
+                            Rectangle { visible: !modelData.icon; width: 12; height: 12; radius: 4; color: modelData.tint || "transparent"; anchors.verticalCenter: parent.verticalCenter }
+                            Label { text: modelData.title || ""; font.weight: win.page === modelData.id ? Font.DemiBold : Font.Normal }
+                        }
+                        Label {
+                            visible: (modelData.count || 0) > 0
+                            anchors { right: parent.right; rightMargin: Theme.space2; verticalCenter: parent.verticalCenter }
+                            text: modelData.count || ""; level: Label.Tertiary; font.pixelSize: Theme.fsSm
+                        }
+                        MouseArea {
+                            id: navMouse
+                            anchors.fill: parent; hoverEnabled: true
+                            onClicked: modelData.id === "updates" ? Session.launch("vinx-updates") : win.page = modelData.id
+                        }
+                        Accessible.role: Accessible.PageTab
+                        Accessible.name: modelData.title || ""
                     }
-                    Label { text: qsTr("Vous pouvez fermer le Store : l'installation continue."); level: Label.Tertiary; font.pixelSize: Theme.fsXs }
                 }
-                Label {
-                    visible: Updates.lastCheck.getTime() > 0 && !Updates.applying
-                    text: qsTr("Dernière vérification : %1").arg(Qt.formatDateTime(Updates.lastCheck, "dd/MM/yyyy HH:mm"))
-                    level: Label.Tertiary; font.pixelSize: Theme.fsSm
-                }
-            }
-            Row {
-                anchors { right: parent.right; verticalCenter: parent.verticalCenter }
-                spacing: Theme.space2
-                Button { text: qsTr("Vérifier"); variant: Button.Secondary; enabled: !Updates.checking && !Updates.applying; onClicked: Updates.check() }
-                Button { text: qsTr("Tout mettre à jour"); variant: Button.Primary; enabled: Updates.count > 0 && !Updates.checking && !Updates.applying; onClicked: Updates.applyAll() }
             }
         }
-        ListView {
-            anchors { left: parent.left; right: parent.right; top: updHead.bottom; bottom: parent.bottom; topMargin: Theme.space3 }
-            clip: true
-            model: Updates.apps.map(a => ({ title: a.name || a.id, detail: qsTr("Application") + " · " + (a.version ? a.version + " · " : "") + a.id, glyph: "bag" }))
-                   .concat(Updates.system.map(p => ({ title: p.name, detail: qsTr("Système") + " · " + p.from + " → " + p.version, glyph: "terminal" })))
-            delegate: AppRow {
-                required property var modelData
-                width: ListView.view.width
-                name: modelData.title; summary: modelData.detail; glyph: modelData.glyph
-                tint: modelData.glyph === "bag" ? "#10DD8C" : "#5F6270"
-                showActions: false
+        // Installation en cours
+        Column {
+            visible: Flatpak.busy || DebianPackages.busy
+            anchors { left: parent.left; right: parent.right; bottom: parent.bottom; margins: Theme.space4 }
+            spacing: 6
+            readonly property int pct: Flatpak.busy ? Flatpak.progress : DebianPackages.progress
+            Label { text: Flatpak.busy ? Flatpak.task : DebianPackages.task; font.pixelSize: Theme.fsSm; width: parent.width; elide: Text.ElideRight }
+            Rectangle {
+                width: parent.width; height: 5; radius: 2.5; color: Theme.surfaceActive
+                Rectangle { height: parent.height; radius: 2.5; color: Theme.accent; width: parent.width * Math.max(0.04, Math.max(0, parent.parent.pct) / 100) }
+            }
+        }
+    }
+
+    Flickable {
+        id: scroller
+        anchors { left: nav.right; right: parent.right; top: parent.top; bottom: parent.bottom }
+        contentHeight: content.height + Theme.space6 * 2
+        clip: true
+        Column {
+            id: content
+            x: Theme.space6; y: Theme.space5
+            width: scroller.width - Theme.space6 * 2
+            spacing: Theme.space5
+            readonly property int cols: Math.max(1, Math.floor((width + Theme.space3) / (250 + Theme.space3)))
+            readonly property real cardWidth: (width - (cols - 1) * Theme.space3) / cols
+
+            // Champ de recherche (toutes les pages sauf la fiche)
+            Rectangle {
+                width: parent.width; height: 40
+                radius: Theme.radiusMd
+                color: Theme.surfaceSunken
+                border.width: query.activeFocus ? 2 : 1
+                border.color: query.activeFocus ? Theme.accentForeground : Theme.border
+                Icon { id: glass; name: "search"; color: Theme.textSecondary; anchors { left: parent.left; leftMargin: Theme.space3; verticalCenter: parent.verticalCenter } }
+                TextInput {
+                    id: query
+                    objectName: "query"
+                    anchors { left: glass.right; right: parent.right; margins: Theme.space2; verticalCenter: parent.verticalCenter }
+                    color: Theme.text
+                    font.pixelSize: Theme.fsMd
+                    selectByMouse: true
+                    Accessible.name: qsTr("Rechercher un logiciel")
+                    onTextChanged: { if (text.length > 0) win.page = "search"; searchDelay.restart() }
+                    Label { visible: !query.text; text: qsTr("Rechercher parmi les logiciels Debian et Flathub…"); level: Label.Tertiary; anchors.verticalCenter: parent.verticalCenter }
+                }
+                Timer { id: searchDelay; interval: 400; onTriggered: { DebianPackages.search(query.text, searchTools.checked); Flatpak.search(query.text) } }
+            }
+
+            // ---------- À la une ----------
+            Column {
+                visible: win.page === "home"
+                width: parent.width
+                spacing: Theme.space5
+
+                // Sélection VinX
+                Rectangle {
+                    id: hero
+                    readonly property var app: win.resolve(Catalog.find(win.pick.pkg))
+                    visible: app !== null
+                    width: parent.width; height: 132
+                    radius: Theme.radiusLg
+                    gradient: Gradient {
+                        orientation: Gradient.Horizontal
+                        GradientStop { position: 0; color: "#16302A" }
+                        GradientStop { position: 1; color: "#1F4B5A" }
+                    }
+                    MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: if (hero.app) win.showApp(hero.app) }
+                    AppLogo {
+                        id: heroLogo
+                        x: Theme.space5; anchors.verticalCenter: parent.verticalCenter
+                        size: 84
+                        iconUrl: hero.app ? hero.app.iconUrl : ""; themeIcon: hero.app ? hero.app.icon : ""
+                        name: hero.app ? hero.app.name : ""; tint: hero.app ? hero.app.tint : "#9AA09C"
+                    }
+                    Column {
+                        anchors { left: heroLogo.right; leftMargin: Theme.space5; right: heroButton.left; rightMargin: Theme.space4; verticalCenter: parent.verticalCenter }
+                        spacing: 2
+                        Label { text: qsTr("SÉLECTION VINX"); color: "#10DD8C"; font.pixelSize: Theme.fsXs; font.weight: Font.DemiBold; font.letterSpacing: 0.8 }
+                        Label { text: hero.app ? hero.app.name : ""; color: "#FFFFFF"; font.pixelSize: 24; font.weight: Font.DemiBold }
+                        Label { text: win.pick.tagline; color: "#CCFFFFFF"; width: parent.width; wrapMode: Text.WordWrap }
+                    }
+                    Button {
+                        id: heroButton
+                        anchors { right: parent.right; rightMargin: Theme.space5; verticalCenter: parent.verticalCenter }
+                        text: hero.app && hero.app.installed ? qsTr("Installé") : qsTr("Installer")
+                        variant: Button.Primary
+                        enabled: hero.app && !hero.app.installed && !DebianPackages.busy && !Flatpak.busy
+                        onClicked: hero.app.source === "debian" ? DebianPackages.install(hero.app.package, hero.app.name)
+                                                                : Flatpak.install([hero.app.id], hero.app.name)
+                    }
+                }
+
+                // Rayons en raccourci
+                Flow {
+                    width: parent.width
+                    spacing: Theme.space2
+                    Repeater {
+                        model: Catalog.categories
+                        Rectangle {
+                            required property var modelData
+                            height: 36; radius: Theme.radiusMd
+                            width: chipRow.implicitWidth + Theme.space3 * 2
+                            color: chipMouse.containsMouse ? Theme.surfaceHover : Theme.surfaceWindow
+                            border.width: 1; border.color: Theme.border
+                            Row {
+                                id: chipRow
+                                anchors.centerIn: parent
+                                spacing: Theme.space2
+                                Rectangle { width: 16; height: 16; radius: 5; color: modelData.tint; anchors.verticalCenter: parent.verticalCenter }
+                                Label { text: modelData.name; font.weight: Font.Medium }
+                            }
+                            MouseArea { id: chipMouse; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: win.page = "cat:" + modelData.id }
+                        }
+                    }
+                }
+
+                // Populaires, puis un aperçu de chaque rayon
+                Repeater {
+                    model: [{ title: qsTr("Populaires"), cat: "", entries: Catalog.popular.map(k => Catalog.find(k)) }]
+                           .concat(Catalog.categories.map(c => ({ title: c.name, cat: c.id, entries: Catalog.all().filter(a => a.category === c.id) })))
+                    Column {
+                        id: shelf
+                        required property var modelData
+                        readonly property var apps: win.resolveAll(modelData.entries).slice(0, content.cols * (modelData.cat ? 1 : 2))
+                        visible: apps.length > 0
+                        width: parent.width
+                        spacing: Theme.space3
+                        Item {
+                            width: parent.width; height: 26
+                            Label { text: shelf.modelData.title; font.pixelSize: Theme.fsLg; font.weight: Font.DemiBold; anchors.verticalCenter: parent.verticalCenter }
+                            Label {
+                                visible: shelf.modelData.cat !== ""
+                                anchors { right: parent.right; verticalCenter: parent.verticalCenter }
+                                text: qsTr("Tout voir"); color: Theme.accentForeground; font.weight: Font.Medium
+                                MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: win.page = "cat:" + shelf.modelData.cat }
+                            }
+                        }
+                        Flow {
+                            width: parent.width
+                            spacing: Theme.space3
+                            Repeater {
+                                model: shelf.apps
+                                AppCard { required property var modelData; app: modelData; width: content.cardWidth; onOpenDetails: win.showApp(modelData) }
+                            }
+                        }
+                    }
+                }
+                Label {
+                    visible: DebianPackages.catalogLoading
+                    text: qsTr("Chargement du catalogue…"); level: Label.Tertiary
+                }
+            }
+
+            // ---------- Rayon ----------
+            Column {
+                readonly property var cat: win.page.startsWith("cat:") ? Catalog.category(win.page.slice(4)) : null
+                visible: cat !== null
+                width: parent.width
+                spacing: Theme.space4
+                Row {
+                    spacing: Theme.space3
+                    Rectangle { width: 22; height: 22; radius: 7; color: parent.parent.cat ? parent.parent.cat.tint : "transparent"; anchors.verticalCenter: parent.verticalCenter }
+                    Label { text: parent.parent.cat ? parent.parent.cat.name : ""; font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold }
+                }
+                Flow {
+                    width: parent.width
+                    spacing: Theme.space3
+                    Repeater {
+                        model: parent.parent.cat ? win.resolveAll(parent.parent.cat.apps.map(a => Object.assign({ tint: parent.parent.cat.tint }, a))) : []
+                        AppCard { required property var modelData; app: modelData; width: content.cardWidth; onOpenDetails: win.showApp(modelData) }
+                    }
+                }
+            }
+
+            // ---------- Recherche : Debian et Flathub mélangés ----------
+            Column {
+                visible: win.page === "search"
+                width: parent.width
+                spacing: Theme.space4
+                // Debian d'abord ; une application Flathub déjà proposée par Debian (même nom) est masquée.
+                readonly property var results: {
+                    const deb = DebianPackages.results.map(r => ({ source: "debian", name: r.name, summary: r.summary, package: r.package, id: r.id,
+                                                                    iconUrl: r.iconUrl || "", icon: r.icon || "", installed: r.installed === true }))
+                    const names = deb.map(d => d.name.toLowerCase())
+                    const fp = Flatpak.searchResults.filter(r => names.indexOf((r.name || "").toLowerCase()) < 0)
+                        .map(r => ({ source: "flathub", name: r.name, summary: r.summary, id: r.id, iconUrl: Flatpak.iconUrl(r.id),
+                                     installed: Flatpak.installed.indexOf(r.id) >= 0 }))
+                    return deb.concat(fp)
+                }
+                Row {
+                    spacing: Theme.space2
+                    Switch { id: searchTools; onToggled: DebianPackages.search(query.text, checked) }
+                    Label { text: qsTr("Inclure les outils techniques (sans interface graphique)"); level: Label.Secondary; anchors.verticalCenter: parent.verticalCenter }
+                }
+                Label {
+                    readonly property bool busy: DebianPackages.searching || Flatpak.searching
+                    visible: busy || (query.text.length >= 2 && parent.results.length === 0) || query.text.length < 2
+                    text: query.text.length < 2 ? qsTr("Tapez le nom d'un logiciel ou ce que vous voulez faire (« photo », « musique »…).")
+                        : busy ? qsTr("Recherche…") : qsTr("Aucun résultat.")
+                    level: Label.Secondary
+                }
+                Flow {
+                    width: parent.width
+                    spacing: Theme.space3
+                    Repeater {
+                        model: parent.parent.results
+                        AppCard { required property var modelData; app: modelData; width: content.cardWidth; onOpenDetails: win.showApp(modelData) }
+                    }
+                }
+            }
+
+            // ---------- Installées ----------
+            Column {
+                visible: win.page === "installed"
+                width: parent.width
+                spacing: Theme.space4
+                readonly property var apps: {
+                    const deb = win.resolveAll(Catalog.all()).filter(a => a.source === "debian" && a.installed)
+                    const fp = Flatpak.installedApps.map(a => ({ source: "flathub", name: a.name || a.id, summary: a.version ? qsTr("Version %1").arg(a.version) : a.id,
+                                                                 id: a.id, iconUrl: Flatpak.iconUrl(a.id), installed: true }))
+                    return deb.concat(fp)
+                }
+                Label { text: qsTr("Installées"); font.pixelSize: Theme.fsXl; font.weight: Font.DemiBold }
+                Flow {
+                    width: parent.width
+                    spacing: Theme.space3
+                    Repeater {
+                        model: parent.parent.apps
+                        AppCard { required property var modelData; app: modelData; width: content.cardWidth; onOpenDetails: win.showApp(modelData) }
+                    }
+                }
+                Label { visible: parent.apps.length === 0; text: qsTr("Aucun logiciel du Store installé pour l'instant."); level: Label.Secondary }
             }
         }
     }

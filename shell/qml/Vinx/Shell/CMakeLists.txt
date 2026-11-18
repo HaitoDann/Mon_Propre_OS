@@ -29,6 +29,9 @@ qt_add_qml_module(vinxshell
         BackgroundWindow.qml
         Toasts.qml
         ToastWindow.qml
+        Osd.qml
+        OsdWindow.qml
+        PowerDialog.qml
         Search.qml
         Calc.js
         AppearanceSync.qml

@@ -44,6 +44,8 @@ public:
     Q_INVOKABLE bool launch(const QString &appId) const;
     // Fiche d'une application Flathub (version, licence, tailles) → detailsReady.
     Q_INVOKABLE void details(const QString &appId);
+    // Logo d'une application Flathub (cache AppStream de Flatpak, ou icône exportée si installée) ; "" sinon.
+    Q_INVOKABLE QString iconUrl(const QString &appId) const;
 
     static int parseProgress(const QString &output);   // dernier « NN% » de la sortie, -1 sinon
 

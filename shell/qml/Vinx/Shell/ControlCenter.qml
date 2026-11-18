@@ -145,7 +145,7 @@ Column {
             IconButton {
                 iconName: "power"
                 toolTip: qsTr("Éteindre…")
-                onClicked: ShellState.confirm("poweroff")
+                onClicked: ShellState.askPower("all")
             }
         }
     }

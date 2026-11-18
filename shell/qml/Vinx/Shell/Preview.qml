@@ -38,6 +38,7 @@ Window {
     Dock { id: dock; anchors { left: parent.left; right: parent.right; bottom: parent.bottom; top: vertical ? bar.bottom : undefined } height: vertical ? undefined : 160 }
     Toasts { anchors { right: parent.right; top: bar.bottom; margins: Theme.space2 } }
     Panels { anchors.fill: parent }
+    Osd { id: osd; anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: 100 } }
 
     // Ouverture d'un panneau au démarrage (--open), après la mise en page.
     Timer {
@@ -49,6 +50,8 @@ Window {
                 if (it) ShellState.openDockMenu(1, it.appName, it.running, true, dock.rectOf(it), "")
                 return
             }
+            if (win.startOpen === "osd") { osd.show("volume", "volume", 64, ""); return }
+            if (win.startOpen === "power") { ShellState.askPower("all"); return }
             if (win.startOpen === "windows") {      // liste des fenêtres de Documents
                 const it = dock.itemAt(2)
                 if (it) ShellState.openWindowList(2, it.appName, dock.rectOf(it), "")

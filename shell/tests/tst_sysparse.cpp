@@ -1,3 +1,4 @@
+#include <QTemporaryDir>
 #include <QtTest>
 #include "sysparse.h"
 
@@ -78,6 +79,23 @@ private Q_SLOTS:
         QCOMPARE(l[0].toMap().value("package").toString(), QStringLiteral("gimp"));
         QCOMPARE(l[0].toMap().value("icon").toString(), QStringLiteral("org.gimp.GIMP"));
         QCOMPARE(l[1].toMap().value("icon").toString(), QStringLiteral("org.inkscape.Inkscape"));
+        QCOMPARE(l[0].toMap().value("iconCached").toString(), QStringLiteral("64x64/gimp_org.gimp.GIMP.png"));
+        QVERIFY(!l[1].toMap().contains("iconCached"));
+    }
+    void appstreamIconCache()
+    {
+        QTemporaryDir root;
+        QDir(root.path()).mkpath("debian-trixie-main/64x64");
+        QDir(root.path()).mkpath("debian-trixie-main/128x128");
+        QFile small(root.path() + "/debian-trixie-main/64x64/gimp_org.gimp.GIMP.png");
+        QVERIFY(small.open(QIODevice::WriteOnly));
+        small.close();
+        QCOMPARE(resolveAppstreamIcon("64x64/gimp_org.gimp.GIMP.png", {root.path()}), small.fileName());
+        QFile big(root.path() + "/debian-trixie-main/128x128/gimp_org.gimp.GIMP.png");   // la plus grande d'abord
+        QVERIFY(big.open(QIODevice::WriteOnly));
+        big.close();
+        QCOMPARE(resolveAppstreamIcon("64x64/gimp_org.gimp.GIMP.png", {"/nulle/part", root.path()}), big.fileName());
+        QCOMPARE(resolveAppstreamIcon("64x64/absent.png", {root.path()}), QString());
     }
     void aptSearchShow()
     {

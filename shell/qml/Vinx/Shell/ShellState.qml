@@ -27,6 +27,15 @@ QtObject {
         openPanel = ""; openPanel = "appmenu"
     }
     function close() { openPanel = ""; pendingAction = "" }
+    // Boîte d'extinction : « all », « poweroff », « reboot » ou « logout ».
+    property string powerAction: "all"
+    function askPower(action) {
+        powerAction = action || "all"
+        anchorRect = Qt.rect(0, 0, 0, 0)
+        screenName = ""
+        openPanel = ""
+        openPanel = "power"
+    }
     function confirm(action) { pendingAction = action; openPanel = "confirm" }
     function openDesktopMenu(rect, screen) { anchorRect = rect; screenName = screen || ""; openPanel = "desktop" }
     // Thème de fenêtre VinX (ADR 0024) : régénéré seulement quand l'accent ou le thème change

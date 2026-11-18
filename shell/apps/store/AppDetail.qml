@@ -57,7 +57,8 @@ Item {
                         Image {
                             id: logo
                             anchors.fill: parent
-                            source: root.app && root.app.icon ? "image://theme/" + root.app.icon : root.app && !root.debian ? "image://theme/" + root.app.id : ""
+                            source: !root.app ? "" : root.app.iconUrl ? root.app.iconUrl
+                                  : root.app.icon ? "image://theme/" + root.app.icon : !root.debian ? "image://theme/" + root.app.id : ""
                             sourceSize: Qt.size(144, 144)
                             visible: status === Image.Ready && implicitWidth > 1
                         }

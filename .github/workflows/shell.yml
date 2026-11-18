@@ -20,9 +20,9 @@ jobs:
             qt6-base-dev qt6-declarative-dev qt6-svg-dev liblayershellqtinterface-dev libkf6kio-dev libqtermwidget-dev libutf8proc-dev qml6-module-qtquick qml6-module-qtquick-window qml6-module-qtquick-shapes \
             qml6-module-qtqml-workerscript qml6-module-qttest fonts-inter
       - uses: actions/checkout@v4
-      - name: Configuration CMake de QTermWidget
+      - name: Agent polkit VinX (paquet facultatif, nom à confirmer)
         run: |
-          dpkg -L libqtermwidget-dev | grep -i cmake || true
+          apt-get install -y --no-install-recommends libpolkit-qt6-1-dev || apt-cache search polkit-qt
       - name: Vérifier la prise en charge de layer-shell
         run: test -n "$(find /usr -name 'LayerShellQtConfig.cmake' 2>/dev/null)"
       - name: Construire le paquet (tests QML inclus)

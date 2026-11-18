@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QDir>
+#include <QFileInfo>
 #include <QRegularExpression>
 #include <QUrl>
 #include <QString>
@@ -199,6 +201,10 @@ inline QVariantList parseAppstreamSearch(const QString &out)
         else if (k == QLatin1String("package")) cur.insert(QStringLiteral("package"), v);
         else if (k == QLatin1String("homepage")) cur.insert(QStringLiteral("homepage"), v);
         else if (k == QLatin1String("icon")) {
+            // Icône en cache AppStream (« cached: 64x64/gimp_org.gimp.GIMP.png ») : chemin relatif gardé
+            // pour retrouver le logo d'un logiciel non installé (resolveAppstreamIcon).
+            if (v.startsWith(QLatin1String("cached:")))
+                cur.insert(QStringLiteral("iconCached"), v.mid(7).trimmed());
             // « firefox-esr.png » ou « cached: 64x64/firefox-esr_firefox-esr.png » → nom de thème probable.
             QString icon = v.section(QLatin1Char(' '), -1).section(QLatin1Char('/'), -1);
             if (icon.endsWith(QLatin1String(".png")) || icon.endsWith(QLatin1String(".svg")) || icon.endsWith(QLatin1String(".xpm")))
@@ -278,4 +284,31 @@ inline int parseProgressLine(const QString &line)
     int last = -1;
     while (it.hasNext()) last = qMin(100, it.next().captured(1).toInt());
     return last;
+}
+
+// Fichier d'icône AppStream en cache (« 64x64/gimp_org.gimp.GIMP.png ») : cherché dans les dossiers
+// de cache d'AppStream (racine/<origine>/<taille>/<fichier>), la plus grande taille d'abord.
+inline QString resolveAppstreamIcon(const QString &cached, const QStringList &roots)
+{
+    if (cached.isEmpty())
+        return {};
+    const QString file = cached.section(QLatin1Char('/'), -1);
+    const QString size = cached.contains(QLatin1Char('/')) ? cached.section(QLatin1Char('/'), 0, 0) : QStringLiteral("64x64");
+    for (const QString &sz : {QStringLiteral("128x128"), size, QStringLiteral("64x64")})
+        for (const QString &root : roots) {
+            const QDir dir(root);
+            for (const QString &origin : dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+                const QString path = root + QLatin1Char('/') + origin + QLatin1Char('/') + sz + QLatin1Char('/') + file;
+                if (QFileInfo::exists(path))
+                    return path;
+            }
+        }
+    return {};
+}
+
+inline QStringList appstreamIconRoots()
+{
+    return {QStringLiteral("/var/cache/swcatalog/icons"), QStringLiteral("/usr/share/swcatalog/icons"),
+            QStringLiteral("/var/lib/swcatalog/icons"), QStringLiteral("/var/cache/app-info/icons"),
+            QStringLiteral("/var/lib/app-info/icons"), QStringLiteral("/usr/share/app-info/icons")};
 }

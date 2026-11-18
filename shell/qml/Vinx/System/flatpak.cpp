@@ -1,4 +1,7 @@
 #include "flatpak.h"
+#include <QUrl>
+#include <QFileInfo>
+#include <QDir>
 #include "updateparse.h"
 
 #include <QDBusConnection>
@@ -156,4 +159,26 @@ void Flatpak::details(const QString &appId)
         Q_EMIT detailsReady(appId, m);
     });
     p->start(QStringLiteral("flatpak"), {QStringLiteral("remote-info"), QStringLiteral("flathub"), appId});
+}
+
+QString Flatpak::iconUrl(const QString &appId) const
+{
+    if (appId.isEmpty())
+        return {};
+    const QString home = QDir::homePath();
+    const QStringList roots = {home + QStringLiteral("/.local/share/flatpak"), QStringLiteral("/var/lib/flatpak")};
+    for (const QString &root : roots) {
+        for (const char *size : {"128x128", "64x64"}) {
+            const QString cached = root + QStringLiteral("/appstream/flathub/x86_64/active/icons/") + QLatin1String(size) + QLatin1Char('/') + appId + QStringLiteral(".png");
+            if (QFileInfo::exists(cached))
+                return QUrl::fromLocalFile(cached).toString();
+            const QString exported = root + QStringLiteral("/exports/share/icons/hicolor/") + QLatin1String(size) + QStringLiteral("/apps/") + appId + QStringLiteral(".png");
+            if (QFileInfo::exists(exported))
+                return QUrl::fromLocalFile(exported).toString();
+        }
+        const QString svg = root + QStringLiteral("/exports/share/icons/hicolor/scalable/apps/") + appId + QStringLiteral(".svg");
+        if (QFileInfo::exists(svg))
+            return QUrl::fromLocalFile(svg).toString();
+    }
+    return {};
 }

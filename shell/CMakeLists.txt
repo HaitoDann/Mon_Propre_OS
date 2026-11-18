@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(vinx-shell VERSION 0.20.1 LANGUAGES CXX)
+project(vinx-shell VERSION 0.21.0 LANGUAGES CXX)
 
 # Shell de bureau VinX OS — Qt 6 / QML, au-dessus de KWin.
 # Modules : Vinx.Theme, Vinx.Controls, Vinx.System, Vinx.Shell ; programmes vinx-shell et vinx-gallery.
@@ -30,6 +30,7 @@ add_subdirectory(qml/Vinx/System)
 add_subdirectory(qml/Vinx/Shell)
 add_subdirectory(src)
 add_subdirectory(windowtheme)
+add_subdirectory(polkitagent)
 add_subdirectory(session)
 add_subdirectory(system)
 add_subdirectory(sddm)

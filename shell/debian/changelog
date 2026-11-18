@@ -1,3 +1,13 @@
+vinx-shell (0.21.0) trixie; urgency=medium
+
+  * Store : vitrine avec rayons à gauche, Sélection VinX, logiciels Debian et
+    Flathub mélangés avec badge, logos AppStream (ADR 0027).
+  * Bulles volume et luminosité VinX, boîte d'extinction VinX avec compte à
+    rebours (services D-Bus de KDE repris par vinx-shell) ; agent polkit VinX
+    (mot de passe administrateur), facultatif à la construction (ADR 0028).
+
+ -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 02:00:00 +0000
+
 vinx-shell (0.20.1) trixie; urgency=medium
 
   * Pastilles aussi pour les applications GTK à barre de titre intégrée (Firefox,

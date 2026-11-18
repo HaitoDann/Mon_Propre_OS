@@ -12,6 +12,7 @@ Item {
     Background { id: background; anchors.fill: parent }
     TopBar { id: bar; anchors { left: parent.left; right: parent.right; top: parent.top } }
     Panels { id: panels; anchors.fill: parent }
+    Osd { id: osd; anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: 120 } }
 
     TestCase {
         name: "VinxShell"
@@ -129,6 +130,28 @@ Item {
             compare(ShellState.pendingAction, "poweroff")
             ShellState.close()
             compare(ShellState.pendingAction, "")
+        }
+
+        function test_power_dialog_with_countdown() {
+            ShellState.askPower("reboot")
+            compare(ShellState.openPanel, "power")
+            const dlg = findChild(panels, "powerDialog")
+            verify(dlg.open)
+            compare(dlg.preferred, "reboot")
+            compare(dlg.remaining, 30)
+            verify(findChild(dlg, "powerCountdown").text.indexOf("30") >= 0)
+            dlg.close()
+            compare(ShellState.openPanel, "")
+            ShellState.askPower("all")
+            compare(findChild(panels, "powerDialog").preferred, "poweroff")   // proposition par défaut
+            ShellState.close()
+        }
+
+        function test_osd_shows_then_hides() {
+            osd.show("volume", "volume", 64, "64 %")
+            verify(osd.shown)
+            compare(osd.percent, 64)
+            tryCompare(osd, "shown", false, 3000)
         }
 
         function test_panel_is_anchored_under_its_button() {

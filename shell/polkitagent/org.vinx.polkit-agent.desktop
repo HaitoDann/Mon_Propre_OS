@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Agent d'authentification VinX
+Exec=/usr/libexec/vinx-polkit-agent
+NoDisplay=true
+OnlyShowIn=KDE;
+X-KDE-autostart-phase=1

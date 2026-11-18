@@ -17,6 +17,7 @@ qt_add_qml_module(vinxsystem
         notifications.h notifications.cpp
         filesearch.h filesearch.cpp
         shellservice.h shellservice.cpp
+        kdeprompts.h kdeprompts.cpp
         flatpak.h flatpak.cpp
         menubridge.h menubridge.cpp
         updateparse.h updates.h updates.cpp

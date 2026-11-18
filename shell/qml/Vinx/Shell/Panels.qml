@@ -11,8 +11,9 @@ Item {
 
     function sync() {
         const name = ShellState.openPanel
-        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, windows: windowMenu, search: searchPanel, desktop: desktopMenu, appmenu: appMenu }
+        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, windows: windowMenu, power: powerDialog, search: searchPanel, desktop: desktopMenu, appmenu: appMenu }
         if (name === "search") ShellState.anchorRect = Qt.rect(layer.width / 2 - 1, layer.height * 0.12, 2, 1)
+        if (name === "power") ShellState.anchorRect = Qt.rect(layer.width / 2 - 1, layer.height * 0.3, 2, 1)
         for (const k in all) {
             const p = all[k]
             if (k === name) { p.anchorRect = ShellState.anchorRect; if (!p.open) p.show() }
@@ -33,6 +34,11 @@ Item {
                             system: Qt.rect(8, 0, 32, h), search: Qt.rect(0, 0, 0, 0) }
             if (rects[name] !== undefined) ShellState.toggle(name, rects[name])
         }
+    }
+    // Demandes d'extinction venant de KDE (bouton d'alimentation, applications) : boîte VinX.
+    Connections {
+        target: DesktopPrompts
+        function onLogoutRequested(action) { ShellState.askPower(action) }
     }
     Component.onCompleted: sync()
 
@@ -59,9 +65,9 @@ Item {
             case 3: Session.launch("vinx-store"); break
             case 5: Session.lock(); break
             case 6: Session.suspend(); break
-            case 7: ShellState.confirm("logout"); break
-            case 8: ShellState.confirm("reboot"); break
-            case 9: ShellState.confirm("poweroff"); break
+            case 7: ShellState.askPower("logout"); break
+            case 8: ShellState.askPower("reboot"); break
+            case 9: ShellState.askPower("poweroff"); break
             }
         }
     }
@@ -112,6 +118,12 @@ Item {
             else if (entry.text === qsTr("Quitter")) Tasks.backend.close(idx)
             else Tasks.backend.togglePin(idx)
         }
+    }
+
+    PowerDialog {
+        id: powerDialog
+        action: ShellState.powerAction
+        onClosed: if (ShellState.openPanel === "power") ShellState.close()
     }
 
     // Menu contextuel du bureau : widgets, fond d'écran.
