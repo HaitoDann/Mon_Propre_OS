@@ -1277,6 +1277,7 @@
     </message>
     <message>
         <location filename="../apps/files/Main.qml" line="385" />
+        <location filename="../apps/monitor/Main.qml" line="396" />
         <source>Suppr</source>
         <translation>Del</translation>
     </message>
@@ -1988,9 +1989,176 @@
         <translation>Volume</translation>
     </message>
     <message>
+        <location filename="../apps/monitor/Main.qml" line="15" />
+        <source>Moniteur système</source>
+        <translation>System Monitor</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="38" />
+        <source>%1 Go</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="39" />
+        <source>%1 Mo</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="40" />
+        <source>%1 ko</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="42" />
+        <source>%1/s</source>
+        <translation>%1/s</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="43" />
         <location filename="../apps/settings/Main.qml" line="696" />
         <source>%1 %</source>
         <translation>%1 %</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="98" />
+        <source>Rechercher une application ou un processus</source>
+        <translation>Search for an application or a process</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="101" />
+        <source>Rechercher (nom, numéro)…</source>
+        <translation>Search (name, ID)…</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="109" />
+        <source>%1 processus</source>
+        <translation>%1 processes</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="121" />
+        <location filename="../apps/monitor/Main.qml" line="167" />
+        <source>Processeur</source>
+        <translation>Processor</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="122" />
+        <location filename="../apps/monitor/Main.qml" line="168" />
+        <source>Mémoire</source>
+        <translation>Memory</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="122" />
+        <location filename="../apps/monitor/Main.qml" line="123" />
+        <location filename="../apps/monitor/Main.qml" line="124" />
+        <source>%1 / %2</source>
+        <translation>%1 / %2</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="123" />
+        <source>Disque · lecture / écriture</source>
+        <translation>Disk · read / write</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="124" />
+        <source>Réseau · ↓ / ↑</source>
+        <translation>Network · ↓ / ↑</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="166" />
+        <source>Application</source>
+        <translation>Application</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="169" />
+        <source>Disque</source>
+        <translation>Disk</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="280" />
+        <source>· %1 processus</source>
+        <translation>· %1 processes</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="281" />
+        <source>· n° %1</source>
+        <translation>· ID %1</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="281" />
+        <source>priorité basse</source>
+        <translation>low priority</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="331" />
+        <source>Aucune application ne correspond à « %1 ».</source>
+        <translation>No application matches “%1”.</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="345" />
+        <source>« %1 » ne s'est pas fermée. Elle ne répond peut-être plus.</source>
+        <translation>“%1” did not close. It may have stopped responding.</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="351" />
+        <source>Attendre</source>
+        <translation>Wait</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="352" />
+        <location filename="../apps/monitor/Main.qml" line="376" />
+        <location filename="../apps/monitor/Main.qml" line="397" />
+        <source>Forcer la fermeture</source>
+        <translation>Force quit</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="368" />
+        <source>Sélectionnez une application. Clic droit pour plus d'actions.</source>
+        <translation>Select an application. Right-click for more actions.</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="369" />
+        <source>« %1 » est un service du système : il ne peut pas être fermé d'ici.</source>
+        <translation>“%1” is a system service: it cannot be closed from here.</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="370" />
+        <source>« %1 » sélectionnée · Suppr pour fermer</source>
+        <translation>“%1” selected · Del to close</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="397" />
+        <source>Maj+Suppr</source>
+        <translation>Shift+Del</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="399" />
+        <source>Voir les services</source>
+        <translation>Show services</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="399" />
+        <source>Voir les processus</source>
+        <translation>Show processes</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="400" />
+        <source>Copier le numéro (%1)</source>
+        <translation>Copy ID (%1)</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="401" />
+        <source>Copier la commande</source>
+        <translation>Copy command</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="402" />
+        <source>Ouvrir l'emplacement du programme</source>
+        <translation>Open program location</translation>
+    </message>
+    <message>
+        <location filename="../apps/monitor/Main.qml" line="404" />
+        <source>Priorité basse</source>
+        <translation>Low priority</translation>
     </message>
     <message>
         <location filename="../apps/settings/Main.qml" line="700" />
@@ -2033,6 +2201,8 @@
         <translation>Unknown</translation>
     </message>
     <message>
+        <location filename="../apps/monitor/Main.qml" line="377" />
+        <location filename="../apps/monitor/Main.qml" line="396" />
         <location filename="../apps/settings/Main.qml" line="745" />
         <source>Fermer</source>
         <translation>Close</translation>
@@ -3288,6 +3458,14 @@
         <location filename="../apps/settings/PrintersPage.qml" line="105" />
         <source>Ouvrir…</source>
         <translation>Open…</translation>
+    </message>
+</context>
+<context>
+    <name>ProcessModel</name>
+    <message>
+        <location filename="../apps/monitor/processmodel.cpp" line="319" />
+        <source>Services du système</source>
+        <translation>System services</translation>
     </message>
 </context>
 <context>

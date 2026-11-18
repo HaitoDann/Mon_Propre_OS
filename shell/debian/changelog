@@ -1,3 +1,10 @@
+vinx-shell (0.25.0) trixie; urgency=medium
+
+  * Moniteur système VinX : applications et processus, processeur, mémoire,
+    disque, réseau ; fermer une application bloquée ; Ctrl+Échap (ADR 0035).
+
+ -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 12:00:00 +0000
+
 vinx-shell (0.24.0) trixie; urgency=medium
 
   * Sauvegarde des documents : vinx-backup (une version par jour, 30 gardées,

@@ -106,3 +106,10 @@ find_program(LUPDATE NAMES lupdate HINTS "${QT6_INSTALL_PREFIX}/${QT6_INSTALL_BI
 if(LUPDATE)
     add_test(NAME translations-complete COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/translations-test.sh" "${LUPDATE}" "${PROJECT_SOURCE_DIR}")
 endif()
+
+# Moniteur système : lecture de /proc et regroupement par application (ADR 0035).
+qt_add_executable(tst_monitor tst_monitor.cpp ${PROJECT_SOURCE_DIR}/apps/monitor/processmodel.cpp)
+target_include_directories(tst_monitor PRIVATE "${PROJECT_SOURCE_DIR}/apps/monitor" "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
+target_link_libraries(tst_monitor PRIVATE Qt6::Test Qt6::Gui)
+add_test(NAME monitor COMMAND tst_monitor)
+set_tests_properties(monitor PROPERTIES ENVIRONMENT "LANG=C.UTF-8")
