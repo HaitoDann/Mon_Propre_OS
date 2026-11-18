@@ -123,6 +123,10 @@ private Q_SLOTS:
         big.close();
         QCOMPARE(resolveAppstreamIcon("64x64/gimp_org.gimp.GIMP.png", {"/nulle/part", root.path()}), big.fileName());
         QCOMPARE(resolveAppstreamIcon("64x64/absent.png", {root.path()}), QString());
+        // Sans « cached: » : le fichier du cache s'appelle « paquet_id.png ».
+        const QVariantMap gimp{{"package", "gimp"}, {"icon", "org.gimp.GIMP"}};
+        QCOMPARE(appstreamIconFor(gimp, {root.path()}), big.fileName());
+        QCOMPARE(appstreamIconFor(QVariantMap{{"package", "x"}, {"icon", "absent"}}, {root.path()}), QString());
     }
     void aptSearchShow()
     {

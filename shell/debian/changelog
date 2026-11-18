@@ -1,3 +1,10 @@
+vinx-shell (0.26.1) trixie; urgency=medium
+
+  * Store : logos des logiciels à nouveau affichés (icônes du thème pour les
+    applications VinX, cache AppStream de Debian sans préfixe « cached: »).
+
+ -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 14:00:00 +0000
+
 vinx-shell (0.26.0) trixie; urgency=medium
 
   * Visionneur d'images VinX (Images) : affichage immersif, zoom, miniatures,

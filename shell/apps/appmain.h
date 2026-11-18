@@ -4,6 +4,7 @@
 
 #include <QCommandLineParser>
 #include "vinxi18n.h"
+#include "themeicons.h"
 #include <QDir>
 #include <QGuiApplication>
 #include <QIcon>
@@ -31,6 +32,8 @@ inline int vinxAppMain(int argc, char *argv[], const char *appName, const char *
     parser.process(app);
 
     QQmlApplicationEngine engine;
+    // image://theme/<nom> : logos des applications installées (Store, Paramètres…).
+    engine.addImageProvider(QStringLiteral("theme"), new ThemeIconProvider);
     engine.addImportPath(QStringLiteral("qrc:/qt/qml"));
     if (QDir(QStringLiteral(VINX_BUILD_QML_DIR)).exists())
         engine.addImportPath(QStringLiteral(VINX_BUILD_QML_DIR));

@@ -28,7 +28,7 @@ void DebianPackages::search(const QString &query, bool tools)
         QVariantList list = parseAppstreamSearch(out);
         for (QVariant &v : list) {   // logo des logiciels non installés (cache AppStream)
             QVariantMap m = v.toMap();
-            const QString path = resolveAppstreamIcon(m.value(QStringLiteral("iconCached")).toString(), appstreamIconRoots());
+            const QString path = appstreamIconFor(m, appstreamIconRoots());
             if (!path.isEmpty())
                 m.insert(QStringLiteral("iconUrl"), QUrl::fromLocalFile(path).toString());
             v = m;
@@ -171,7 +171,7 @@ void DebianPackages::lookupNext()
             QVariantMap m = v.toMap();
             if (m.value(QStringLiteral("package")).toString() != pkg)
                 continue;
-            const QString path = resolveAppstreamIcon(m.value(QStringLiteral("iconCached")).toString(), appstreamIconRoots());
+            const QString path = appstreamIconFor(m, appstreamIconRoots());
             if (!path.isEmpty())
                 m.insert(QStringLiteral("iconUrl"), QUrl::fromLocalFile(path).toString());
             m.insert(QStringLiteral("installed"), false);

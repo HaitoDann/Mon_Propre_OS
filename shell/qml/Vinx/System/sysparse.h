@@ -306,6 +306,25 @@ inline QString resolveAppstreamIcon(const QString &cached, const QStringList &ro
     return {};
 }
 
+// Logo d'un composant AppStream : « cached: 64x64/pkg_id.png », ou seulement « id.png » (le cache
+// de Debian nomme alors le fichier « paquet_id.png »).
+inline QString appstreamIconFor(const QVariantMap &component, const QStringList &roots)
+{
+    const QString cached = component.value(QStringLiteral("iconCached")).toString();
+    if (!cached.isEmpty())
+        return resolveAppstreamIcon(cached, roots);
+    const QString icon = component.value(QStringLiteral("icon")).toString();
+    const QString pkg = component.value(QStringLiteral("package")).toString();
+    if (icon.isEmpty())
+        return {};
+    for (const QString &name : {pkg + QLatin1Char('_') + icon + QStringLiteral(".png"), icon + QStringLiteral(".png")}) {
+        const QString path = resolveAppstreamIcon(name, roots);
+        if (!path.isEmpty())
+            return path;
+    }
+    return {};
+}
+
 inline QStringList appstreamIconRoots()
 {
     return {QStringLiteral("/var/cache/swcatalog/icons"), QStringLiteral("/usr/share/swcatalog/icons"),
