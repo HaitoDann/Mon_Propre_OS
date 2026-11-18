@@ -113,3 +113,21 @@ target_include_directories(tst_monitor PRIVATE "${PROJECT_SOURCE_DIR}/apps/monit
 target_link_libraries(tst_monitor PRIVATE Qt6::Test Qt6::Gui)
 add_test(NAME monitor COMMAND tst_monitor)
 set_tests_properties(monitor PROPERTIES ENVIRONMENT "LANG=C.UTF-8")
+
+# Capture d'écran : image brute de KWin, nom de fichier, annotations (ADR 0036).
+qt_add_executable(tst_screenshot tst_screenshot.cpp)
+target_include_directories(tst_screenshot PRIVATE "${PROJECT_SOURCE_DIR}/apps/screenshot")
+target_link_libraries(tst_screenshot PRIVATE Qt6::Test Qt6::Gui)
+add_test(NAME screenshot COMMAND tst_screenshot)
+set_tests_properties(screenshot PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+
+# Presse-papiers : historique, épinglés, mots de passe ignorés (ADR 0037).
+qt_add_executable(tst_clipboard tst_clipboard.cpp ${PROJECT_SOURCE_DIR}/qml/Vinx/System/clipboard.cpp)
+target_include_directories(tst_clipboard PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
+target_link_libraries(tst_clipboard PRIVATE Qt6::Test Qt6::Gui Qt6::Qml)
+if(KF6GuiAddons_FOUND)
+    target_compile_definitions(tst_clipboard PRIVATE VINX_HAVE_GUIADDONS)
+    target_link_libraries(tst_clipboard PRIVATE KF6::GuiAddons)
+endif()
+add_test(NAME clipboard COMMAND tst_clipboard)
+set_tests_properties(clipboard PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;LANG=C.UTF-8")

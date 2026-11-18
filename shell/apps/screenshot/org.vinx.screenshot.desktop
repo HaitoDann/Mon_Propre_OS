@@ -1,0 +1,23 @@
+[Desktop Entry]
+Type=Application
+Name=Capture d'écran
+Name[en]=Screenshot
+GenericName=Capturer et annoter l'écran
+GenericName[en]=Capture and annotate the screen
+Comment=Capturer une zone, une fenêtre ou l'écran, puis l'annoter
+Comment[en]=Capture an area, a window or the screen, then annotate it
+Exec=vinx-screenshot
+Icon=applets-screenshooter
+Terminal=false
+Categories=Utility;Graphics;
+Keywords=capture;écran;screenshot;impr;annoter;image;
+Keywords[en]=screenshot;capture;screen;print;annotate;image;
+Actions=FullScreen;
+X-KDE-DBUS-Restricted-Interfaces=org.kde.KWin.ScreenShot2
+X-KDE-Shortcuts=Meta+Shift+S
+
+[Desktop Action FullScreen]
+Name=Capturer tout l'écran
+Name[en]=Capture the whole screen
+Exec=vinx-screenshot --full
+X-KDE-Shortcuts=Print

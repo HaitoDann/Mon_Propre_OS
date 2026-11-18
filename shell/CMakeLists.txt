@@ -14,6 +14,9 @@ find_package(Python3 3.11 REQUIRED COMPONENTS Interpreter)
 # Facultatif : sans lui, Fichiers se limite aux dossiers locaux.
 find_package(KF6KIO 6.0 QUIET CONFIG)
 message(STATUS "KIO pour Fichiers : ${KF6KIO_FOUND}")
+# KGuiAddons (KSystemClipboard) : historique du presse-papiers sous Wayland (ADR 0037).
+find_package(KF6GuiAddons 6.0 QUIET CONFIG)
+message(STATUS "KGuiAddons pour le presse-papiers : ${KF6GuiAddons_FOUND}")
 qt_standard_project_setup()
 
 include(GNUInstallDirs)

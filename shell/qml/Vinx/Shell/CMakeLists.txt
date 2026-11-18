@@ -33,6 +33,7 @@ qt_add_qml_module(vinxshell
         OsdWindow.qml
         PowerDialog.qml
         Search.qml
+        ClipboardPanel.qml
         Calc.js
         AppearanceSync.qml
         WorkspaceIndicator.qml

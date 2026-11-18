@@ -11,8 +11,8 @@ Item {
 
     function sync() {
         const name = ShellState.openPanel
-        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, windows: windowMenu, power: powerDialog, search: searchPanel, desktop: desktopMenu, appmenu: appMenu }
-        if (name === "search") ShellState.anchorRect = Qt.rect(layer.width / 2 - 1, layer.height * 0.12, 2, 1)
+        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, windows: windowMenu, power: powerDialog, search: searchPanel, clipboard: clipboardPanel, desktop: desktopMenu, appmenu: appMenu }
+        if (name === "search" || name === "clipboard") ShellState.anchorRect = Qt.rect(layer.width / 2 - 1, layer.height * 0.12, 2, 1)
         if (name === "power") ShellState.anchorRect = Qt.rect(layer.width / 2 - 1, layer.height * 0.3, 2, 1)
         for (const k in all) {
             const p = all[k]
@@ -21,6 +21,7 @@ Item {
         }
         if (name === "calendar") calendarContent.reset()
         if (name === "search") searchContent.reset()
+        if (name === "clipboard") clipboardContent.reset()
     }
     Connections { target: ShellState; function onOpenPanelChanged() { layer.sync() } }
     // Touche Méta (KWin) ou autre programme : org.vinx.Shell.toggleSearch
@@ -31,7 +32,7 @@ Item {
         function onPanelRequested(name) {
             const w = layer.width, h = Theme.topbarHeight
             const rects = { control: Qt.rect(w - 48, 0, 32, h), calendar: Qt.rect(w / 2 - 60, 0, 120, h),
-                            system: Qt.rect(8, 0, 32, h), search: Qt.rect(0, 0, 0, 0) }
+                            system: Qt.rect(8, 0, 32, h), search: Qt.rect(0, 0, 0, 0), clipboard: Qt.rect(0, 0, 0, 0) }
             if (rects[name] !== undefined) ShellState.toggle(name, rects[name])
         }
     }
@@ -40,7 +41,10 @@ Item {
         target: DesktopPrompts
         function onLogoutRequested(action) { ShellState.askPower(action) }
     }
-    Component.onCompleted: sync()
+    // Capture d'écran VinX : l'image reste dans le presse-papiers après la fermeture de l'outil.
+    Connections { target: ShellService; function onImageCopyRequested(path) { Clipboard.copyImageFile(path) } }
+    // L'historique doit suivre le presse-papiers dès le démarrage, pas seulement à l'ouverture de Méta+V.
+    Component.onCompleted: { sync(); Clipboard.items }
 
     Menu {
         id: systemMenu
@@ -181,6 +185,15 @@ Item {
         align: Popover.Center
         onClosed: if (ShellState.openPanel === "search") ShellState.close()
         Search { id: searchContent; onDone: ShellState.close() }
+    }
+
+    // Historique du presse-papiers (Méta+V), centré comme la recherche.
+    Popover {
+        id: clipboardPanel
+        padding: Theme.space3
+        align: Popover.Center
+        onClosed: if (ShellState.openPanel === "clipboard") ShellState.close()
+        ClipboardPanel { id: clipboardContent; onDone: ShellState.close() }
     }
 
     Popover {

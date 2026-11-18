@@ -52,6 +52,18 @@ Window {
             }
             if (win.startOpen === "osd") { osd.show("volume", "volume", 64, ""); return }
             if (win.startOpen === "power") { ShellState.askPower("all"); return }
+            if (win.startOpen === "search") { ShellState.toggle("search", Qt.rect(0, 0, 0, 0)); return }
+            if (win.startOpen === "clipboard") {      // historique d'exemple
+                if (win.demo) {
+                    for (const t of ["IBAN FR76 3000 6000 0112 3456 7890 189", "https://www.service-public.fr/particuliers",
+                                     "Bonjour Claire,\nvoici le compte rendu de la réunion de mardi.", "Réunion d'équipe jeudi 14 h, salle B"])
+                        Clipboard.copyText(t)
+                    const first = Clipboard.items[0]
+                    if (first) Clipboard.setPinned(first.id, true)
+                }
+                ShellState.toggle("clipboard", Qt.rect(0, 0, 0, 0))
+                return
+            }
             if (win.startOpen === "windows") {      // liste des fenêtres de Documents
                 const it = dock.itemAt(2)
                 if (it) ShellState.openWindowList(2, it.appName, dock.rectOf(it), "")

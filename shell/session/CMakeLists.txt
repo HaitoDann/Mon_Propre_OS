@@ -8,5 +8,5 @@ install(FILES xdg/kwinrc xdg/mimeapps.list xdg/kde-mimeapps.list DESTINATION "${
 # Applications KDE remplacées par VinX, masquées dans la session VinX seulement (ADR 0025).
 install(DIRECTORY data/applications DESTINATION "${CMAKE_INSTALL_DATADIR}/vinx/data")
 install(PROGRAMS vinx-shellctl DESTINATION "${CMAKE_INSTALL_BINDIR}")
-install(FILES org.vinx.shellctl.search.desktop org.vinx.shellctl.control.desktop org.vinx.shellctl.calendar.desktop
+install(FILES org.vinx.shellctl.search.desktop org.vinx.shellctl.control.desktop org.vinx.shellctl.calendar.desktop org.vinx.shellctl.clipboard.desktop
         DESTINATION "${CMAKE_INSTALL_DATADIR}/applications")

@@ -37,6 +37,7 @@ référence est [DESIGN.md](DESIGN.md).
 - **Glisser une fenêtre en tuile** : elle retrouve sa taille d'origine sous le pointeur.
 - **Bouton vert** : plein écran (la barre et le dock s'effacent, `Échap` pour sortir). **Double-clic sur la barre de titre** : agrandir.
 - **Clic droit** : sur la barre de titre → menu de fenêtre ; sur le bureau → widgets et organisation ; sur le dock → fenêtres et épinglage.
+- **Outils du quotidien** : **Ctrl+Échap** moniteur système (ADR 0035) ; **Méta+Maj+S** capture d'une zone, d'une fenêtre ou d'un écran avec annotation, **Impr. écran** capture de tout l'écran (ADR 0036) ; **Méta+V** historique du presse-papiers (ADR 0037). Toute capture est copiée aussitôt.
 - **Échap** ferme toujours l'élément le plus haut : menu, recherche, vue d'ensemble, puis plein écran.
 
 Raccourcis : voir [`prototype/README.md`](../prototype/README.md).

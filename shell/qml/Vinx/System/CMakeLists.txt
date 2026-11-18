@@ -30,8 +30,14 @@ qt_add_qml_module(vinxsystem
         accounts.h accounts.cpp
         diagparse.h diagnostics.h diagnostics.cpp
         debianpackages.h debianpackages.cpp
+        cliphistory.h clipboard.h clipboard.cpp
 )
 target_link_libraries(vinxsystem PRIVATE Qt6::Qml Qt6::Gui Qt6::Widgets Qt6::DBus crypt)
+# Presse-papiers sous Wayland sans le focus (historique Méta+V, ADR 0037).
+if(KF6GuiAddons_FOUND)
+    target_compile_definitions(vinxsystem PRIVATE VINX_HAVE_GUIADDONS)
+    target_link_libraries(vinxsystem PRIVATE KF6::GuiAddons)
+endif()
 
 install(TARGETS vinxsystem LIBRARY DESTINATION "${VINX_QML_INSTALL_DIR}/Vinx/System")
 install(FILES

@@ -2,6 +2,10 @@ vinx-shell (0.25.0) trixie; urgency=medium
 
   * Moniteur système VinX : applications et processus, processeur, mémoire,
     disque, réseau ; fermer une application bloquée ; Ctrl+Échap (ADR 0035).
+  * Capture d'écran VinX : zone, fenêtre ou écran (Méta+Maj+S), tout l'écran
+    (Impr. écran), copie automatique, annotation (ADR 0036).
+  * Historique du presse-papiers (Méta+V) : 50 éléments, épinglage, mots de
+    passe ignorés, effacé à la fermeture de session (ADR 0037).
 
  -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 12:00:00 +0000
 

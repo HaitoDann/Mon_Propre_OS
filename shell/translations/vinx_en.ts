@@ -243,6 +243,69 @@
     </message>
 </context>
 <context>
+    <name>ClipboardPanel</name>
+    <message>
+        <location filename="../qml/Vinx/Shell/ClipboardPanel.qml" line="29" />
+        <source>À l'instant</source>
+        <translation>Just now</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/ClipboardPanel.qml" line="30" />
+        <source>Il y a %1 min</source>
+        <translation>%1 min ago</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/ClipboardPanel.qml" line="31" />
+        <source>Il y a %1 h</source>
+        <translation>%1 h ago</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/ClipboardPanel.qml" line="76" />
+        <source>Rechercher dans l'historique…</source>
+        <translation>Search the history…</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/ClipboardPanel.qml" line="130" />
+        <source>Image %1</source>
+        <translation>Image %1</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/ClipboardPanel.qml" line="137" />
+        <source>épinglé</source>
+        <translation>pinned</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/ClipboardPanel.qml" line="162" />
+        <source>Épingler</source>
+        <translation>Pin</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/ClipboardPanel.qml" line="175" />
+        <source>Aucun élément ne correspond.</source>
+        <translation>No item matches.</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/ClipboardPanel.qml" line="175" />
+        <source>Rien n'a encore été copié.</source>
+        <translation>Nothing has been copied yet.</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/ClipboardPanel.qml" line="184" />
+        <source>Ce que vous copiez apparaîtra ici. L'historique est effacé à la fermeture de session, sauf les éléments épinglés.</source>
+        <translation>What you copy will appear here. The history is cleared when you log out, except pinned items.</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/ClipboardPanel.qml" line="195" />
+        <source>Entrée : copier, puis Ctrl+V pour coller · Ctrl+P : épingler</source>
+        <translation>Enter: copy, then Ctrl+V to paste · Ctrl+P: pin</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/ClipboardPanel.qml" line="202" />
+        <source>Tout effacer</source>
+        <translation>Clear all</translation>
+    </message>
+</context>
+<context>
     <name>ConflictDialog</name>
     <message>
         <location filename="../apps/files/ConflictDialog.qml" line="43" />
@@ -871,6 +934,80 @@
         <location filename="../apps/settings/DriversPage.qml" line="69" />
         <source>Seuls les pilotes fournis par Debian sont proposés. Certains matériels très récents n'ont pas encore de pilote sous Linux.</source>
         <translation>Only drivers provided by Debian are offered. Some very recent hardware has no Linux driver yet.</translation>
+    </message>
+</context>
+<context>
+    <name>Editor</name>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="13" />
+        <source>Capture d'écran</source>
+        <translation>Screenshot</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="20" />
+        <location filename="../apps/screenshot/Editor.qml" line="28" />
+        <source>Copiée dans le presse-papiers.</source>
+        <translation>Copied to the clipboard.</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="31" />
+        <source>Enregistrée dans Images › Captures.</source>
+        <translation>Saved in Pictures › Screenshots.</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="31" />
+        <source>L'enregistrement a échoué.</source>
+        <translation>Saving failed.</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="140" />
+        <source>Flèche</source>
+        <translation>Arrow</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="141" />
+        <source>Cadre</source>
+        <translation>Frame</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="142" />
+        <source>Surligner</source>
+        <translation>Highlight</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="143" />
+        <source>Flouter</source>
+        <translation>Blur</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="144" />
+        <source>Texte</source>
+        <translation>Text</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="189" />
+        <source>Copier</source>
+        <translation>Copy</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="190" />
+        <source>Enregistrer dans Images</source>
+        <translation>Save to Pictures</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="191" />
+        <source>Annuler la dernière annotation</source>
+        <translation>Undo last annotation</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="197" />
+        <source>Ouvrir le dossier</source>
+        <translation>Open folder</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Editor.qml" line="200" />
+        <source>%1 × %2 pixels</source>
+        <translation>%1 × %2 pixels</translation>
     </message>
 </context>
 <context>
@@ -3010,140 +3147,140 @@
 <context>
     <name>Panels</name>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="49" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="53" />
         <source>À propos de cet ordinateur</source>
         <translation>About this computer</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="51" />
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="142" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="55" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="146" />
         <source>Paramètres…</source>
         <translation>Settings…</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="52" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="56" />
         <source>Store…</source>
         <translation>Store…</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="54" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="58" />
         <source>Verrouiller l'écran</source>
         <translation>Lock screen</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="55" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="59" />
         <source>Mettre en veille</source>
         <translation>Sleep</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="56" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="60" />
         <source>Fermer la session…</source>
         <translation>Log out…</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="57" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="61" />
         <source>Redémarrer…</source>
         <translation>Restart…</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="58" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="62" />
         <source>Éteindre…</source>
         <translation>Shut down…</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="89" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="93" />
         <source>Réduite</source>
         <translation>Minimized</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="90" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="94" />
         <source>Toutes les fenêtres</source>
         <translation>All windows</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="109" />
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="117" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="113" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="121" />
         <source>Nouvelle fenêtre</source>
         <translation>New window</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="110" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="114" />
         <source>Retirer du dock</source>
         <translation>Remove from dock</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="110" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="114" />
         <source>Garder dans le dock</source>
         <translation>Keep in dock</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="111" />
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="118" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="115" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="122" />
         <source>Quitter</source>
         <translation>Quit</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="136" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="140" />
         <source>Widgets</source>
         <translation>Widgets</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="137" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="141" />
         <source>Horloge</source>
         <translation>Clock</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="138" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="142" />
         <source>Calendrier</source>
         <translation>Calendar</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="139" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="143" />
         <source>Note rapide</source>
         <translation>Quick note</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="141" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="145" />
         <source>Changer le fond d'écran…</source>
         <translation>Change wallpaper…</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="209" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="222" />
         <source>Éteindre l'ordinateur ?</source>
         <translation>Shut down the computer?</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="209" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="222" />
         <source>Éteindre</source>
         <translation>Shut down</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="210" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="223" />
         <source>Redémarrer l'ordinateur ?</source>
         <translation>Restart the computer?</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="210" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="223" />
         <source>Redémarrer</source>
         <translation>Restart</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="211" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="224" />
         <source>Fermer la session ?</source>
         <translation>Log out?</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="211" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="224" />
         <source>Fermer la session</source>
         <translation>Log out</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="220" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="233" />
         <source>Les documents non enregistrés seront perdus.</source>
         <translation>Unsaved documents will be lost.</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="225" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="238" />
         <source>Annuler</source>
         <translation>Cancel</translation>
     </message>
@@ -3673,6 +3810,106 @@
         <location filename="../qml/Vinx/Shell/Search.qml" line="192" />
         <source>Aucun résultat</source>
         <translation>No results</translation>
+    </message>
+</context>
+<context>
+    <name>Selector</name>
+    <message>
+        <location filename="../apps/screenshot/Selector.qml" line="24" />
+        <source>Capture d'écran</source>
+        <translation>Screenshot</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Selector.qml" line="112" />
+        <source>Faites glisser pour choisir une zone · Entrée pour capturer · Échap pour annuler</source>
+        <translation>Drag to choose an area · Enter to capture · Esc to cancel</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Selector.qml" line="130" />
+        <source>Zone</source>
+        <translation>Area</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Selector.qml" line="131" />
+        <source>Fenêtre</source>
+        <translation>Window</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Selector.qml" line="132" />
+        <source>Écran</source>
+        <translation>Screen</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Selector.qml" line="143" />
+        <source>Retardateur : %1 s</source>
+        <translation>Timer: %1 s</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Selector.qml" line="143" />
+        <source>Retardateur</source>
+        <translation>Timer</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Selector.qml" line="150" />
+        <source>Capturer</source>
+        <translation>Capture</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/Selector.qml" line="155" />
+        <source>Annuler</source>
+        <translation>Cancel</translation>
+    </message>
+</context>
+<context>
+    <name>Shot</name>
+    <message>
+        <location filename="../apps/screenshot/shot.cpp" line="165" />
+        <location filename="../apps/screenshot/shot.cpp" line="178" />
+        <location filename="../apps/screenshot/shot.cpp" line="207" />
+        <location filename="../apps/screenshot/shot.cpp" line="211" />
+        <source>La capture a échoué.</source>
+        <translation>The capture failed.</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/shot.cpp" line="187" />
+        <source>La capture d'une fenêtre demande KWin.</source>
+        <translation>Capturing a window requires KWin.</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/shot.cpp" line="283" />
+        <location filename="../apps/screenshot/shot.cpp" line="297" />
+        <source>Captures</source>
+        <translation>Screenshots</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/shot.cpp" line="287" />
+        <source>Capture du %1 à %2</source>
+        <translation>Screenshot %1 at %2</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/shot.cpp" line="306" />
+        <source>Capture d'écran</source>
+        <translation>Screenshot</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/shot.cpp" line="306" />
+        <source>Capture enregistrée</source>
+        <translation>Screenshot saved</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/shot.cpp" line="307" />
+        <source>Copiée dans le presse-papiers et enregistrée dans Images › Captures.</source>
+        <translation>Copied to the clipboard and saved in Pictures › Screenshots.</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/shot.cpp" line="308" />
+        <source>Annoter</source>
+        <translation>Annotate</translation>
+    </message>
+    <message>
+        <location filename="../apps/screenshot/shot.cpp" line="308" />
+        <source>Ouvrir le dossier</source>
+        <translation>Open folder</translation>
     </message>
 </context>
 <context>

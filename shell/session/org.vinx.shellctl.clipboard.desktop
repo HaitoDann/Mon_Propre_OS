@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Presse-papiers VinX
+Name[en]=VinX Clipboard
+Exec=vinx-shellctl clipboard
+NoDisplay=true
+OnlyShowIn=KDE;
+X-KDE-Shortcuts=Meta+V

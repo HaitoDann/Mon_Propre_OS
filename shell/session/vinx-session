@@ -22,11 +22,14 @@ if [ -n "$KWC" ]; then
 		"$KWC" --file kwinrc --group org.kde.kdecoration2 --key "${kv%%=*}" "${kv#*=}"
 	done
 	# Raccourcis globaux du shell (kglobalaccel lit les .desktop listés dans [services]).
-	for p in search:Meta+Space control:Meta+A calendar:Meta+N; do
+	for p in search:Meta+Space control:Meta+A calendar:Meta+N clipboard:Meta+V; do
 		"$KWC" --file kglobalshortcutsrc --group services --group "org.vinx.shellctl.${p%%:*}.desktop" --key _launch "${p#*:}"
 	done
 	# Moniteur système VinX à la place de celui de KDE (ADR 0035).
 	"$KWC" --file kglobalshortcutsrc --group services --group org.vinx.monitor.desktop --key _launch "Ctrl+Esc"
+	# Capture d'écran VinX (ADR 0036) : Méta+Maj+S pour choisir, Impr. écran pour tout l'écran.
+	"$KWC" --file kglobalshortcutsrc --group services --group org.vinx.screenshot.desktop --key _launch "Meta+Shift+S"
+	"$KWC" --file kglobalshortcutsrc --group services --group org.vinx.screenshot.desktop --key FullScreen "Print"
 fi
 
 # Sauvegarde des documents : vérification toutes les heures (ADR 0032).
@@ -42,9 +45,11 @@ if [ -n "$KWC" ]; then
 	done
 	"$KWC" --file ksplashrc --group KSplash --key Engine --delete
 	"$KWC" --file ksplashrc --group KSplash --key Theme --delete
-	for n in search control calendar; do
+	for n in search control calendar clipboard; do
 		"$KWC" --file kglobalshortcutsrc --group services --group "org.vinx.shellctl.$n.desktop" --key _launch --delete
 	done
 	"$KWC" --file kglobalshortcutsrc --group services --group org.vinx.monitor.desktop --key _launch --delete
+	"$KWC" --file kglobalshortcutsrc --group services --group org.vinx.screenshot.desktop --key _launch --delete
+	"$KWC" --file kglobalshortcutsrc --group services --group org.vinx.screenshot.desktop --key FullScreen --delete
 fi
 exit $status
