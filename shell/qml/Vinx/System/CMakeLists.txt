@@ -18,6 +18,7 @@ qt_add_qml_module(vinxsystem
         filesearch.h filesearch.cpp
         shellservice.h shellservice.cpp
         kdeprompts.h kdeprompts.cpp
+        officeparse.h office.h office.cpp
         flatpak.h flatpak.cpp
         menubridge.h menubridge.cpp
         updateparse.h updates.h updates.cpp

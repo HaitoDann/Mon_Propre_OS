@@ -19,6 +19,10 @@ firmware-sof-signed
 plymouth
 plymouth-themes
 fonts-inter
+# Polices compatibles Microsoft Office (Calibri, Cambria, Arial, Times New Roman) — ADR 0029
+fonts-crosextra-carlito
+fonts-crosextra-caladea
+fonts-liberation
 fonts-noto-core
 fonts-noto-color-emoji
 flatpak

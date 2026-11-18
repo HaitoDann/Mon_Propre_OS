@@ -38,6 +38,7 @@ public:
     Q_INVOKABLE void search(const QString &query, bool tools = false);
     Q_INVOKABLE void details(const QString &package);
     Q_INVOKABLE void install(const QString &package, const QString &label);
+    Q_INVOKABLE void installPackages(const QStringList &packages, const QString &label);
     Q_INVOKABLE void remove(const QString &package, const QString &label);
     Q_INVOKABLE bool launch(const QString &desktopId) const;
     // Charge les fiches AppStream (nom, résumé, logo) des paquets du catalogue, une à une.

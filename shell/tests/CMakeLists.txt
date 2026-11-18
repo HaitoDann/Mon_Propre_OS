@@ -52,6 +52,11 @@ target_include_directories(tst_termtheme PRIVATE "${PROJECT_SOURCE_DIR}/apps/ter
 target_link_libraries(tst_termtheme PRIVATE Qt6::Test Qt6::Gui vinx::tokens)
 add_test(NAME terminal-theme COMMAND tst_termtheme)
 
+qt_add_executable(tst_office tst_office.cpp)
+target_include_directories(tst_office PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
+target_link_libraries(tst_office PRIVATE Qt6::Test)
+add_test(NAME office-format COMMAND tst_office)
+
 qt_add_executable(tst_flatpak tst_flatpak.cpp "${PROJECT_SOURCE_DIR}/qml/Vinx/System/flatpak.cpp")
 target_include_directories(tst_flatpak PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
 target_link_libraries(tst_flatpak PRIVATE Qt6::Test Qt6::DBus Qt6::Qml)

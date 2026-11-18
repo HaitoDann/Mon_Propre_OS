@@ -125,6 +125,12 @@ void DebianPackages::install(const QString &package, const QString &label)
              tr("L'installation de %1 a échoué.").arg(label));
 }
 
+void DebianPackages::installPackages(const QStringList &packages, const QString &label)
+{
+    runPkcon(QStringList{QStringLiteral("install")} + packages, tr("Installation de %1").arg(label), tr("%1 : installé.").arg(label),
+             tr("L'installation de %1 a échoué.").arg(label));
+}
+
 void DebianPackages::remove(const QString &package, const QString &label)
 {
     runPkcon({QStringLiteral("remove"), package}, tr("Suppression de %1").arg(label), tr("%1 a été supprimé.").arg(label),

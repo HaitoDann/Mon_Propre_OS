@@ -40,6 +40,7 @@ Window {
         { id: "desktop", title: qsTr("Bureau"), icon: "grid", section: qsTr("Personnalisation") },
         { id: "dock", title: qsTr("Dock"), icon: "folder", section: qsTr("Personnalisation") },
         { id: "notifications", title: qsTr("Notifications"), icon: "bell", section: qsTr("Personnalisation") },
+        { id: "office", title: qsTr("Bureautique"), icon: "doc", section: qsTr("Personnalisation") },
         { id: "displays", title: qsTr("Écrans"), icon: "monitor", section: qsTr("Matériel") },
         { id: "sound", title: qsTr("Son"), icon: "volume", section: qsTr("Matériel") },
         { id: "power", title: qsTr("Énergie"), icon: "bolt", section: qsTr("Matériel") },
@@ -188,6 +189,45 @@ Window {
                         }
                     }
                 }
+            }
+
+            // Bureautique (ADR 0029)
+            Column {
+                visible: win.page === "office"
+                width: parent.width
+                onVisibleChanged: if (visible) Office.refresh()
+                SettingsRow {
+                    title: qsTr("Format des nouveaux documents")
+                    description: Office.format === "msoffice"
+                        ? qsTr("Word (.docx), Excel (.xlsx), PowerPoint (.pptx) : s'ouvrent partout, sans conversion.")
+                        : qsTr("OpenDocument (.odt, .ods, .odp) : format libre et ouvert de LibreOffice.")
+                    SegmentedControl {
+                        objectName: "officeFormat"
+                        model: [qsTr("Microsoft Office"), qsTr("OpenDocument")]
+                        currentIndex: Office.format === "odf" ? 1 : 0
+                        onActivated: (i) => Office.setFormat(i === 0 ? "msoffice" : "odf")
+                    }
+                }
+                Label {
+                    visible: Office.libreOfficeInstalled && Office.libreOfficeRunning()
+                    width: parent.width; wrapMode: Text.WordWrap; topPadding: Theme.space2
+                    level: Label.Secondary; font.pixelSize: Theme.fsSm
+                    text: qsTr("LibreOffice est ouvert : fermez-le pour que le changement soit pris en compte.")
+                }
+                SettingsRow {
+                    title: qsTr("Polices compatibles Microsoft Office")
+                    description: Office.missingFonts.length === 0
+                        ? qsTr("Installées : les documents gardent la même mise en page que sous Word et Excel (Calibri, Cambria, Arial, Times New Roman…).")
+                        : qsTr("Manquantes : %1. Sans elles, la mise en page des documents Word peut changer.").arg(Office.missingFonts.join(", "))
+                    Button {
+                        visible: Office.missingFonts.length > 0
+                        text: qsTr("Installer")
+                        variant: Button.Primary
+                        enabled: !DebianPackages.busy
+                        onClicked: DebianPackages.installPackages(["fonts-crosextra-carlito", "fonts-crosextra-caladea", "fonts-liberation"], qsTr("Polices compatibles"))
+                    }
+                }
+                Connections { target: DebianPackages; function onFinished() { Office.refresh() } }
             }
 
             // Fond d'écran
