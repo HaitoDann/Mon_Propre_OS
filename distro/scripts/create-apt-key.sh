@@ -6,6 +6,7 @@
 set -eu
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 OUT="$ROOT/distro/keys/vinx-archive-keyring.asc"
+mkdir -p "$(dirname "$OUT")"
 [ -f "$OUT" ] && { echo "La clé publique existe déjà : $OUT" >&2; exit 1; }
 
 GNUPGHOME=$(mktemp -d); export GNUPGHOME
