@@ -1,0 +1,10 @@
+[Unit]
+Description=VinX OS : vérification horaire de la sauvegarde des documents
+
+[Timer]
+OnStartupSec=10min
+OnUnitActiveSec=1h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

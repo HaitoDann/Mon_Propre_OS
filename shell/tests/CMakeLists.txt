@@ -94,3 +94,9 @@ qt_add_executable(tst_accounts tst_accounts.cpp ${PROJECT_SOURCE_DIR}/qml/Vinx/S
 target_include_directories(tst_accounts PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/System")
 target_link_libraries(tst_accounts PRIVATE Qt6::Test Qt6::DBus Qt6::Qml crypt)
 add_test(NAME accounts COMMAND tst_accounts)
+
+# Sauvegarde des documents (vinx-backup) : versions, liens physiques, restauration à part.
+find_program(RSYNC rsync)
+if(RSYNC)
+    add_test(NAME backup COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/backup-test.sh" "${PROJECT_SOURCE_DIR}/system/vinx-backup")
+endif()

@@ -1,0 +1,114 @@
+#!/bin/sh
+# vinx-backup : sauvegarde des documents sur un disque externe (ADR 0032).
+#   vinx-backup run [--if-due]   sauvegarde maintenant (--if-due : seulement si la dernière a plus de 24 h
+#                                et si le disque est branché ; appelé toutes les heures par le minuteur)
+#   vinx-backup status           état en JSON (destination, dernière sauvegarde, versions)
+#   vinx-backup disks            disques externes montés, en JSON
+#   vinx-backup restore DATE     copie la version DATE dans « ~/Restauration du DATE » (rien n'est écrasé)
+#
+# Une version par jour (rsync --link-dest : les fichiers inchangés ne prennent pas de place en plus),
+# 30 versions gardées. Réglages (Paramètres → Sauvegarde) dans ~/.config/vinx/shell.ini, groupe [backup] :
+#   destination=/media/haito/MonDisque   folders=DOCUMENTS PICTURES DESKTOP   auto=true
+set -u
+INI=${XDG_CONFIG_HOME:-$HOME/.config}/vinx/shell.ini
+STATE=${XDG_STATE_HOME:-$HOME/.local/state}/vinx
+KEEP=${VINX_BACKUP_KEEP:-30}
+mkdir -p "$STATE"
+
+# Valeur d'une clé du groupe [backup] (QSettings : guillemets éventuels).
+conf() {
+	awk -v k="$1" -F= '/^\[/{g=$0} g=="[backup]" && $1==k {sub(/^[^=]*=/,""); gsub(/^"|"$/,""); print; exit}' "$INI" 2>/dev/null
+}
+json_escape() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'; }
+notify() {
+	busctl --user call org.freedesktop.Notifications /org/freedesktop/Notifications org.freedesktop.Notifications \
+		Notify 'susssasa{sv}i' "Sauvegarde" 0 "drive-harddisk" "$1" "$2" 0 0 -1 >/dev/null 2>&1 || true
+}
+
+DEST=$(conf destination)
+ROOT="$DEST/VinX-Sauvegarde/$(id -un)"
+FOLDERS=$(conf folders | tr ';,' '  ')
+[ -n "$FOLDERS" ] || FOLDERS="DOCUMENTS PICTURES DESKTOP"
+
+case "${1:-status}" in
+disks)
+	# Partitions montées sous /media ou /run/media (clés USB, disques externes).
+	printf '['
+	first=1
+	findmnt -rn -o TARGET,SIZE,AVAIL,LABEL 2>/dev/null | while read -r target size avail label; do
+		case "$target" in /media/*|/run/media/*) ;; *) continue ;; esac
+		target=$(printf '%b' "$target")
+		name=$(basename "$target")
+		[ $first = 1 ] || printf ','
+		first=0
+		printf '{"path":"%s","name":"%s","size":"%s","free":"%s"}' "$(json_escape "$target")" "$(json_escape "$name")" "$size" "$avail"
+	done
+	printf ']\n'
+	;;
+status)
+	last=$(cat "$STATE/backup-last" 2>/dev/null || true)
+	ok=$(cat "$STATE/backup-ok" 2>/dev/null || echo unknown)
+	connected=false
+	[ -n "$DEST" ] && [ -d "$DEST" ] && connected=true
+	printf '{"destination":"%s","connected":%s,"last":"%s","result":"%s","versions":[' "$(json_escape "$DEST")" "$connected" "$last" "$ok"
+	if [ "$connected" = true ] && [ -d "$ROOT" ]; then
+		ls -1 "$ROOT" 2>/dev/null | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort -r | awk 'NR>1{printf ","} {printf "\"%s\"", $0}'
+	fi
+	printf ']}\n'
+	;;
+run)
+	[ -n "$DEST" ] || { echo "Aucun disque de sauvegarde choisi." >&2; exit 2; }
+	if [ ! -d "$DEST" ]; then
+		[ "${2:-}" = --if-due ] && exit 0
+		echo "Le disque de sauvegarde n'est pas branché." >&2; exit 3
+	fi
+	if [ "${2:-}" = --if-due ]; then
+		[ "$(conf auto)" = false ] && exit 0
+		last=$(cat "$STATE/backup-last-epoch" 2>/dev/null || echo 0)
+		[ $(( $(date +%s) - last )) -ge 86400 ] || exit 0
+	fi
+	exec 9>"$STATE/backup.lock"
+	flock -n 9 || exit 0
+	TODAY=$(date +%F)
+	mkdir -p "$ROOT" || { echo "Impossible d'écrire sur le disque." >&2; exit 4; }
+	PREV=$(ls -1 "$ROOT" 2>/dev/null | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | grep -v "^$TODAY$" | sort | tail -n 1)
+	echo running > "$STATE/backup-ok"
+	rc=0
+	for key in $FOLDERS; do
+		src=$(xdg-user-dir "$key" 2>/dev/null)
+		[ -n "$src" ] && [ -d "$src" ] && [ "$src" != "$HOME" ] || continue
+		name=$(basename "$src")
+		mkdir -p "$ROOT/$TODAY.partial"
+		link=""
+		[ -n "$PREV" ] && [ -d "$ROOT/$PREV/$name" ] && link="--link-dest=$ROOT/$PREV/$name"
+		# Pas de --delete entre versions : chaque version du jour est complète (liens vers la précédente).
+		rsync -a --no-owner --no-group $link "$src/" "$ROOT/$TODAY.partial/$name/" || rc=$?
+	done
+	if [ $rc -eq 0 ] && [ -d "$ROOT/$TODAY.partial" ]; then
+		rm -rf "$ROOT/$TODAY"
+		mv "$ROOT/$TODAY.partial" "$ROOT/$TODAY"
+		# Rotation : on garde les KEEP versions les plus récentes.
+		ls -1 "$ROOT" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort -r | tail -n +"$((KEEP + 1))" | while read -r old; do rm -rf "$ROOT/$old"; done
+		date '+%Y-%m-%d %H:%M' > "$STATE/backup-last"
+		date +%s > "$STATE/backup-last-epoch"
+		echo ok > "$STATE/backup-ok"
+		[ "${2:-}" = --if-due ] && notify "Sauvegarde terminée" "Vos documents sont copiés sur $(basename "$DEST")."
+		exit 0
+	fi
+	echo failed > "$STATE/backup-ok"
+	notify "Sauvegarde incomplète" "Certains fichiers n'ont pas pu être copiés sur $(basename "$DEST")."
+	exit 5
+	;;
+restore)
+	DATE=${2:?date de la version manquante}
+	case "$DATE" in *[!0-9-]*) echo "Date invalide." >&2; exit 2 ;; esac
+	[ -d "$ROOT/$DATE" ] || { echo "Version introuvable (disque branché ?)." >&2; exit 3; }
+	OUT="$HOME/Restauration du $DATE"
+	mkdir -p "$OUT"
+	# Copie à part : les fichiers actuels ne sont jamais écrasés.
+	rsync -a --no-owner --no-group "$ROOT/$DATE/" "$OUT/" || exit 4
+	echo "$OUT"
+	;;
+*)
+	echo "usage : vinx-backup run [--if-due] | status | disks | restore DATE" >&2; exit 2 ;;
+esac

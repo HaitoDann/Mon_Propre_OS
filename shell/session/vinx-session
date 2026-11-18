@@ -27,6 +27,9 @@ if [ -n "$KWC" ]; then
 	done
 fi
 
+# Sauvegarde des documents : vérification toutes les heures (ADR 0032).
+systemctl --user start vinx-backup.timer >/dev/null 2>&1 || true
+
 /usr/bin/startplasma-wayland "$@"
 status=$?
 

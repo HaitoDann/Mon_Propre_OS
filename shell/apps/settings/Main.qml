@@ -450,27 +450,114 @@ Window {
                 id: backup
                 visible: win.page === "backup"
                 width: parent.width
-                property bool enabledState: false
-                function load() { enabledState = Session.capture("/usr/lib/vinx/vinx-snapshots", ["status"]).trim() === "enabled" }
+                // Sauvegarde des documents (ADR 0032) : vinx-backup, réglages dans le groupe [backup].
+                property var st: ({ destination: "", connected: false, last: "", result: "", versions: [] })
+                property var disks: []
+                property bool choosing: false
+                property string message: ""
+                readonly property var folderKeys: [["DOCUMENTS", qsTr("Documents")], ["PICTURES", qsTr("Images")], ["DESKTOP", qsTr("Bureau")],
+                                                   ["MUSIC", qsTr("Musique")], ["VIDEOS", qsTr("Vidéos")], ["DOWNLOAD", qsTr("Téléchargements")]]
+                readonly property var folders: String(win.pref("backup/folders", "DOCUMENTS PICTURES DESKTOP")).split(/[ ;,]+/).filter(f => f)
+                function load() {
+                    try { st = JSON.parse(Session.capture("vinx-backup", ["status"]) || "{}") } catch (e) {}
+                    try { disks = JSON.parse(Session.capture("vinx-backup", ["disks"]) || "[]") } catch (e) {}
+                }
+                function toggleFolder(key, on) {
+                    const l = folders.filter(f => f !== key)
+                    if (on) l.push(key)
+                    Preferences.setValue("backup/folders", l.join(" "))
+                }
                 onVisibleChanged: if (visible) load()
-                Timer { id: backupReload; interval: 4000; repeat: true; running: backup.visible; onTriggered: backup.load() }
+                Component.onCompleted: if (visible) load()
+                Timer { interval: 3000; repeat: true; running: backup.visible; onTriggered: backup.load() }
+
+                Label { text: qsTr("VOS DOCUMENTS"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 24; verticalAlignment: Text.AlignBottom }
                 SettingsRow {
-                    title: qsTr("Instantanés du système")
-                    description: qsTr("Un instantané chaque jour et avant chaque mise à jour, pour revenir en arrière en cas de problème. Vos documents ne sont pas inclus.")
-                    Switch {
-                        checked: backup.enabledState
-                        onToggled: (c) => Session.launch("pkexec", ["/usr/lib/vinx/vinx-snapshots", c ? "enable" : "disable"])
+                    title: backup.st.destination ? qsTr("Disque de sauvegarde : %1").arg(backup.st.destination.split("/").pop()) : qsTr("Disque de sauvegarde")
+                    description: !backup.st.destination ? qsTr("Branchez une clé USB ou un disque externe, puis choisissez-le.")
+                        : backup.st.connected ? qsTr("Branché.") : qsTr("Débranché : la sauvegarde reprendra dès qu'il sera branché.")
+                    Button { text: backup.st.destination ? qsTr("Changer…") : qsTr("Choisir…"); variant: backup.st.destination ? Button.Ghost : Button.Primary
+                             onClicked: { backup.choosing = !backup.choosing; backup.load() } }
+                }
+                Column {
+                    visible: backup.choosing
+                    width: parent.width
+                    Label { visible: backup.disks.length === 0; width: parent.width; wrapMode: Text.WordWrap; level: Label.Secondary; topPadding: Theme.space2; bottomPadding: Theme.space2
+                            text: qsTr("Aucun disque externe détecté. Branchez-le, attendez quelques secondes, puis rouvrez cette liste.") }
+                    Repeater {
+                        model: backup.disks
+                        SettingsRow {
+                            required property var modelData
+                            title: modelData.name
+                            description: qsTr("%1 libres sur %2").arg(modelData.free).arg(modelData.size)
+                            Button { text: qsTr("Utiliser ce disque"); variant: Button.Primary
+                                     onClicked: { Preferences.setValue("backup/destination", modelData.path); backup.choosing = false; backup.load() } }
+                        }
                     }
                 }
                 SettingsRow {
-                    title: qsTr("Restaurer le système")
-                    description: qsTr("Revenir à un instantané précédent (redémarrage nécessaire).")
-                    Button { text: qsTr("Ouvrir…"); variant: Button.Secondary; enabled: backup.enabledState; onClicked: Session.launch("timeshift-launcher") }
+                    title: qsTr("Automatiquement")
+                    description: qsTr("Une fois par jour, dès que le disque est branché. 30 versions sont gardées ; les fichiers inchangés ne prennent pas de place en plus.")
+                    Switch { checked: win.on("backup/auto", true); onToggled: (c) => Preferences.setValue("backup/auto", c) }
                 }
+                Label { text: qsTr("Dossiers sauvegardés"); topPadding: Theme.space3 }
+                Flow {
+                    width: parent.width
+                    spacing: Theme.space2
+                    topPadding: Theme.space2
+                    bottomPadding: Theme.space3
+                    Repeater {
+                        model: backup.folderKeys
+                        Rectangle {
+                            required property var modelData
+                            readonly property bool on: backup.folders.indexOf(modelData[0]) >= 0
+                            height: 30; radius: 15
+                            width: chipLabel.implicitWidth + Theme.space4 * 2
+                            color: on ? Theme.accent : Theme.surfaceSunken
+                            border.width: on ? 0 : 1; border.color: Theme.border
+                            Label { id: chipLabel; anchors.centerIn: parent; text: modelData[1]; font.pixelSize: Theme.fsSm; color: parent.on ? Theme.accentText : Theme.text }
+                            MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: backup.toggleFolder(modelData[0], !parent.on) }
+                            Accessible.role: Accessible.CheckBox
+                            Accessible.name: modelData[1]
+                            Accessible.checked: on
+                        }
+                    }
+                }
+                Rectangle { width: parent.width; height: 1; color: Theme.border }
                 SettingsRow {
-                    title: qsTr("Sauvegarder vos documents")
-                    description: qsTr("Copiez régulièrement votre dossier personnel sur un disque externe ou un service en ligne.")
-                    Button { text: qsTr("Ouvrir Fichiers"); variant: Button.Ghost; onClicked: Session.launch("vinx-files") }
+                    title: backup.st.result === "running" ? qsTr("Sauvegarde en cours…")
+                        : backup.st.last ? qsTr("Dernière sauvegarde : %1").arg(backup.st.last.replace(/^(\d+)-(\d+)-(\d+)/, "$3/$2/$1")) : qsTr("Aucune sauvegarde pour l'instant")
+                    description: backup.st.result === "failed" ? qsTr("La dernière sauvegarde est incomplète : vérifiez la place libre sur le disque.") : ""
+                    Button {
+                        text: qsTr("Sauvegarder maintenant"); variant: Button.Secondary
+                        enabled: backup.st.connected && backup.st.result !== "running" && backup.folders.length > 0
+                        onClicked: { Session.launch("vinx-backup", ["run"]); backup.message = "" }
+                    }
+                }
+                Label { visible: backup.st.connected && backup.st.versions.length > 0; text: qsTr("VERSIONS"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 36; verticalAlignment: Text.AlignBottom; bottomPadding: 4 }
+                Repeater {
+                    model: backup.st.connected ? backup.st.versions.slice(0, 10) : []
+                    SettingsRow {
+                        required property string modelData
+                        title: { const p = modelData.split("-"); return p[2] + "/" + p[1] + "/" + p[0] }
+                        Button {
+                            text: qsTr("Restaurer…"); variant: Button.Ghost
+                            onClicked: {
+                                const out = Session.capture("vinx-backup", ["restore", modelData]).trim()
+                                backup.message = out ? qsTr("Fichiers copiés dans « %1 » : vos fichiers actuels n'ont pas été modifiés.").arg(out.split("/").pop())
+                                                     : qsTr("La restauration a échoué.")
+                                if (out) Session.launch("vinx-files", [out])
+                            }
+                        }
+                    }
+                }
+                Label { visible: backup.message !== ""; text: backup.message; width: parent.width; wrapMode: Text.WordWrap; color: Theme.accentForeground; topPadding: Theme.space2 }
+
+                Label { text: qsTr("SYSTÈME"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 40; verticalAlignment: Text.AlignBottom; bottomPadding: 4 }
+                SettingsRow {
+                    title: qsTr("Instantanés du système")
+                    description: qsTr("Programmes et réglages, pour revenir en arrière après une mise à jour.")
+                    Button { text: qsTr("Ouvrir…"); variant: Button.Ghost; onClicked: Session.launch("vinx-updates", ["--page", "snapshots"]) }
                 }
             }
 
