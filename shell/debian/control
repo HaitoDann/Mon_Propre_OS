@@ -57,7 +57,10 @@ Recommends: plasma-workspace,
             wireplumber,
             network-manager,
             bluez,
-            upower
+            upower,
+            qt6-image-formats-plugins,
+            kimageformat6-plugins,
+            xdg-utils
 Description: Shell de bureau et applications de VinX OS
  vinx-shell : barre supérieure (menu système, centre de contrôle, calendrier)
  ancrée via layer-shell sous KWin, ou fenêtre d'aperçu (--preview).

@@ -1,0 +1,21 @@
+[Desktop Entry]
+Type=Application
+Name=Images
+Name[en]=Images
+GenericName=Visionneur d'images
+GenericName[en]=Image viewer
+Comment=Regarder, retoucher et partager des photos
+Comment[en]=View, edit and share photos
+Exec=vinx-images %f
+Icon=image-x-generic
+Terminal=false
+Categories=Graphics;Viewer;Photography;
+MimeType=image/jpeg;image/png;image/webp;image/gif;image/bmp;image/tiff;image/svg+xml;image/heic;image/heif;image/avif;image/x-portable-pixmap;image/vnd.microsoft.icon;
+Keywords=image;photo;visionneur;diaporama;recadrer;
+Keywords[en]=image;photo;viewer;slideshow;crop;
+Actions=Edit;
+
+[Desktop Action Edit]
+Name=Modifier
+Name[en]=Edit
+Exec=vinx-images --edit %f

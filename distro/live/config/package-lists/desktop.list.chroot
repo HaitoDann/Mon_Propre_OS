@@ -11,6 +11,7 @@ kscreen
 # Dolphin et Discover : remplacés par Fichiers et le Store VinX (ADR 0025).
 konsole
 ark
+# Gwenview : en secours, masqué, remplacé par Images (ADR 0038).
 gwenview
 okular
 kcalc

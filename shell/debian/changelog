@@ -1,3 +1,12 @@
+vinx-shell (0.26.0) trixie; urgency=medium
+
+  * Visionneur d'images VinX (Images) : affichage immersif, zoom, miniatures,
+    infos de prise de vue, diaporama, partage ; mode Modifier (recadrer,
+    pivoter, lumière, annoter, réduire pour un mail) ; enregistre une copie
+    par défaut (ADR 0038). Application par défaut des images.
+
+ -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 13:00:00 +0000
+
 vinx-shell (0.25.0) trixie; urgency=medium
 
   * Moniteur système VinX : applications et processus, processeur, mémoire,

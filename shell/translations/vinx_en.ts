@@ -937,6 +937,140 @@
     </message>
 </context>
 <context>
+    <name>EditView</name>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="38" />
+        <location filename="../apps/viewer/EditView.qml" line="321" />
+        <source>Copie enregistrée : %1</source>
+        <translation>Copy saved: %1</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="232" />
+        <source>Recadrer</source>
+        <translation>Crop</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="237" />
+        <source>Libre</source>
+        <translation>Free</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="238" />
+        <source>Original</source>
+        <translation>Original</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="239" />
+        <source>Carré</source>
+        <translation>Square</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="253" />
+        <source>Pivoter</source>
+        <translation>Rotate</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="258" />
+        <source>Miroir</source>
+        <translation>Mirror</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="261" />
+        <source>Lumière</source>
+        <translation>Light</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="262" />
+        <source>Luminosité</source>
+        <translation>Brightness</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="264" />
+        <source>Contraste</source>
+        <translation>Contrast</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="267" />
+        <source>Annoter</source>
+        <translation>Annotate</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="272" />
+        <source>Flèche</source>
+        <translation>Arrow</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="272" />
+        <source>Cadre</source>
+        <translation>Frame</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="273" />
+        <source>Surligner</source>
+        <translation>Highlight</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="273" />
+        <source>Flouter</source>
+        <translation>Blur</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="274" />
+        <source>Texte</source>
+        <translation>Text</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="300" />
+        <source>Taille</source>
+        <translation>Size</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="301" />
+        <source>Réduire pour un mail (1600 px)</source>
+        <translation>Shrink for email (1600 px)</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="304" />
+        <source>Résultat : %1 × %2 pixels</source>
+        <translation>Result: %1 × %2 pixels</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="309" />
+        <source>Annuler</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="310" />
+        <source>Tout réinitialiser</source>
+        <translation>Reset all</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="320" />
+        <source>Enregistrer une copie</source>
+        <translation>Save a copy</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="326" />
+        <source>Confirmer : remplacer l'original</source>
+        <translation>Confirm: replace the original</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="326" />
+        <source>Remplacer l'original</source>
+        <translation>Replace the original</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="329" />
+        <source>Image enregistrée.</source>
+        <translation>Image saved.</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/EditView.qml" line="333" />
+        <source>Fermer sans enregistrer</source>
+        <translation>Close without saving</translation>
+    </message>
+</context>
+<context>
     <name>Editor</name>
     <message>
         <location filename="../apps/screenshot/Editor.qml" line="13" />
@@ -1249,6 +1383,84 @@
     </message>
 </context>
 <context>
+    <name>InfoPanel</name>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="15" />
+        <source>Fichier</source>
+        <translation>File</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="15" />
+        <source>Taille</source>
+        <translation>Size</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="15" />
+        <source>%1 Mo</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="15" />
+        <source>%1 ko</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="16" />
+        <source>Dimensions</source>
+        <translation>Dimensions</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="16" />
+        <source>%1 × %2 pixels</source>
+        <translation>%1 × %2 pixels</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="17" />
+        <source>Format</source>
+        <translation>Format</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="18" />
+        <source>Prise le</source>
+        <translation>Taken on</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="19" />
+        <source>Modifiée le</source>
+        <translation>Modified on</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="20" />
+        <source>Appareil</source>
+        <translation>Camera</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="21" />
+        <source>Réglages</source>
+        <translation>Settings</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="35" />
+        <source>Infos</source>
+        <translation>Info</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="57" />
+        <source>Dossier</source>
+        <translation>Folder</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="70" />
+        <source>Ouvrir avec…</source>
+        <translation>Open with…</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/InfoPanel.qml" line="71" />
+        <source>Fond d'écran</source>
+        <translation>Wallpaper</translation>
+    </message>
+</context>
+<context>
     <name>LockScreen</name>
     <message>
         <location filename="../lockscreen/LockScreen.qml" line="84" />
@@ -1409,12 +1621,14 @@
     </message>
     <message>
         <location filename="../apps/files/Main.qml" line="385" />
+        <location filename="../apps/viewer/Main.qml" line="265" />
         <source>Mettre à la corbeille</source>
         <translation>Move to trash</translation>
     </message>
     <message>
         <location filename="../apps/files/Main.qml" line="385" />
         <location filename="../apps/monitor/Main.qml" line="396" />
+        <location filename="../apps/viewer/Main.qml" line="265" />
         <source>Suppr</source>
         <translation>Del</translation>
     </message>
@@ -1844,6 +2058,7 @@
     </message>
     <message>
         <location filename="../apps/settings/Main.qml" line="475" />
+        <location filename="../apps/viewer/Main.qml" line="15" />
         <source>Images</source>
         <translation>Pictures</translation>
     </message>
@@ -2137,11 +2352,13 @@
     </message>
     <message>
         <location filename="../apps/monitor/Main.qml" line="39" />
+        <location filename="../apps/viewer/Main.qml" line="29" />
         <source>%1 Mo</source>
         <translation>%1 MB</translation>
     </message>
     <message>
         <location filename="../apps/monitor/Main.qml" line="40" />
+        <location filename="../apps/viewer/Main.qml" line="29" />
         <source>%1 ko</source>
         <translation>%1 kB</translation>
     </message>
@@ -2153,6 +2370,7 @@
     <message>
         <location filename="../apps/monitor/Main.qml" line="43" />
         <location filename="../apps/settings/Main.qml" line="696" />
+        <location filename="../apps/viewer/Main.qml" line="180" />
         <source>%1 %</source>
         <translation>%1 %</translation>
     </message>
@@ -2904,6 +3122,7 @@
     </message>
     <message>
         <location filename="../apps/updates/Main.qml" line="362" />
+        <location filename="../apps/viewer/Main.qml" line="155" />
         <source>Annuler</source>
         <translation>Cancel</translation>
     </message>
@@ -3037,6 +3256,128 @@
         <location filename="../apps/welcome/Main.qml" line="175" />
         <source>Suivant</source>
         <translation>Next</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="39" />
+        <source>« %1 » mise à la corbeille.</source>
+        <translation>“%1” moved to the trash.</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="68" />
+        <location filename="../apps/viewer/Main.qml" line="269" />
+        <source>Image copiée.</source>
+        <translation>Image copied.</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="93" />
+        <source>Aucune image à afficher.</source>
+        <translation>No image to display.</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="140" />
+        <source>Image précédente</source>
+        <translation>Previous image</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="140" />
+        <source>Image suivante</source>
+        <translation>Next image</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="154" />
+        <source>Rotation non enregistrée</source>
+        <translation>Rotation not saved</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="157" />
+        <source>Enregistrer</source>
+        <translation>Save</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="158" />
+        <source>Rotation enregistrée.</source>
+        <translation>Rotation saved.</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="179" />
+        <source>Réduire</source>
+        <translation>Zoom out</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="180" />
+        <source>Ajuster</source>
+        <translation>Fit</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="181" />
+        <source>Agrandir</source>
+        <translation>Zoom in</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="183" />
+        <source>Pivoter</source>
+        <translation>Rotate</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="184" />
+        <source>Modifier</source>
+        <translation>Edit</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="185" />
+        <source>Infos</source>
+        <translation>Info</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="187" />
+        <source>Diaporama</source>
+        <translation>Slideshow</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="188" />
+        <source>Partager</source>
+        <translation>Share</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="247" />
+        <location filename="../apps/viewer/Main.qml" line="271" />
+        <source>Fond d'écran changé.</source>
+        <translation>Wallpaper changed.</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="258" />
+        <source>Copier l'image</source>
+        <translation>Copy image</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="258" />
+        <source>Ctrl+C</source>
+        <translation>Ctrl+C</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="259" />
+        <source>Envoyer par e-mail…</source>
+        <translation>Send by email…</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="261" />
+        <source>Utiliser comme fond d'écran</source>
+        <translation>Use as wallpaper</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="262" />
+        <source>Ouvrir le dossier</source>
+        <translation>Open folder</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="263" />
+        <source>Ouvrir avec…</source>
+        <translation>Open with…</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/Main.qml" line="270" />
+        <source>Aucune messagerie n'est configurée.</source>
+        <translation>No email application is set up.</translation>
     </message>
 </context>
 <context>
@@ -4359,6 +4700,30 @@
         <location filename="../apps/settings/UsersPage.qml" line="124" />
         <source>Gérer…</source>
         <translation>Manage…</translation>
+    </message>
+</context>
+<context>
+    <name>Viewer</name>
+    <message>
+        <location filename="../apps/viewer/viewer.cpp" line="122" />
+        <source>d MMMM yyyy 'à' HH:mm</source>
+        <translation>MMMM d, yyyy 'at' HH:mm</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/viewer.cpp" line="147" />
+        <source>Impossible de mettre l'image à la corbeille.</source>
+        <translation>Could not move the image to the trash.</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/viewer.cpp" line="352" />
+        <source>modifiée</source>
+        <translation>edited</translation>
+    </message>
+    <message>
+        <location filename="../apps/viewer/viewer.cpp" line="357" />
+        <location filename="../apps/viewer/viewer.cpp" line="370" />
+        <source>L'enregistrement a échoué.</source>
+        <translation>Saving failed.</translation>
     </message>
 </context>
 <context>

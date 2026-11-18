@@ -131,3 +131,10 @@ if(KF6GuiAddons_FOUND)
 endif()
 add_test(NAME clipboard COMMAND tst_clipboard)
 set_tests_properties(clipboard PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;LANG=C.UTF-8")
+
+# Visionneur d'images : EXIF, retouches, dossier, copie modifiée (ADR 0038).
+qt_add_executable(tst_viewer tst_viewer.cpp ${PROJECT_SOURCE_DIR}/apps/viewer/viewer.cpp)
+target_include_directories(tst_viewer PRIVATE "${PROJECT_SOURCE_DIR}/apps/viewer" "${PROJECT_SOURCE_DIR}/apps/screenshot")
+target_link_libraries(tst_viewer PRIVATE Qt6::Test Qt6::Gui Qt6::Quick Qt6::DBus)
+add_test(NAME viewer COMMAND tst_viewer)
+set_tests_properties(viewer PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;LANG=C.UTF-8")
