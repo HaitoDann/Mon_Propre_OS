@@ -13,7 +13,7 @@
 | 5 bis — Système | Instantanés btrfs + retour arrière au démarrage (ADR 0031), sauvegarde des documents | ✅ à valider sur ISO neuve |
 | 5 ter — Traduction | Anglais (ADR 0034) | ✅ sauf catalogue du Store, noms d'accents, messages des scripts |
 | **6 — Consolidation** | Gel des fonctions, recette sur matériel ([RECETTE.md](RECETTE.md)), corrections, qualité | ⏳ **en cours** |
-| 7 — Publication 1.0 | Dépôt APT actif, ISO signée, site (vinxlabs.fr/vinx-os), guide utilisateur, notes de version | à venir |
+| 7 — Publication 1.0 | ISO signée, site (vinxlabs.fr/vinx-os), guide utilisateur, notes de version | à venir |
 
 ## Phase 6 — Consolidation (détail)
 
@@ -21,7 +21,7 @@
 |---|---|---|---|
 | 6.1 | Gel des fonctions 1.0, liste « après 1.0 » (ADR 0039) | Claude | ✅ |
 | 6.2 | Nettoyage du dépôt, branche `main` | Claude | ✅ |
-| 6.3 | Activer le dépôt APT ([APT.md](APT.md)) | utilisateur | ⏳ |
+| 6.3 | Activer le dépôt APT ([APT.md](APT.md)) | utilisateur | ✅ |
 | 6.4 | ISO neuve, installation btrfs, déroulé de [RECETTE.md](RECETTE.md) | utilisateur | ⏳ |
 | 6.5 | Corrections issues de la recette | Claude | — |
 | 6.6 | Traduction restante (Store, accents, scripts) | Claude | — |

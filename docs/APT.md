@@ -27,6 +27,15 @@ ainsi les nouvelles versions par le Store (onglet Mises à jour), sans réinstal
    Le workflow « Dépôt APT » construit le paquet, signe le dépôt et le publie sur
    `https://haitodann.github.io/VinX_OS/apt`. C'est le seul moment où il consomme des minutes.
 
+## Dépannage
+
+- **Relancer une publication** sans nouvelle étiquette : Actions → « Dépôt APT » → *Run workflow* (branche `main`).
+- **`503 Backend is unhealthy`** : Pages n'a encore rien publié (workflow pas terminé ou en échec).
+- **« Signature … created after the --not-after date »** : l'horloge du poste est en retard sur celle de
+  GitHub ; `sudo timedatectl set-ntp true`, ou attendre quelques minutes.
+- **`curl` introuvable** (ISO antérieures à la 0.26.2) : `sudo apt install curl`, ou installer la clé depuis
+  le dépôt local : `sudo gpg --dearmor -o /usr/share/keyrings/vinx-archive-keyring.gpg distro/keys/vinx-archive-keyring.asc`.
+
 ## Côté système
 
 Les ISO construites après l'étape 3 contiennent `/etc/apt/sources.list.d/vinx.sources` et la clé

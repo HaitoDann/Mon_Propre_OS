@@ -87,8 +87,8 @@ Préférences utilisateur : `~/.config/vinx/shell.ini` (QSettings, clés `sectio
 - **Phase de consolidation 1.0** (ADR 0039, gel des fonctions) : suivre `docs/ROADMAP.md` et `docs/RECETTE.md` ;
   l'utilisateur envoie ses retours avec `vinx-dev rapport`. Branche principale : `main`.
 
-- **Dépôt APT** : l'utilisateur doit créer la clé (`distro/scripts/create-apt-key.sh`), ajouter le
-  secret `APT_SIGNING_KEY`, activer GitHub Pages, pousser une étiquette `shell-vX.Y.Z` (docs/APT.md).
+- **Dépôt APT** : actif depuis le 18/11/2026 (`https://haitodann.github.io/VinX_OS/apt`, clé dans `distro/keys`).
+  Publier = monter la version + étiquette `shell-vX.Y.Z` poussée par l'utilisateur (ou « Run workflow »).
 - **Retours de test sur le portable** (jamais testé sur matériel réel) : Wi-Fi natif, écrans et
   bulle de branchement, imprimantes, utilisateurs, pilotes, dépannage, recherche Debian du Store,
   fiche détaillée d'application, mises à jour en arrière-plan, couleurs du menu GRUB.
