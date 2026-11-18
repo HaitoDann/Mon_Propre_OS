@@ -1,3 +1,11 @@
+vinx-shell (0.26.3) trixie; urgency=medium
+
+  * vinx-dev rapport : captures du bureau et des Paramètres réparées
+    (plantage hors écran avec la liste des tâches de KWin).
+  * Store : avertissement QML sur l'icône de la sélection corrigé.
+
+ -- VinX OS <vinx@localhost>  Thu, 19 Nov 2026 00:10:00 +0000
+
 vinx-shell (0.26.2) trixie; urgency=medium
 
   * Consolidation 1.0 (ADR 0039) : « vinx-dev rapport » (captures de toutes

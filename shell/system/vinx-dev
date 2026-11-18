@@ -149,9 +149,10 @@ status)
 rapport)
 	# Rapport de recette (docs/RECETTE.md) : ce que voit l'utilisateur, sur son matériel réel.
 	# Les captures sont rendues hors écran (rien ne s'ouvre) avec les vraies données du système.
+	# Les fenêtres réelles (liste des tâches de KWin) ne sont pas lisibles hors écran : modèle d'aperçu.
 	out=${XDG_CACHE_HOME:-$HOME/.cache}/vinx-dev/rapport-$(date +%Y%m%d-%H%M%S)
 	mkdir -p "$out/captures"
-	shot() { name=$1; shift; QT_QPA_PLATFORM=offscreen timeout 30 "$@" --screenshot "$out/captures/$name.png" >>"$out/captures.log" 2>&1 || echo "échec : $name" >>"$out/captures.log"; }
+	shot() { name=$1; shift; VINX_TASKS_BACKEND=preview QT_QPA_PLATFORM=offscreen timeout 30 "$@" --screenshot "$out/captures/$name.png" >>"$out/captures.log" 2>&1 || echo "échec : $name" >>"$out/captures.log"; }
 	say "Captures des Paramètres"
 	for p in appearance wallpaper desktop dock notifications office displays sound power network printers drivers \
 		accessibility keyboard datetime users backup troubleshoot updates about; do

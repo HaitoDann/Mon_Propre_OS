@@ -177,7 +177,7 @@ Window {
                         id: heroLogo
                         x: Theme.space5; anchors.verticalCenter: parent.verticalCenter
                         size: 84
-                        iconUrl: hero.app ? hero.app.iconUrl : ""; themeIcon: hero.app ? hero.app.icon : ""
+                        iconUrl: hero.app ? hero.app.iconUrl : ""; themeIcon: hero.app && hero.app.icon ? hero.app.icon : ""
                         name: hero.app ? hero.app.name : ""; tint: hero.app ? hero.app.tint : "#9AA09C"
                     }
                     Column {
