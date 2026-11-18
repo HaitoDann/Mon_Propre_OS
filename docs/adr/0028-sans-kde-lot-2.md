@@ -16,7 +16,7 @@
 - **Mot de passe administrateur** : `vinx-polkit-agent` (polkit-qt6, `PolkitQt1::Agent::Listener`),
   fenêtre VinX, trois essais. Démarré par l'autostart dans la session VinX ; l'agent de KDE y est
   désactivé (complément `plasma-polkit-agent.service.d`), **seulement si** l'agent VinX est construit.
-  Construction facultative tant que le nom du paquet Debian (`libpolkit-qt6-1-dev`) n'est pas confirmé.
+  Dépendance de construction : `libpolkit-qt6-1-dev` (Debian 13).
 
 ## Conséquences
 

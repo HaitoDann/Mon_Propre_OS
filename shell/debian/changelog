@@ -1,3 +1,9 @@
+vinx-shell (0.21.1) trixie; urgency=medium
+
+  * Agent polkit VinX toujours construit (dépendance libpolkit-qt6-1-dev).
+
+ -- VinX OS <vinx@localhost>  Wed, 18 Nov 2026 02:20:00 +0000
+
 vinx-shell (0.21.0) trixie; urgency=medium
 
   * Store : vitrine avec rayons à gauche, Sélection VinX, logiciels Debian et
