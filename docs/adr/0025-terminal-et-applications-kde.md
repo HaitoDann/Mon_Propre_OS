@@ -45,3 +45,12 @@ Configuration du système.
   à la main (dossier courant du shell relu toutes les 0,7 s). Clic droit : se placer dans le
   dossier, ouvrir dans Fichiers, écrire ou copier le chemin.
 - Plus tard : connexions SSH enregistrées, glisser-déposer vers un serveur.
+
+## Complément : glisser-déposer et petites améliorations (sans « MobaXterm bis »)
+
+- Glisser un fichier de l'arborescence vers Fichiers ou le bureau pour le récupérer ; déposer des
+  fichiers sur l'arborescence pour les copier dans le dossier courant (ou le sous-dossier visé),
+  sans jamais écraser (`cp -rn`).
+- Point « ● » sur un onglet en arrière-plan quand une sortie y apparaît (fin de compilation…).
+- Clic droit sur un dossier : ouvrir dans un nouvel onglet, nouveau dossier.
+- Pas de gestionnaire de serveurs enregistrés (choix de l'utilisateur : rester simple).

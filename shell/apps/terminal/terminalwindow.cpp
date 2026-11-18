@@ -7,6 +7,10 @@
 #include <QClipboard>
 #include <QDesktopServices>
 #include <QDir>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QInputDialog>
+#include <QMimeData>
 #include <QFile>
 #include <QFileInfo>
 #include <QFileSystemModel>
@@ -132,8 +136,11 @@ TerminalWindow::TerminalWindow(const QString &workingDirectory, QWidget *parent)
         m_stack->insertWidget(to, w);
     });
     connect(m_tabBar, &QTabBar::currentChanged, this, [this](int i) {
-        if (i >= 0 && i < m_stack->count())
+        if (i >= 0 && i < m_stack->count()) {
             m_stack->setCurrentIndex(i);
+            if (auto *t = qobject_cast<QTermWidget *>(m_stack->widget(i)))
+                markActivity(t, false);
+        }
         updateTitle();
         followDirectory();
         if (current()) current()->setFocus();
@@ -211,7 +218,14 @@ QWidget *TerminalWindow::buildTree()
     m_tree->setExpandsOnDoubleClick(false);
     m_tree->setFrameShape(QFrame::NoFrame);
     m_tree->setContextMenuPolicy(Qt::CustomContextMenu);
-    m_tree->setToolTip(tr("Double-clic : se placer dans le dossier, ou ouvrir le fichier"));
+    // Glisser-déposer : on fait glisser un fichier vers Fichiers ou le bureau pour le récupérer,
+    // on dépose des fichiers sur l'arborescence pour les copier dans le dossier (ou le sous-dossier visé).
+    m_tree->setDragEnabled(true);
+    m_tree->setDragDropMode(QAbstractItemView::DragOnly);
+    m_tree->setDefaultDropAction(Qt::CopyAction);
+    m_tree->viewport()->setAcceptDrops(true);
+    m_tree->viewport()->installEventFilter(this);
+    m_tree->setToolTip(tr("Double-clic : se placer dans le dossier, ou ouvrir le fichier. Glissez des fichiers ici pour les copier."));
     layout->addWidget(m_tree, 1);
 
     connect(up, &QToolButton::clicked, this, [this] {
@@ -277,6 +291,9 @@ QTermWidget *TerminalWindow::newTab(const QString &workingDirectory)
         updateTitle();
     });
     connect(term, &QTermWidget::finished, this, [this, term] { closeTab(m_stack->indexOf(term)); });
+    // Onglet en arrière-plan : un point signale une nouvelle sortie (fin de compilation, de copie…).
+    term->setMonitorActivity(true);
+    connect(term, &QTermWidget::activity, this, [this, term] { if (term != current()) markActivity(term, true); });
     connect(term, &QTermWidget::urlActivated, this, [](const QUrl &url, bool) { QDesktopServices::openUrl(url); });
 
     const int i = m_stack->addWidget(term);
@@ -351,6 +368,13 @@ void TerminalWindow::showTreeMenu(const QPoint &pos)
     QMenu menu(this);
     if (isDir) {
         menu.addAction(tr("Se placer dans ce dossier"), this, [this, path] { changeDirectory(path); });
+        menu.addAction(tr("Ouvrir dans un nouvel onglet"), this, [this, path] { newTab(path); });
+        menu.addAction(tr("Nouveau dossier…"), this, [this, path] {
+            bool ok = false;
+            const QString name = QInputDialog::getText(this, tr("Nouveau dossier"), tr("Nom du dossier :"), QLineEdit::Normal, QString(), &ok).trimmed();
+            if (ok && !name.isEmpty() && !name.contains(QLatin1Char('/')))
+                QDir(path).mkdir(name);
+        });
         menu.addAction(tr("Ouvrir dans Fichiers"), this, [path] {
             if (!QProcess::startDetached(QStringLiteral("vinx-files"), {path}))
                 QDesktopServices::openUrl(QUrl::fromLocalFile(path));
@@ -430,4 +454,61 @@ void TerminalWindow::applyAppearance()
         "QMenu::item:selected { background: %8; color: %9; }"
         "QMenu::separator { height: 1px; background: %7; margin: 4px 8px; }")
         .arg(bg, bar, side, text, text2, text3, line, accent, ink));
+}
+
+void TerminalWindow::markActivity(QTermWidget *term, bool active)
+{
+    const int i = m_stack->indexOf(term);
+    if (i < 0)
+        return;
+    QString text = m_tabBar->tabText(i);
+    const QString dot = QStringLiteral("● ");
+    if (text.startsWith(dot))
+        text = text.mid(dot.size());
+    m_tabBar->setTabText(i, active ? dot + text : text);
+}
+
+bool TerminalWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == m_tree->viewport()) {
+        if (event->type() == QEvent::DragEnter || event->type() == QEvent::DragMove) {
+            auto *e = static_cast<QDropEvent *>(event);
+            if (e->mimeData()->hasUrls() && e->source() != m_tree) {
+                e->setDropAction(Qt::CopyAction);
+                e->accept();
+                return true;
+            }
+        } else if (event->type() == QEvent::Drop) {
+            auto *e = static_cast<QDropEvent *>(event);
+            if (e->mimeData()->hasUrls() && e->source() != m_tree) {
+                // Cible : le dossier survolé, sinon le dossier courant.
+                const QModelIndex index = m_tree->indexAt(e->position().toPoint());
+                const QString dir = index.isValid() && m_model->isDir(index) ? m_model->filePath(index) : m_dir;
+                copyInto(e->mimeData()->urls(), dir);
+                e->setDropAction(Qt::CopyAction);
+                e->accept();
+                return true;
+            }
+        }
+    }
+    return QWidget::eventFilter(watched, event);
+}
+
+// Copie (récursive, sans jamais écraser un fichier existant) des fichiers déposés.
+void TerminalWindow::copyInto(const QList<QUrl> &urls, const QString &dir)
+{
+    QStringList args{QStringLiteral("-r"), QStringLiteral("-n"), QStringLiteral("--")};
+    for (const QUrl &u : urls)
+        if (u.isLocalFile())
+            args << u.toLocalFile();
+    if (args.size() == 3)
+        return;
+    args << dir;
+    auto *p = new QProcess(this);
+    connect(p, &QProcess::finished, p, &QObject::deleteLater);
+    connect(p, &QProcess::finished, this, [this, dir](int code) {
+        m_status->setText(code == 0 ? tr("Copié dans %1.").arg(shortPath(dir)) : tr("La copie dans %1 a échoué.").arg(shortPath(dir)));
+    });
+    m_status->setText(tr("Copie en cours…"));
+    p->start(QStringLiteral("cp"), args);
 }

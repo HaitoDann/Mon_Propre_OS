@@ -38,6 +38,9 @@ private:
     void setTreeRoot(const QString &dir);
     void changeDirectory(const QString &dir);
     void setTreeVisible(bool visible);
+    bool eventFilter(QObject *watched, QEvent *event) override;
+    void copyInto(const QList<QUrl> &urls, const QString &dir);
+    void markActivity(QTermWidget *term, bool active);
 
     QTabBar *m_tabBar = nullptr;
     QStackedWidget *m_stack = nullptr;
