@@ -1,6 +1,49 @@
 <?xml version='1.0' encoding='utf-8'?>
 <TS version="2.1" language="en" sourcelanguage="fr">
 <context>
+    <name>Accent</name>
+    <message>
+        <location filename="../common/accentnames.h" line="8" />
+        <source>Vert VinX</source>
+        <translation>VinX Green</translation>
+    </message>
+    <message>
+        <location filename="../common/accentnames.h" line="9" />
+        <source>Lagon</source>
+        <translation>Lagoon</translation>
+    </message>
+    <message>
+        <location filename="../common/accentnames.h" line="10" />
+        <source>Turquoise</source>
+        <translation>Turquoise</translation>
+    </message>
+    <message>
+        <location filename="../common/accentnames.h" line="11" />
+        <source>Citron</source>
+        <translation>Lime</translation>
+    </message>
+    <message>
+        <location filename="../common/accentnames.h" line="12" />
+        <source>Ambre</source>
+        <translation>Amber</translation>
+    </message>
+    <message>
+        <location filename="../common/accentnames.h" line="13" />
+        <source>Corail</source>
+        <translation>Coral</translation>
+    </message>
+    <message>
+        <location filename="../common/accentnames.h" line="14" />
+        <source>Framboise</source>
+        <translation>Raspberry</translation>
+    </message>
+    <message>
+        <location filename="../common/accentnames.h" line="15" />
+        <source>Graphite</source>
+        <translation>Graphite</translation>
+    </message>
+</context>
+<context>
     <name>Accounts</name>
     <message>
         <location filename="../qml/Vinx/System/accounts.cpp" line="87" />
@@ -240,6 +283,395 @@
         <location filename="../qml/Vinx/Shell/CalendarPanel.qml" line="114" />
         <source>Effacer</source>
         <translation>Clear</translation>
+    </message>
+</context>
+<context>
+    <name>Catalog</name>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="7" />
+        <source>Bureautique</source>
+        <translation>Office</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="8" />
+        <source>Traitement de texte compatible Word</source>
+        <translation>Word-compatible word processor</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="9" />
+        <source>Tableur compatible Excel</source>
+        <translation>Excel-compatible spreadsheet</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="10" />
+        <source>Présentations compatibles PowerPoint</source>
+        <translation>PowerPoint-compatible presentations</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="11" />
+        <source>Lire et annoter des PDF</source>
+        <translation>Read and annotate PDFs</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="12" />
+        <source>Numériseur</source>
+        <translation>Scanner</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="12" />
+        <source>Numériser des documents</source>
+        <translation>Scan documents</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="13" />
+        <source>Notes manuscrites et annotation de PDF</source>
+        <translation>Handwritten notes and PDF annotation</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="14" />
+        <source>Bibliothèque de livres numériques</source>
+        <translation>E-book library</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="15" />
+        <source>Comptabilité personnelle</source>
+        <translation>Personal accounting</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="16" />
+        <source>Mise en page et publication</source>
+        <translation>Desktop publishing</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="17" />
+        <source>Suite compatible Microsoft Office</source>
+        <translation>Microsoft Office-compatible suite</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="18" />
+        <source>Gestion de références</source>
+        <translation>Reference management</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="19" />
+        <source>Prise de notes reliées</source>
+        <translation>Linked note-taking</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="20" />
+        <source>Internet</source>
+        <translation>Internet</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="21" />
+        <location filename="../apps/store/Catalog.js" line="22" />
+        <source>Navigateur web</source>
+        <translation>Web browser</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="23" />
+        <source>Courrier électronique et agenda</source>
+        <translation>Email and calendar</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="24" />
+        <source>Transfert de fichiers (FTP, SFTP)</source>
+        <translation>File transfer (FTP, SFTP)</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="25" />
+        <source>Téléchargements BitTorrent</source>
+        <translation>BitTorrent downloads</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="26" />
+        <source>Bureau à distance</source>
+        <translation>Remote desktop</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="27" />
+        <source>Messagerie chiffrée</source>
+        <translation>Encrypted messaging</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="28" />
+        <source>Communautés et vocal</source>
+        <translation>Communities and voice chat</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="29" />
+        <source>Visioconférence</source>
+        <translation>Video conferencing</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="30" />
+        <source>Graphisme et photo</source>
+        <translation>Graphics and photo</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="31" />
+        <source>Retouche photo et création graphique</source>
+        <translation>Photo editing and graphic design</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="32" />
+        <source>Dessin vectoriel</source>
+        <translation>Vector drawing</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="33" />
+        <source>Peinture numérique</source>
+        <translation>Digital painting</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="34" />
+        <source>Développement de photos RAW</source>
+        <translation>RAW photo development</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="35" />
+        <source>Gérer sa photothèque</source>
+        <translation>Manage your photo library</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="36" />
+        <source>Organiser ses photos</source>
+        <translation>Organize your photos</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="37" />
+        <source>Modélisation et animation 3D</source>
+        <translation>3D modeling and animation</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="38" />
+        <source>Audio et vidéo</source>
+        <translation>Audio and video</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="39" />
+        <source>Lecteur multimédia qui lit presque tout</source>
+        <translation>Media player that plays almost anything</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="40" />
+        <source>Enregistrer et monter du son</source>
+        <translation>Record and edit audio</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="41" />
+        <source>Montage vidéo</source>
+        <translation>Video editing</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="42" />
+        <source>Enregistrer l'écran et diffuser</source>
+        <translation>Record the screen and stream</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="43" />
+        <source>Convertir des vidéos</source>
+        <translation>Convert videos</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="44" />
+        <source>Lecteur de musique</source>
+        <translation>Music player</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="45" />
+        <source>Musique en ligne</source>
+        <translation>Online music</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="46" />
+        <source>Jeux</source>
+        <translation>Games</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="47" />
+        <source>Course de karts</source>
+        <translation>Kart racing</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="48" />
+        <source>Stratégie historique en temps réel</source>
+        <translation>Historical real-time strategy</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="49" />
+        <source>Jeux de cartes et solitaires</source>
+        <translation>Card games and solitaire</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="50" />
+        <source>Démineur</source>
+        <translation>Minesweeper</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="51" />
+        <source>Lanceur de jeux</source>
+        <translation>Game launcher</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="52" />
+        <source>Plateforme de jeux</source>
+        <translation>Gaming platform</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="53" />
+        <source>Éducation</source>
+        <translation>Education</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="54" />
+        <source>Activités éducatives pour les enfants</source>
+        <translation>Educational activities for children</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="55" />
+        <source>Planétarium</source>
+        <translation>Planetarium</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="56" />
+        <source>Globe et cartes</source>
+        <translation>Globe and maps</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="57" />
+        <source>Tableau périodique des éléments</source>
+        <translation>Periodic table of the elements</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="58" />
+        <source>Cartes mémoire pour apprendre</source>
+        <translation>Flashcards for learning</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="59" />
+        <source>Dessin pour les enfants</source>
+        <translation>Drawing for children</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="60" />
+        <source>Apprendre la géographie</source>
+        <translation>Learn geography</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="61" />
+        <source>Développement</source>
+        <translation>Development</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="62" />
+        <source>Éditeur de code léger</source>
+        <translation>Lightweight code editor</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="63" />
+        <source>Comparer des fichiers et des dossiers</source>
+        <translation>Compare files and folders</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="64" />
+        <source>Client Git graphique</source>
+        <translation>Graphical Git client</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="65" />
+        <source>Éditeur de code</source>
+        <translation>Code editor</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="66" />
+        <source>Conteneurs</source>
+        <translation>Containers</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="67" />
+        <source>Outils système</source>
+        <translation>System tools</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="68" />
+        <source>Coffre-fort de mots de passe</source>
+        <translation>Password vault</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="69" />
+        <source>Gérer les partitions des disques</source>
+        <translation>Manage disk partitions</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="70" />
+        <source>Disques</source>
+        <translation>Disks</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="70" />
+        <source>Disques, clés USB et images</source>
+        <translation>Disks, USB drives and images</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="71" />
+        <source>Voir ce qui occupe le disque</source>
+        <translation>See what is using disk space</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="72" />
+        <source>Libérer de l'espace</source>
+        <translation>Free up space</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="73" />
+        <source>Chiffrement et signatures</source>
+        <translation>Encryption and signatures</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="74" />
+        <source>Permissions des applications Flathub</source>
+        <translation>Flathub app permissions</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="79" />
+        <source>Retouchez vos photos comme un pro, librement.</source>
+        <translation>Edit your photos like a pro, freely.</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="80" />
+        <source>Toutes vos vidéos et votre musique, sans rien installer d'autre.</source>
+        <translation>All your videos and music, with nothing else to install.</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="81" />
+        <source>Logos, affiches et schémas en dessin vectoriel.</source>
+        <translation>Logos, posters and diagrams in vector drawing.</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="82" />
+        <source>Tous vos mots de passe dans un coffre-fort chiffré.</source>
+        <translation>All your passwords in an encrypted vault.</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="83" />
+        <source>Enregistrez votre écran pour un tutoriel ou une réunion.</source>
+        <translation>Record your screen for a tutorial or a meeting.</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="84" />
+        <source>Le ciel de ce soir, depuis votre bureau.</source>
+        <translation>Tonight's sky, from your desk.</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="85" />
+        <source>Annotez vos PDF et prenez des notes à la main.</source>
+        <translation>Annotate your PDFs and take handwritten notes.</translation>
+    </message>
+    <message>
+        <location filename="../apps/store/Catalog.js" line="86" />
+        <source>Montez vos vidéos de vacances en quelques clics.</source>
+        <translation>Edit your holiday videos in a few clicks.</translation>
     </message>
 </context>
 <context>
@@ -805,37 +1237,37 @@
         <translation>Size of text and items</translation>
     </message>
     <message>
-        <location filename="../apps/settings/DisplaysPage.qml" line="205" />
+        <location filename="../apps/settings/DisplaysPage.qml" line="211" />
         <source>Fréquence de rafraîchissement</source>
         <translation>Refresh rate</translation>
     </message>
     <message>
-        <location filename="../apps/settings/DisplaysPage.qml" line="206" />
+        <location filename="../apps/settings/DisplaysPage.qml" line="212" />
         <source>Une fréquence plus élevée rend les mouvements plus fluides.</source>
         <translation>A higher rate makes motion smoother.</translation>
     </message>
     <message>
-        <location filename="../apps/settings/DisplaysPage.qml" line="216" />
+        <location filename="../apps/settings/DisplaysPage.qml" line="222" />
         <source>Orientation</source>
         <translation>Orientation</translation>
     </message>
     <message>
-        <location filename="../apps/settings/DisplaysPage.qml" line="220" />
+        <location filename="../apps/settings/DisplaysPage.qml" line="226" />
         <source>Normale</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../apps/settings/DisplaysPage.qml" line="220" />
+        <location filename="../apps/settings/DisplaysPage.qml" line="226" />
         <source>Gauche</source>
         <translation>Left</translation>
     </message>
     <message>
-        <location filename="../apps/settings/DisplaysPage.qml" line="220" />
+        <location filename="../apps/settings/DisplaysPage.qml" line="226" />
         <source>Droite</source>
         <translation>Right</translation>
     </message>
     <message>
-        <location filename="../apps/settings/DisplaysPage.qml" line="220" />
+        <location filename="../apps/settings/DisplaysPage.qml" line="226" />
         <source>Retournée</source>
         <translation>Upside down</translation>
     </message>
@@ -1492,153 +1924,153 @@
 <context>
     <name>Main</name>
     <message>
-        <location filename="../apps/files/Main.qml" line="106" />
-        <location filename="../apps/files/Main.qml" line="386" />
+        <location filename="../apps/files/Main.qml" line="113" />
+        <location filename="../apps/files/Main.qml" line="393" />
         <source>Nouveau dossier</source>
         <translation>New folder</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="166" />
+        <location filename="../apps/files/Main.qml" line="173" />
         <source>Précédent (Alt+←)</source>
         <translation>Back (Alt+←)</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="167" />
+        <location filename="../apps/files/Main.qml" line="174" />
         <source>Suivant (Alt+→)</source>
         <translation>Forward (Alt+→)</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="191" />
+        <location filename="../apps/files/Main.qml" line="198" />
         <source>Filtrer ce dossier</source>
         <translation>Filter this folder</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="195" />
+        <location filename="../apps/files/Main.qml" line="202" />
         <source>Filtrer</source>
         <translation>Filter</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="200" />
+        <location filename="../apps/files/Main.qml" line="207" />
         <source>Icônes</source>
         <translation>Icons</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="200" />
+        <location filename="../apps/files/Main.qml" line="207" />
         <source>Liste</source>
         <translation>List</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="204" />
+        <location filename="../apps/files/Main.qml" line="211" />
         <source>Nouveau dossier (Ctrl+Maj+N)</source>
         <translation>New folder (Ctrl+Shift+N)</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="241" />
+        <location filename="../apps/files/Main.qml" line="248" />
         <source>Fermer l'onglet (Ctrl+W)</source>
         <translation>Close tab (Ctrl+W)</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="259" />
+        <location filename="../apps/files/Main.qml" line="266" />
         <source>Les éléments de la corbeille peuvent être restaurés depuis leur menu.</source>
         <translation>Items in the trash can be restored from their menu.</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="260" />
-        <location filename="../apps/files/Main.qml" line="375" />
+        <location filename="../apps/files/Main.qml" line="267" />
+        <location filename="../apps/files/Main.qml" line="382" />
         <source>Vider la corbeille</source>
         <translation>Empty trash</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="306" />
+        <location filename="../apps/files/Main.qml" line="313" />
         <source>Aucun élément ne correspond à « %1 ».</source>
         <translation>Nothing matches "%1".</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="307" />
+        <location filename="../apps/files/Main.qml" line="314" />
         <source>La corbeille est vide.</source>
         <translation>The trash is empty.</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="307" />
+        <location filename="../apps/files/Main.qml" line="314" />
         <source>Ce dossier est vide.</source>
         <translation>This folder is empty.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../apps/files/Main.qml" line="337" />
+        <location filename="../apps/files/Main.qml" line="344" />
         <source>%n élément(s)</source>
         <translation><numerusform>%n item</numerusform><numerusform>%n items</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../apps/files/Main.qml" line="339" />
+        <location filename="../apps/files/Main.qml" line="346" />
         <source>%n sélectionné(s)</source>
         <translation><numerusform>%n selected</numerusform><numerusform>%n selected</numerusform></translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="374" />
+        <location filename="../apps/files/Main.qml" line="381" />
         <source>Restaurer</source>
         <translation>Restore</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="374" />
+        <location filename="../apps/files/Main.qml" line="381" />
         <source>Supprimer définitivement</source>
         <translation>Delete permanently</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="377" />
+        <location filename="../apps/files/Main.qml" line="384" />
         <source>Ouvrir</source>
         <translation>Open</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="377" />
+        <location filename="../apps/files/Main.qml" line="384" />
         <source>Entrée</source>
         <translation>Enter</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="378" />
+        <location filename="../apps/files/Main.qml" line="385" />
         <source>Ouvrir dans un nouvel onglet</source>
         <translation>Open in a new tab</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="380" />
+        <location filename="../apps/files/Main.qml" line="387" />
         <source>Couper</source>
         <translation>Cut</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="381" />
+        <location filename="../apps/files/Main.qml" line="388" />
         <source>Copier</source>
         <translation>Copy</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="382" />
-        <location filename="../apps/files/Main.qml" line="387" />
+        <location filename="../apps/files/Main.qml" line="389" />
+        <location filename="../apps/files/Main.qml" line="394" />
         <source>Coller</source>
         <translation>Paste</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="384" />
+        <location filename="../apps/files/Main.qml" line="391" />
         <source>Renommer…</source>
         <translation>Rename…</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="385" />
+        <location filename="../apps/files/Main.qml" line="392" />
         <location filename="../apps/viewer/Main.qml" line="265" />
         <source>Mettre à la corbeille</source>
         <translation>Move to trash</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="385" />
+        <location filename="../apps/files/Main.qml" line="392" />
         <location filename="../apps/monitor/Main.qml" line="396" />
         <location filename="../apps/viewer/Main.qml" line="265" />
         <source>Suppr</source>
         <translation>Del</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="389" />
+        <location filename="../apps/files/Main.qml" line="396" />
         <source>Afficher les fichiers cachés</source>
         <translation>Show hidden files</translation>
     </message>
     <message>
-        <location filename="../apps/files/Main.qml" line="390" />
+        <location filename="../apps/files/Main.qml" line="397" />
         <source>Ouvrir un terminal ici</source>
         <translation>Open a terminal here</translation>
     </message>
@@ -1773,7 +2205,7 @@
     </message>
     <message>
         <location filename="../apps/settings/Main.qml" line="57" />
-        <location filename="../apps/store/Main.qml" line="69" />
+        <location filename="../apps/store/Main.qml" line="70" />
         <location filename="../apps/updates/Main.qml" line="14" />
         <source>Mises à jour</source>
         <translation>Updates</translation>
@@ -1886,7 +2318,7 @@
     <message>
         <location filename="../apps/settings/Main.qml" line="247" />
         <location filename="../apps/settings/Main.qml" line="876" />
-        <location filename="../apps/store/Main.qml" line="193" />
+        <location filename="../apps/store/Main.qml" line="194" />
         <source>Installer</source>
         <translation>Install</translation>
     </message>
@@ -2827,94 +3259,94 @@
     </message>
     <message>
         <location filename="../apps/store/Main.qml" line="15" />
-        <location filename="../apps/store/Main.qml" line="63" />
+        <location filename="../apps/store/Main.qml" line="64" />
         <source>Store</source>
         <translation>Store</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="66" />
+        <location filename="../apps/store/Main.qml" line="67" />
         <source>À la une</source>
         <translation>Featured</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="67" />
+        <location filename="../apps/store/Main.qml" line="68" />
         <source>Rechercher</source>
         <translation>Search</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="68" />
-        <location filename="../apps/store/Main.qml" line="331" />
+        <location filename="../apps/store/Main.qml" line="69" />
+        <location filename="../apps/store/Main.qml" line="334" />
         <source>Installées</source>
         <translation>Installed</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="70" />
+        <location filename="../apps/store/Main.qml" line="71" />
         <source>Catégories</source>
         <translation>Categories</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="150" />
+        <location filename="../apps/store/Main.qml" line="151" />
         <source>Rechercher un logiciel</source>
         <translation>Search for software</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="152" />
+        <location filename="../apps/store/Main.qml" line="153" />
         <source>Rechercher parmi les logiciels Debian et Flathub…</source>
         <translation>Search Debian and Flathub software…</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="186" />
+        <location filename="../apps/store/Main.qml" line="187" />
         <source>SÉLECTION VINX</source>
         <translation>VINX PICK</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="193" />
+        <location filename="../apps/store/Main.qml" line="194" />
         <source>Installé</source>
         <translation>Installed</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="227" />
+        <location filename="../apps/store/Main.qml" line="228" />
         <source>Populaires</source>
         <translation>Popular</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="242" />
+        <location filename="../apps/store/Main.qml" line="243" />
         <source>Tout voir</source>
         <translation>See all</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="258" />
+        <location filename="../apps/store/Main.qml" line="259" />
         <source>Chargement du catalogue…</source>
         <translation>Loading the catalog…</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="301" />
+        <location filename="../apps/store/Main.qml" line="303" />
         <source>Inclure les outils techniques (sans interface graphique)</source>
         <translation>Include technical tools (without a graphical interface)</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="306" />
+        <location filename="../apps/store/Main.qml" line="308" />
         <source>Tapez le nom d'un logiciel ou ce que vous voulez faire (« photo », « musique »…).</source>
         <translation>Type the name of an app or what you want to do ("photo", "music"…).</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="307" />
+        <location filename="../apps/store/Main.qml" line="309" />
         <location filename="../apps/updates/Main.qml" line="134" />
         <source>Recherche…</source>
         <translation>Searching…</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="307" />
+        <location filename="../apps/store/Main.qml" line="309" />
         <source>Aucun résultat.</source>
         <translation>No results.</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="327" />
+        <location filename="../apps/store/Main.qml" line="330" />
         <source>Version %1</source>
         <translation>Version %1</translation>
     </message>
     <message>
-        <location filename="../apps/store/Main.qml" line="340" />
+        <location filename="../apps/store/Main.qml" line="343" />
         <source>Aucun logiciel du Store installé pour l'instant.</source>
         <translation>No software installed from the Store yet.</translation>
     </message>

@@ -142,3 +142,8 @@ target_include_directories(tst_viewer PRIVATE "${PROJECT_SOURCE_DIR}/apps/viewer
 target_link_libraries(tst_viewer PRIVATE Qt6::Test Qt6::Gui Qt6::Quick Qt6::DBus)
 add_test(NAME viewer COMMAND tst_viewer)
 set_tests_properties(viewer PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;LANG=C.UTF-8")
+
+# Noms des couleurs d'accent : common/accentnames.h (déclarés pour la traduction) suit tokens.toml.
+add_test(NAME accent-names
+    COMMAND "${Python3_EXECUTABLE}" -c "import re,sys,tomllib; t=tomllib.load(open(sys.argv[1],'rb')); h=open(sys.argv[2],encoding='utf-8').read(); m=[a['name'] for a in t['accents'].values() if '\"'+a['name']+'\"' not in h]; print('manquants :', m) if m else None; sys.exit(1 if m else 0)"
+            "${VINX_BRANDING_DIR}/tokens.toml" "${PROJECT_SOURCE_DIR}/common/accentnames.h")

@@ -46,7 +46,8 @@ def main() -> None:
     for key, a in t["accents"].items():
         for c in ("fill", "ink", "text"):
             qml_color(a[c])  # validation
-        out.append(f'        {{ id: "{key}", name: "{a["name"]}", fill: "{a["fill"]}", ink: "{a["ink"]}", text: "{a["text"]}" }},')
+        # Nom traduit (contexte « Accent ») : les textes source sont déclarés dans common/accentnames.h.
+        out.append(f'        {{ id: "{key}", name: qsTranslate("Accent", "{a["name"]}"), fill: "{a["fill"]}", ink: "{a["ink"]}", text: "{a["text"]}" }},')
     out += [
         "    ]",
         "    readonly property var accentEntry: accents.find(a => a.id === accentId) || accents[0]",
