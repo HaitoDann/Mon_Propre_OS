@@ -3863,6 +3863,47 @@
         <source>Aucune messagerie n'est configurée.</source>
         <translation>No email application is set up.</translation>
     </message>
+    <message>
+        <location filename="../sddm/vinx/Main.qml" line="54" />
+        <source>Mot de passe incorrect.</source>
+        <translation>Wrong password.</translation>
+    </message>
+    <message>
+        <location filename="../sddm/vinx/Main.qml" line="165" />
+        <location filename="../sddm/vinx/Main.qml" line="169" />
+        <source>Mot de passe</source>
+        <translation>Password</translation>
+    </message>
+    <message>
+        <location filename="../sddm/vinx/Main.qml" line="179" />
+        <source>Se connecter</source>
+        <translation>Connect</translation>
+    </message>
+    <message>
+        <location filename="../sddm/vinx/Main.qml" line="185" />
+        <source>Majuscules activées</source>
+        <translation>Caps Lock is on</translation>
+    </message>
+    <message>
+        <location filename="../sddm/vinx/Main.qml" line="196" />
+        <source>Session :</source>
+        <translation>Session:</translation>
+    </message>
+    <message>
+        <location filename="../sddm/vinx/Main.qml" line="211" />
+        <source>Veille</source>
+        <translation>Sleep</translation>
+    </message>
+    <message>
+        <location filename="../sddm/vinx/Main.qml" line="212" />
+        <source>Redémarrer</source>
+        <translation>Restart</translation>
+    </message>
+    <message>
+        <location filename="../sddm/vinx/Main.qml" line="213" />
+        <source>Éteindre</source>
+        <translation>Shut down</translation>
+    </message>
 </context>
 <context>
     <name>NetConfig</name>

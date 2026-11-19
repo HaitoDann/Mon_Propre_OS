@@ -9,6 +9,8 @@ if(TARGET Qt6::lrelease)
         COMMENT "Compilation de la traduction anglaise")
     add_custom_target(vinx-translations ALL DEPENDS "${VINX_QM}")
     install(FILES "${VINX_QM}" DESTINATION "${CMAKE_INSTALL_DATADIR}/vinx/translations")
+    # Écran de connexion : SDDM charge <langue>.qm du dossier « translations » du thème.
+    install(FILES "${VINX_QM}" DESTINATION "${CMAKE_INSTALL_DATADIR}/sddm/themes/vinx/translations" RENAME en.qm)
 else()
     message(WARNING "lrelease introuvable (qt6-l10n-tools) : traduction anglaise non construite")
 endif()
