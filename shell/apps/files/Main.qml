@@ -96,8 +96,15 @@ Window {
     }
     function paste() { if (FileOps.canPaste) conflict.ask(FileOps.clipboardUrls(), folder.url, FileOps.clipboardIsCut()) }
     // Glisser-déposer : déplacement par défaut (même disque local), copie avec Ctrl ou vers ailleurs.
+    // Dépôt : on ignore les éléments déjà dans le dossier de destination (lâcher un fichier là où il
+    // est créait une copie « nom (1) ») et un dossier déposé dans lui-même ou un de ses sous-dossiers.
+    function parentOf(u) { const s = u.toString().replace(/\/+$/, ""); return s.slice(0, s.lastIndexOf("/")) }
     function dropUrls(urls, dest, copyRequested) {
-        const list = urls.filter(u => u.toString() !== dest.toString())
+        const d = dest.toString().replace(/\/+$/, "")
+        const list = urls.filter(u => {
+            const s = u.toString().replace(/\/+$/, "")
+            return s !== d && parentOf(s) !== d && !d.startsWith(s + "/")
+        })
         if (!list.length || win.inTrash) return
         const sameLocal = dest.toString().startsWith("file:") && list.every(u => u.toString().startsWith("file:"))
         conflict.ask(list, dest, sameLocal && !copyRequested)
