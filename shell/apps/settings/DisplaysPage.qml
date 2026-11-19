@@ -181,9 +181,15 @@ Column {
             visible: page.current && page.current.enabled
             title: qsTr("Taille du texte et des éléments")
             SegmentedControl {
-                readonly property var scales: [1, 1.25, 1.5, 2]
-                model: ["100 %", "125 %", "150 %", "200 %"]
-                currentIndex: page.current ? Math.max(0, scales.indexOf(page.current.scale || 1)) : 0
+                // Échelles courantes, plus l'échelle actuelle si elle n'en fait pas partie (ex. 115 %
+                // choisie par KDE à l'installation) : sinon « 100 % » paraissait sélectionné à tort.
+                readonly property real currentScale: page.current ? Math.round((page.current.scale || 1) * 100) / 100 : 1
+                readonly property var scales: {
+                    const base = [1, 1.25, 1.5, 2]
+                    return base.some(v => Math.abs(v - currentScale) < 0.005) ? base : base.concat([currentScale]).sort((a, b) => a - b)
+                }
+                model: scales.map(v => Math.round(v * 100) + " %")
+                currentIndex: Math.max(0, scales.findIndex(v => Math.abs(v - currentScale) < 0.005))
                 onActivated: (i) => page.apply(["output." + page.current.name + ".scale." + scales[i]])
             }
         }
