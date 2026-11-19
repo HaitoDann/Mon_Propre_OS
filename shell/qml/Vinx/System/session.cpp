@@ -83,7 +83,12 @@ QVariantList Session::wallpapers() const
 {
     QVariantList out;
     const QDir root(QStringLiteral("/usr/share/wallpapers"));
+    // Fonds retirés (violets et biseau, ADR 0040) : encore présents sur les systèmes installés
+    // avant leur retrait de l'ISO, mais plus proposés.
+    static const QStringList retired = {QStringLiteral("VinX"), QStringLiteral("VinX-Minimal"), QStringLiteral("VinX-Biseau")};
     for (const QString &pkg : root.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
+        if (retired.contains(pkg))
+            continue;
         const QDir images(root.filePath(pkg + QStringLiteral("/contents/images")));
         QStringList files = images.entryList({QStringLiteral("*.png"), QStringLiteral("*.jpg"), QStringLiteral("*.jpeg")}, QDir::Files);
         if (files.isEmpty())

@@ -8,6 +8,8 @@ Rectangle {
     id: bg
     readonly property string source: { Preferences.revision; return Preferences.value("desktop/wallpaper",
         "/usr/share/wallpapers/VinX-Logo/contents/images/3840x2160.png") }
+    // Fond retiré (violets et biseau, ADR 0040) encore choisi : retour au fond par défaut « VinX Logo ».
+    Component.onCompleted: if (/\/wallpapers\/(VinX|VinX-Minimal|VinX-Biseau)\//.test(source)) Preferences.setValue("desktop/wallpaper", "/usr/share/wallpapers/VinX-Logo/contents/images/3840x2160.png")
     // Widgets et menu contextuel du bureau.
     property bool interactive: true
     gradient: Gradient {
