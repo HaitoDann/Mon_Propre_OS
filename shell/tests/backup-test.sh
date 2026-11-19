@@ -11,6 +11,11 @@ printf '#!/bin/sh\ncase "$1" in DOCUMENTS) echo "$HOME/Documents";; PICTURES) ec
 printf '#!/bin/sh\nexit 0\n' > "$T/bin/busctl"
 chmod +x "$T/bin/"*
 export PATH="$T/bin:$PATH"
+# Aucun disque choisi : le minuteur (--if-due) sort sans erreur, une sauvegarde manuelle échoue.
+printf '[backup]\nauto=true\n' > "$XDG_CONFIG_HOME/vinx/shell.ini"
+sh "$SCRIPT" run --if-due
+if sh "$SCRIPT" run 2>/dev/null; then echo "run sans disque aurait dû échouer" >&2; exit 1; fi
+
 printf '[backup]\ndestination=%s\nfolders=DOCUMENTS PICTURES\nauto=true\n' "$T/media/Disque" > "$XDG_CONFIG_HOME/vinx/shell.ini"
 echo "budget" > "$HOME/Documents/budget.txt"
 echo "photo" > "$HOME/Images/photo.jpg"

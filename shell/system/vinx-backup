@@ -57,7 +57,12 @@ status)
 	printf ']}\n'
 	;;
 run)
-	[ -n "$DEST" ] || { echo "Aucun disque de sauvegarde choisi." >&2; exit 2; }
+	# Minuteur (--if-due) sans disque choisi : rien à faire, ce n'est pas une erreur (sinon le
+	# service échoue toutes les heures et le Dépannage signale un faux problème).
+	if [ -z "$DEST" ]; then
+		[ "${2:-}" = --if-due ] && exit 0
+		echo "Aucun disque de sauvegarde choisi." >&2; exit 2
+	fi
 	if [ ! -d "$DEST" ]; then
 		[ "${2:-}" = --if-due ] && exit 0
 		echo "Le disque de sauvegarde n'est pas branché." >&2; exit 3
