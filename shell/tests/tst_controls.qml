@@ -108,5 +108,24 @@ Item {
             mouseClick(menu, 5, 390)
             verify(!menu.open)
         }
+
+        // Clavier : ↓ saute le séparateur, ↑ boucle, Entrée choisit, Échap ferme.
+        function test_menu_keyboard() {
+            menu.last = undefined
+            menu.show(anchorBtn)
+            tryCompare(menu, "visible", true)
+            compare(menu.current, -1)
+            keyClick(Qt.Key_Down); compare(menu.current, 0)
+            keyClick(Qt.Key_Down); compare(menu.current, 2)     // séparateur sauté
+            keyClick(Qt.Key_Down); compare(menu.current, 0)     // retour au début
+            keyClick(Qt.Key_Up);   compare(menu.current, 2)
+            keyClick(Qt.Key_Return)
+            compare(menu.last, "Second")
+            verify(!menu.open)
+            menu.show(anchorBtn)
+            compare(menu.current, -1)
+            keyClick(Qt.Key_Escape)
+            verify(!menu.open)
+        }
     }
 }

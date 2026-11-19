@@ -12,6 +12,9 @@ Item {
     property var checked: undefined       // undefined = pas de case ; true/false sinon
     property bool separator: false
     property bool header: false
+    // Entrée sélectionnée au clavier (Menu.current) ; survol à la souris : hovered.
+    property bool current: false
+    readonly property alias hovered: mouse.containsMouse
     signal triggered()
 
     readonly property bool interactive: enabled && !separator && !header
@@ -28,7 +31,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Theme.radiusXs
-        color: root.interactive && mouse.containsMouse ? Theme.surfaceActive : "transparent"
+        color: root.interactive && (mouse.containsMouse || root.current) ? Theme.surfaceActive : "transparent"
     }
 
     Row {
