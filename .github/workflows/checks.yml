@@ -14,6 +14,7 @@ jobs:
       - name: JavaScript des outils et de la disposition Plasma
         run: |
           for f in shell/tools/*.js distro/live/config/includes.chroot/usr/share/plasma/look-and-feel/*/contents/layouts/*.js; do
+            [ -e "$f" ] || continue   # motif sans fichier (plus de .js dans shell/tools)
             node --check "$f"
           done
       - name: Générateur de thème
