@@ -1,3 +1,14 @@
+vinx-shell (0.26.12) trixie; urgency=medium
+
+  * Traduction : écran de connexion en anglais (traduction installée dans le
+    thème SDDM) ; diaporama de l'installateur bilingue et clair.
+  * Qualité : test de fumée de toutes les pages des Paramètres et des
+    applications (aucune erreur QML tolérée) ; vinx-admin refuse les
+    arguments sur plusieurs lignes (test des refus) ; shellcheck étendu aux
+    scripts du shell en CI ; raccourci « nouvel onglet » de Fichiers.
+
+ -- VinX OS <vinx@localhost>  Thu, 19 Nov 2026 22:00:00 +0000
+
 vinx-shell (0.26.11) trixie; urgency=medium
 
   * Mises à jour : « Tout mettre à jour » et la mise à jour automatique des

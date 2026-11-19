@@ -137,7 +137,7 @@ Window {
     Shortcut { sequence: "Ctrl+H"; onActivated: Preferences.setValue("files/showHidden", !folder.showHidden) }
     Shortcut { sequence: "Ctrl+Shift+N"; enabled: !win.inTrash; onActivated: win.newFolder() }
     Shortcut { sequence: "F5"; onActivated: folder.refresh() }
-    Shortcut { sequence: StandardKey.AddTab; onActivated: win.newTab() }
+    Shortcut { sequences: [StandardKey.AddTab]; onActivated: win.newTab() }
     Shortcut { sequences: [StandardKey.Close]; onActivated: win.closeTab(win.tab) }
     Shortcut { sequence: "Ctrl+Tab"; onActivated: win.switchTab((win.tab + 1) % win.tabs.length) }
     Shortcut { sequence: "Ctrl+Shift+Tab"; onActivated: win.switchTab((win.tab + win.tabs.length - 1) % win.tabs.length) }

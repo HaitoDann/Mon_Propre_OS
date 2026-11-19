@@ -7,11 +7,15 @@
 #   install PAQUET…           installe des pilotes ; active les dépôts « non-free » si nécessaire
 #   journal                   avertissements et erreurs du journal système (assistant de dépannage)
 set -eu
-[ "$(id -u)" = 0 ] || { echo "À lancer via pkexec." >&2; exit 1; }
+[ "$(id -u)" = 0 ] || [ "${VINX_ADMIN_CHECK:-0}" = 1 ] || { echo "À lancer via pkexec." >&2; exit 1; }
 
-valid_queue() { printf '%s' "$1" | grep -Eq '^[A-Za-z0-9_][A-Za-z0-9_-]{0,126}$'; }
-valid_uri() { printf '%s' "$1" | grep -Eq '^(ipps?|dnssd)://[]A-Za-z0-9._~%/:@[-]+$'; }
-valid_pkg() { printf '%s' "$1" | grep -Eq '^[a-z0-9][a-z0-9+.-]{1,62}$'; }
+# Une seule ligne : grep valide ligne par ligne, « nom-valide\nautre chose » passerait sinon.
+NL='
+'
+one_line() { case "$1" in *"$NL"*) return 1 ;; esac; }
+valid_queue() { one_line "$1" && printf '%s' "$1" | grep -Eq '^[A-Za-z0-9_][A-Za-z0-9_-]{0,126}$'; }
+valid_uri() { one_line "$1" && printf '%s' "$1" | grep -Eq '^(ipps?|dnssd)://[]A-Za-z0-9._~%/:@[-]+$'; }
+valid_pkg() { one_line "$1" && printf '%s' "$1" | grep -Eq '^[a-z0-9][a-z0-9+.-]{1,62}$'; }
 
 # Active la section non-free (pilote NVIDIA…) dans les sources Debian.
 enable_nonfree() {
@@ -27,18 +31,21 @@ enable_nonfree() {
 case "${1:-}" in
 printer-add)
 	if ! { [ $# -eq 3 ] && valid_queue "$2" && valid_uri "$3"; }; then echo "Arguments invalides." >&2; exit 2; fi
+	[ "${VINX_ADMIN_CHECK:-0}" = 1 ] && exit 0
 	lpadmin -p "$2" -v "$3" -m everywhere -E
 	cupsenable "$2" || true
 	cupsaccept "$2" || true
 	;;
 printer-remove)
 	if ! { [ $# -eq 2 ] && valid_queue "$2"; }; then echo "Arguments invalides." >&2; exit 2; fi
+	[ "${VINX_ADMIN_CHECK:-0}" = 1 ] && exit 0
 	lpadmin -x "$2"
 	;;
 install)
 	shift
 	[ $# -ge 1 ] || { echo "Aucun paquet." >&2; exit 2; }
 	for p in "$@"; do valid_pkg "$p" || { echo "Nom de paquet invalide : $p" >&2; exit 2; }; done
+	[ "${VINX_ADMIN_CHECK:-0}" = 1 ] && exit 0
 	case " $* " in *" nvidia-driver "*) enable_nonfree ;; esac
 	apt-get update
 	# Les en-têtes du noyau sont nécessaires aux pilotes compilés (NVIDIA, DKMS).

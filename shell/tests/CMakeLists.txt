@@ -155,3 +155,10 @@ add_test(NAME installed-tools
 
 # Contrastes WCAG AA de tokens.toml, 8 accents, clair et sombre (docs/DESIGN.md § 2).
 add_test(NAME contrast COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/contrast.py" "${VINX_BRANDING_DIR}/tokens.toml")
+
+# Fumée : chaque page des Paramètres et chaque application s'ouvre sans erreur QML.
+add_test(NAME apps-smoke COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/apps-smoke.sh" "${PROJECT_BINARY_DIR}")
+set_tests_properties(apps-smoke PROPERTIES TIMEOUT 400)
+
+# vinx-admin (administrateur) : arguments douteux refusés (option, plusieurs lignes, URI non IPP…).
+add_test(NAME admin COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/admin-test.sh" "${PROJECT_SOURCE_DIR}/system/vinx-admin")

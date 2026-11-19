@@ -10,7 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Scripts shell (shellcheck)
-        run: shellcheck -S warning distro/*.sh distro/scripts/*.sh distro/live/auto/* distro/live/config/hooks/normal/*
+        run: |
+          shellcheck -S warning distro/*.sh distro/scripts/*.sh distro/live/auto/* distro/live/config/hooks/normal/*
+          # Scripts du shell (outils administrateur, sauvegarde, session, tests) : tous en sh POSIX.
+          shellcheck -S warning -s sh shell/system/vinx-admin shell/system/vinx-backup shell/system/vinx-dev \
+            shell/system/vinx-snapshots shell/system/vinx-update shell/system/vinx-i18n.sh shell/system/vinx-release.in \
+            shell/session/vinx-session shell/session/vinx-shell-autostart shell/session/vinx-shellctl shell/tests/*.sh
       - name: JavaScript des outils et de la disposition Plasma
         run: |
           for f in shell/tools/*.js distro/live/config/includes.chroot/usr/share/plasma/look-and-feel/*/contents/layouts/*.js; do
