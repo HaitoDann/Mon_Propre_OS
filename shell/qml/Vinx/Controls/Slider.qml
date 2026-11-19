@@ -8,9 +8,12 @@ Item {
     property real to: 1
     property real value: 0
     property real stepSize: (to - from) / 20
+    // snap : la valeur reste un multiple du pas, même à la souris (tailles en pixels…).
+    property bool snap: false
     signal moved(real value)
 
     function setValue(v) {
+        if (snap && stepSize > 0) v = from + Math.round((v - from) / stepSize) * stepSize
         const clamped = Math.max(from, Math.min(to, v))
         if (clamped !== value) { value = clamped; moved(value) }
     }

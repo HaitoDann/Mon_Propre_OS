@@ -125,7 +125,7 @@ Window {
                             Rectangle {
                                 width: 8; height: 8; radius: 4
                                 anchors.verticalCenter: parent.verticalCenter
-                                color: Updates.count > 0 ? Theme.warning : Theme.success
+                                color: Updates.checking || Updates.applying ? Theme.borderStrong : Updates.count > 0 ? Theme.warning : Theme.success
                             }
                             Label {
                                 objectName: "statusText"

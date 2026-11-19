@@ -1,5 +1,15 @@
 # Traduction anglaise (3/3).
 T = {
+"ou": "or",
+"Espace": "Space",
+"Maj": "Shift",
+"Échap": "Esc",
+"Impr. écran": "Print Screen",
+"Bureau virtuel précédent / suivant": "Previous / next virtual desktop",
+"Capture de tout l'écran": 'Full-screen screenshot',
+"Presse-papiers": "Clipboard",
+"1 point à vérifier": "1 item to check",
+"%1 points à vérifier": "%1 items to check",
 "Polices compatibles": "Compatible fonts",
 "Polices compatibles Microsoft Office": "Microsoft Office compatible fonts",
 "Populaires": "Popular",

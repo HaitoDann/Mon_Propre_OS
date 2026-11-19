@@ -62,7 +62,7 @@ inline const QList<DiagRule> &diagRules()
          QT_TRANSLATE_NOOP("Diag", "Le son rencontre des erreurs"),
          QT_TRANSLATE_NOOP("Diag", "Vérifiez la sortie audio choisie dans Paramètres → Son. Une déconnexion de la session relance le service du son."),
          "page:sound", QT_TRANSLATE_NOOP("Diag", "Ouvrir Son")},
-        {"service-failed", R"(Failed to start (.+?)\.?$)", 1,
+        {"service-failed", R"(Failed to start (?:\S+\.(?:service|mount|socket|timer) - )?(.+?)\.?$)", 1,
          QT_TRANSLATE_NOOP("Diag", "Un service n'a pas démarré : %1"),
          QT_TRANSLATE_NOOP("Diag", "Si une fonction manque, redémarrez l'ordinateur. Si le problème revient, installez les mises à jour."),
          "page:updates", QT_TRANSLATE_NOOP("Diag", "Ouvrir Mises à jour")},

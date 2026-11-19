@@ -57,7 +57,11 @@ Window {
         { id: "updates", title: qsTr("Mises à jour"), icon: "restart", section: qsTr("Système") },
         { id: "about", title: qsTr("À propos"), icon: "info", section: qsTr("Système") }
     ]
-    property string page: pages.some(p => p.id === startPage) ? startPage : "appearance"
+    // La page est choisie une fois la fenêtre construite (et non par liaison) : chaque page charge
+    // ses données quand elle devient visible (onVisibleChanged), y compris la page de départ (--page).
+    property string page: ""
+    function isPage(id) { return pages.some(p => p.id === id) }
+    Component.onCompleted: page = isPage(startPage) ? startPage : "appearance"
 
     // ---------- Barre latérale ----------
     Rectangle {
@@ -148,6 +152,7 @@ Window {
                     id: accentPicker
                     width: parent.width
                     spacing: Theme.space1
+                    topPadding: Theme.space3
                     bottomPadding: Theme.space4
                     readonly property string chosen: { const v = String(win.pref("appearance/accent", "")); return v === "" ? Theme.accents[0].id : v }
                     Repeater {
@@ -341,7 +346,7 @@ Window {
                     Slider {
                         id: sizeSlider
                         width: 220
-                        from: 40; to: 64; stepSize: 2
+                        from: 40; to: 64; stepSize: 2; snap: true
                         value: Number(win.pref("dock/iconSize", Theme.dockIcon))
                         onMoved: (v) => Preferences.setValue("dock/iconSize", Math.round(v))
                     }
@@ -847,27 +852,30 @@ Window {
                 }
                 Label { text: qsTr("ENTENDRE"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 40; verticalAlignment: Text.AlignBottom; bottomPadding: 4 }
                 SettingsRow {
+                    id: orcaRow
                     readonly property bool installed: Session.fileExists("/usr/bin/orca")
                     title: qsTr("Lecteur d'écran")
                     description: installed ? qsTr("Lit à voix haute ce qui est à l'écran (Orca). Démarre aussi à chaque ouverture de session.")
                                            : qsTr("Le lecteur d'écran Orca n'est pas installé.")
-                    Switch {
-                        visible: parent.parent.installed
-                        checked: win.on("accessibility/screenReader", false)
-                        onToggled: (c) => {
-                            Preferences.setValue("accessibility/screenReader", c)
-                            if (c) {
-                                Session.run("sh", ["-c", "mkdir -p \"$HOME/.config/autostart\" && printf '[Desktop Entry]\\nType=Application\\nName=Orca\\nExec=orca --replace\\nNoDisplay=true\\n' > \"$HOME/.config/autostart/orca.desktop\""])
-                                Session.launch("orca", ["--replace"])
-                            } else {
-                                Session.run("sh", ["-c", "rm -f \"$HOME/.config/autostart/orca.desktop\"; pkill -x orca || true"])
+                    Row {  // le bouton masqué ne doit pas décaler l'interrupteur
+                        Switch {
+                            visible: orcaRow.installed
+                            checked: win.on("accessibility/screenReader", false)
+                            onToggled: (c) => {
+                                Preferences.setValue("accessibility/screenReader", c)
+                                if (c) {
+                                    Session.run("sh", ["-c", "mkdir -p \"$HOME/.config/autostart\" && printf '[Desktop Entry]\\nType=Application\\nName=Orca\\nExec=orca --replace\\nNoDisplay=true\\n' > \"$HOME/.config/autostart/orca.desktop\""])
+                                    Session.launch("orca", ["--replace"])
+                                } else {
+                                    Session.run("sh", ["-c", "rm -f \"$HOME/.config/autostart/orca.desktop\"; pkill -x orca || true"])
+                                }
                             }
                         }
-                    }
-                    Button {
-                        visible: !parent.parent.installed
-                        text: qsTr("Installer"); variant: Button.Primary; enabled: !DebianPackages.busy
-                        onClicked: DebianPackages.install("orca", qsTr("Lecteur d'écran"))
+                        Button {
+                            visible: !orcaRow.installed
+                            text: qsTr("Installer"); variant: Button.Primary; enabled: !DebianPackages.busy
+                            onClicked: DebianPackages.install("orca", qsTr("Lecteur d'écran"))
+                        }
                     }
                 }
                 Label { text: qsTr("BOUGER"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 40; verticalAlignment: Text.AlignBottom; bottomPadding: 4 }
@@ -884,17 +892,21 @@ Window {
                 width: parent.width
                 Repeater {
                     model: [
-                        ["Méta", qsTr("Recherche")],
-                        ["Méta + Espace", qsTr("Recherche")],
-                        ["Méta + A", qsTr("Centre de contrôle")],
-                        ["Méta + N", qsTr("Calendrier et notifications")],
-                        ["Méta + L", qsTr("Verrouiller la session")],
-                        ["Méta + W", qsTr("Vue d'ensemble des fenêtres")],
-                        ["Méta + Tab", qsTr("Changer de fenêtre")],
-                        ["Méta + ← / →", qsTr("Placer la fenêtre à gauche / à droite")],
-                        ["Méta + ↑", qsTr("Agrandir la fenêtre")],
-                        ["Ctrl + Méta + ← / →", qsTr("Espace de travail précédent / suivant")],
-                        ["Échap", qsTr("Fermer le panneau ou le menu ouvert")]
+                        // Noms de touches traduits (« Méta », « Maj », « Échap »…) ; « ou » sépare deux raccourcis.
+                        [qsTr("Méta") + " " + qsTr("ou") + " " + qsTr("Méta") + " + " + qsTr("Espace"), qsTr("Recherche")],
+                        [qsTr("Méta") + " + A", qsTr("Centre de contrôle")],
+                        [qsTr("Méta") + " + N", qsTr("Calendrier et notifications")],
+                        [qsTr("Méta") + " + V", qsTr("Presse-papiers")],
+                        [qsTr("Méta") + " + L", qsTr("Verrouiller la session")],
+                        [qsTr("Méta") + " + W", qsTr("Vue d'ensemble des fenêtres")],
+                        [qsTr("Méta") + " + Tab", qsTr("Changer de fenêtre")],
+                        [qsTr("Méta") + " + ← / →", qsTr("Placer la fenêtre à gauche / à droite")],
+                        [qsTr("Méta") + " + ↑", qsTr("Agrandir la fenêtre")],
+                        ["Ctrl + " + qsTr("Méta") + " + ← / →", qsTr("Bureau virtuel précédent / suivant")],
+                        [qsTr("Méta") + " + " + qsTr("Maj") + " + S", qsTr("Capture d'écran")],
+                        [qsTr("Impr. écran"), qsTr("Capture de tout l'écran")],
+                        ["Ctrl + " + qsTr("Échap"), qsTr("Moniteur système")],
+                        [qsTr("Échap"), qsTr("Fermer le panneau ou le menu ouvert")]
                     ]
                     delegate: SettingsRow {
                         required property var modelData

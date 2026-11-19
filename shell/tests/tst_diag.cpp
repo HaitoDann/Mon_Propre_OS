@@ -30,7 +30,8 @@ private Q_SLOTS:
         QCOMPARE(printer.value("count").toInt(), 2);
         QCOMPARE(printer.value("action").toString(), QStringLiteral("page:printers"));
         QVERIFY(d[ids.indexOf("firmware-missing")].toMap().value("title").toString().contains("iwlwifi-so-a0-gf-a0-86.ucode"));
-        QVERIFY(d[ids.indexOf("service-failed")].toMap().value("title").toString().contains("bluetooth.service - Bluetooth service"));
+        QVERIFY(d[ids.indexOf("service-failed")].toMap().value("title").toString().contains("Bluetooth service"));
+        QVERIFY(!d[ids.indexOf("service-failed")].toMap().value("title").toString().contains(".service"));
         QCOMPARE(d.first().toMap().value("severity").toInt(), 2);   // importants d'abord
     }
     void clean() { QVERIFY(diagnoseLog(QStringLiteral("tout va bien\n"), id).isEmpty()); }
