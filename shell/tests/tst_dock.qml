@@ -19,6 +19,18 @@ Item {
         function initTestCase() { backend.launchApps = false }
         function cleanup() { ShellState.close() }
 
+        // Zone cliquable = plateau (jusqu'au bord de l'écran), pas toute la fenêtre du dock :
+        // la bande transparente au-dessus doit laisser passer les clics vers les fenêtres.
+        function test_input_rect_is_the_plate() {
+            const r = dock.inputRect
+            const first = dock.itemAt(0).mapToItem(dock, 0, 0)
+            verify(r.y > 40, "rien au-dessus du plateau : " + r.y)
+            compare(r.y + r.height, dock.height)
+            verify(r.x > 0 && r.x + r.width < dock.width, "pas sur toute la largeur")
+            verify(first.x >= r.x && first.y >= r.y, "les icônes sont dans la zone")
+            verify(r.y >= dock.height - dock.reservedHeight - 1, "pas plus haut que la zone réservée")
+        }
+
         function test_preview_backend_and_pinned_items() {
             verify(!Tasks.live)
             compare(backend.model.count, backend.pinnedCount)

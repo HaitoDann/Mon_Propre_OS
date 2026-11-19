@@ -34,8 +34,13 @@ Item {
     Behavior on hideOffset { NumberAnimation { duration: Theme.durNormal; easing.type: Easing.OutCubic } }
     // Lus par vinx-shell (main.cpp) : zone réservée et zone qui reçoit le pointeur.
     readonly property int exclusiveZone: autohide ? 0 : reservedHeight
-    readonly property rect inputRect: shown ? Qt.rect(0, 0, width, height)
-                                            : vertical ? Qt.rect(0, 0, 4, height) : Qt.rect(0, height - 4, width, 4)
+    // Affiché : seulement le plateau, prolongé jusqu'au bord de l'écran (cible facile à atteindre).
+    // La fenêtre est plus grande (agrandissement, infobulle) : sans ce masque, la bande transparente
+    // au-dessus et autour du plateau captait les clics destinés au bas des fenêtres.
+    readonly property rect inputRect: shown
+        ? (vertical ? Qt.rect(0, plate.y, plate.x + plate.width, plate.height)
+                    : Qt.rect(plate.x, plate.y, plate.width, height - plate.y))
+        : vertical ? Qt.rect(0, 0, 4, height) : Qt.rect(0, height - 4, width, 4)
 
     // Icône à la position i (tests, aperçu).
     function itemAt(i) { const c = rep.itemAt(i); return c ? c.children[1] : null }
