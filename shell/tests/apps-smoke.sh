@@ -9,7 +9,15 @@ export XDG_CONFIG_HOME="$T/config" XDG_STATE_HOME="$T/state" QT_QPA_PLATFORM=off
 mkdir -p "$XDG_CONFIG_HOME"
 PATTERN='TypeError|ReferenceError|Binding loop|Unable to assign|is not defined|Cannot read property|Cannot call method|is not a function|Non-existent attached|Cannot assign|Type .* unavailable|failed to load component|is not a type'
 fail=0
+# Deux passes : avec les outils du système (données réelles), puis sans aucun (PATH vide : nmcli,
+# kscreen-doctor, vinx-backup… absents, comme dans le conteneur de la CI) ; aucune page ne doit
+# alors produire d'erreur.
 run() {
+	name=$1; shift
+	run_once "$name" "$@"
+	run_once "$name-sans-outils" env PATH=/nonexistent "$@"
+}
+run_once() {
 	name=$1; shift
 	out=$(timeout 30 "$@" --screenshot "$T/$name.png" 2>&1)
 	bad=$(printf '%s\n' "$out" | grep -E "$PATTERN" | sort -u)

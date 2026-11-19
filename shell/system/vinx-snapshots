@@ -84,7 +84,7 @@ list)
 	publish ;;
 restore)
 	[ "$(id -u)" = 0 ] || { echo "À lancer en administrateur (pkexec)." >&2; exit 1; }
-	NAME=${2:?nom de l'instantané manquant}
+	NAME=${2:?"nom de l'instantané manquant"}
 	case "$NAME" in *[!0-9_-]*) echo "Nom d'instantané invalide." >&2; exit 2 ;; esac
 	log "Retour à l'instantané $NAME"
 	# Restauration du système (pas des dossiers personnels) ; le chargeur de démarrage n'est pas touché.

@@ -1,3 +1,15 @@
+vinx-shell (0.26.13) trixie; urgency=medium
+
+  * Instantanés : « Revenir à cet instantané » fonctionne. Une apostrophe
+    non protégée dans vinx-snapshots rendait la commande restore inopérante
+    (elle se terminait sans appeler Timeshift). Test snapshots.
+  * Sauvegarde : page robuste sans vinx-backup ; script durci (liste des
+    versions sans « ls | grep », rm protégé).
+  * Test de fumée en deux passes, avec et sans les outils du système.
+  * Tous les scripts du shell passent shellcheck.
+
+ -- VinX OS <vinx@localhost>  Thu, 19 Nov 2026 22:40:00 +0000
+
 vinx-shell (0.26.12) trixie; urgency=medium
 
   * Traduction : écran de connexion en anglais (traduction installée dans le

@@ -11,7 +11,8 @@ printf '#!/bin/sh\ncase "$1" in DOCUMENTS) echo "$HOME/Documents";; PICTURES) ec
 printf '#!/bin/sh\nexit 0\n' > "$T/bin/busctl"
 chmod +x "$T/bin/"*
 export PATH="$T/bin:$PATH"
-export VINX_I18N="$(dirname "$SCRIPT")/vinx-i18n.sh"
+VINX_I18N="$(dirname "$SCRIPT")/vinx-i18n.sh"
+export VINX_I18N
 # Aucun disque choisi : le minuteur (--if-due) sort sans erreur, une sauvegarde manuelle échoue.
 printf '[backup]\nauto=true\n' > "$XDG_CONFIG_HOME/vinx/shell.ini"
 sh "$SCRIPT" run --if-due

@@ -1,6 +1,6 @@
 # Roadmap
 
-État au 19 novembre 2026 — shell 0.26.12. Phase en cours : **consolidation vers la 1.0** (ADR 0039).
+État au 19 novembre 2026 — shell 0.26.13. Phase en cours : **consolidation vers la 1.0** (ADR 0039).
 
 | Phase | Contenu | État |
 |---|---|---|

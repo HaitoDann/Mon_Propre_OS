@@ -552,13 +552,13 @@ Window {
                     description: backup.st.result === "failed" ? qsTr("La dernière sauvegarde est incomplète : vérifiez la place libre sur le disque.") : ""
                     Button {
                         text: qsTr("Sauvegarder maintenant"); variant: Button.Secondary
-                        enabled: backup.st.connected && backup.st.result !== "running" && backup.folders.length > 0
+                        enabled: backup.st.connected === true && backup.st.result !== "running" && backup.folders.length > 0
                         onClicked: { Session.launch("vinx-backup", ["run"]); backup.message = "" }
                     }
                 }
-                Label { visible: backup.st.connected && backup.st.versions.length > 0; text: qsTr("VERSIONS"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 36; verticalAlignment: Text.AlignBottom; bottomPadding: 4 }
+                Label { visible: backup.st.connected === true && (backup.st.versions || []).length > 0; text: qsTr("VERSIONS"); level: Label.Secondary; font.pixelSize: Theme.fsXs; font.letterSpacing: 0.8; height: 36; verticalAlignment: Text.AlignBottom; bottomPadding: 4 }
                 Repeater {
-                    model: backup.st.connected ? backup.st.versions.slice(0, 10) : []
+                    model: backup.st.connected === true ? (backup.st.versions || []).slice(0, 10) : []
                     SettingsRow {
                         required property string modelData
                         title: { const p = modelData.split("-"); return p[2] + "/" + p[1] + "/" + p[0] }

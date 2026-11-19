@@ -158,7 +158,10 @@ add_test(NAME contrast COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_D
 
 # Fumée : chaque page des Paramètres et chaque application s'ouvre sans erreur QML.
 add_test(NAME apps-smoke COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/apps-smoke.sh" "${PROJECT_BINARY_DIR}")
-set_tests_properties(apps-smoke PROPERTIES TIMEOUT 400)
+set_tests_properties(apps-smoke PROPERTIES TIMEOUT 900)
 
 # vinx-admin (administrateur) : arguments douteux refusés (option, plusieurs lignes, URI non IPP…).
 add_test(NAME admin COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/admin-test.sh" "${PROJECT_SOURCE_DIR}/system/vinx-admin")
+
+# vinx-snapshots restore : Timeshift appelé pour un nom valide, noms douteux refusés.
+add_test(NAME snapshots COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/snapshots-test.sh" "${PROJECT_SOURCE_DIR}/system/vinx-snapshots")
