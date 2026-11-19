@@ -1,3 +1,17 @@
+vinx-shell (0.26.11) trixie; urgency=medium
+
+  * Mises à jour : « Tout mettre à jour » et la mise à jour automatique des
+    applications fonctionnent (vinx-update n'était pas installé) ; test qui
+    vérifie que chaque outil /usr/lib/vinx cité est installé.
+  * Traduction anglaise : catalogue du Store, noms des couleurs d'accent,
+    notifications des scripts et dossier de restauration.
+  * Écrans : l'échelle actuelle (ex. 115 %) figure parmi les choix.
+  * Accessibilité : menus utilisables au clavier ; contrastes WCAG AA testés
+    automatiquement, vert foncé #0A7A4E et texte tertiaire #888781.
+  * Licences : IBM Plex Mono, visuels et logo déclarés (docs/LICENCES.md).
+
+ -- VinX OS <vinx@localhost>  Thu, 19 Nov 2026 21:00:00 +0000
+
 vinx-shell (0.26.10) trixie; urgency=medium
 
   * Fichiers : l'icône du fichier suit le pointeur pendant un glisser-déposer.

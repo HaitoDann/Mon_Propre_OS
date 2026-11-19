@@ -1,6 +1,6 @@
 # Roadmap
 
-État au 19 novembre 2026 — shell 0.26.5. Phase en cours : **consolidation vers la 1.0** (ADR 0039).
+État au 19 novembre 2026 — shell 0.26.11. Phase en cours : **consolidation vers la 1.0** (ADR 0039).
 
 | Phase | Contenu | État |
 |---|---|---|
@@ -24,9 +24,9 @@
 | 6.3 | Activer le dépôt APT ([APT.md](APT.md)) | utilisateur | ✅ |
 | 6.4 | ISO neuve, installation btrfs, déroulé de [RECETTE.md](RECETTE.md) | utilisateur | ⏳ |
 | 6.5 | Corrections issues de la recette (1er rapport : 0.26.4 ; version unique et fonds, ADR 0040) | Claude | ⏳ |
-| 6.6 | Traduction restante (Store, accents, scripts) | Claude | — |
-| 6.7 | Passe de qualité : relecture de code, tests manquants, cohérence visuelle, accessibilité clavier/contrastes, absence de commandes système | Claude | — |
-| 6.8 | Vérification des licences des éléments fournis (polices, logos tiers, fonds) | Claude | — |
+| 6.6 | Traduction restante (Store, accents, notifications des scripts) ; restent le diaporama de l'installateur et l'écran de connexion | Claude | ✅ |
+| 6.7 | Passe de qualité : relecture de code, tests manquants, cohérence visuelle, accessibilité clavier/contrastes, absence de commandes système (fait : contrastes testés, menus au clavier, outils installés testés, boucles de liaison) | Claude | ⏳ |
+| 6.8 | Vérification des licences des éléments fournis (polices, logos tiers, fonds) — [LICENCES.md](LICENCES.md) | Claude | ✅ |
 
 ## Phase 7 — Publication 1.0
 

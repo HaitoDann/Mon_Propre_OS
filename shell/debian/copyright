@@ -24,3 +24,21 @@ Files: ../branding/fonts/ibm-plex-sans/*
 Copyright: 2017 IBM Corp.
 License: OFL-1.1
  See /usr/share/fonts/opentype/ibm-plex-sans/OFL.txt
+
+Files: ../branding/fonts/ibm-plex-mono/*
+Copyright: 2017 IBM Corp.
+License: OFL-1.1
+ See /usr/share/fonts/truetype/ibm-plex-mono/OFL.txt
+
+Files: ../branding/icons/* ../branding/icon-theme/* ../branding/wallpaper/* ../branding/boot/*
+Copyright: 2026 HaitoDann et les contributeurs de VinX OS
+License: CC-BY-SA-4.0
+ Pictogrammes, thème d'icônes, fonds d'écran et visuels de démarrage dessinés pour VinX OS.
+ https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+Files: ../branding/logo/*
+Copyright: 2026 HaitoDann
+License: VinX-trademark
+ Le logo VinX (symbole « V/X ») et le nom « VinX OS » sont les marques du projet, tous droits
+ réservés. Une version modifiée redistribuée par un tiers doit retirer le logo et changer de nom
+ (voir branding/LICENSE.md).
