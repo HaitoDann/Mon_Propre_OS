@@ -2,7 +2,7 @@ import QtQuick
 import Vinx.Theme
 import Vinx.Controls
 
-// Écran de connexion VinX OS (SDDM, API de thème 2) : style Biseau.
+// Écran de connexion VinX OS (SDDM, API de thème 2) : fond clair à points, logo vert, formes douces (ADR 0018).
 // Objets fournis par SDDM : sddm (login, powerOff, reboot, suspend…), userModel, sessionModel,
 // config (theme.conf), keyboard. Aucune logique d'authentification ici : SDDM et PAM s'en chargent.
 Rectangle {

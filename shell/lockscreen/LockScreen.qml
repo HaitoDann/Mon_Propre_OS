@@ -56,7 +56,7 @@ Item {
     Column {
         id: form
         visible: root.locked
-        // Arrivée signature : glissement le long de la diagonale du biseau.
+        // Arrivée signature : glissement le long de la diagonale (depuis le coin haut-droit).
         opacity: root.locked ? 1 : 0
         transform: Translate { x: root.locked ? 0 : 16; y: root.locked ? 0 : -16
             Behavior on x { NumberAnimation { duration: Theme.durSlow; easing.type: Easing.OutCubic } }
