@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDateTime>
 #include <QObject>
 #include <QProcess>
 #include <QStringList>
@@ -22,6 +23,9 @@ class Flatpak : public QObject
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_PROPERTY(QString task READ task NOTIFY busyChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
+    // Incrémenté quand le catalogue AppStream (logos) vient d'être téléchargé : à lire dans les
+    // liaisons qui appellent iconUrl() pour qu'elles se réévaluent.
+    Q_PROPERTY(int iconsRevision READ iconsRevision NOTIFY iconsChanged)
 
 public:
     explicit Flatpak(QObject *parent = nullptr);
@@ -46,6 +50,12 @@ public:
     Q_INVOKABLE void details(const QString &appId);
     // Logo d'une application Flathub (cache AppStream de Flatpak, ou icône exportée si installée) ; "" sinon.
     Q_INVOKABLE QString iconUrl(const QString &appId) const;
+    // Télécharge le catalogue AppStream de Flathub (noms, logos) s'il manque ou date de plus de
+    // 24 h, en arrière-plan (« flatpak update --appstream », autorisé sans mot de passe par polkit).
+    Q_INVOKABLE void refreshAppstream();
+    int iconsRevision() const { return m_iconsRevision; }
+    // Catalogue absent, de plus de 24 h ou daté dans le futur (horloge corrigée) : à retélécharger.
+    static bool appstreamStale(const QDateTime &lastUpdate, const QDateTime &now);
 
     static int parseProgress(const QString &output);   // dernier « NN% » de la sortie, -1 sinon
 
@@ -56,6 +66,7 @@ Q_SIGNALS:
     void searchResultsChanged();
     void finished(bool success, const QString &message);
     void detailsReady(const QString &appId, const QVariantMap &info);
+    void iconsChanged();
 
 private:
     bool start(const QStringList &args, const QString &task, const QString &doneMessage);
@@ -68,4 +79,6 @@ private:
     QProcess *m_process = nullptr;
     QString m_task;
     int m_progress = -1;
+    int m_iconsRevision = 0;
+    bool m_appstreamRunning = false;
 };

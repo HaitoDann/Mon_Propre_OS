@@ -62,7 +62,13 @@ restart_shell() {
 		pgrep -x vinx-shell >/dev/null 2>&1 || {
 			say "Le shell n'a pas redémarré seul : lancement direct"
 			# Sous-shell détaché lui aussi de la sortie : sinon l'appelant (terminal, script) attend sa fin.
-			(VINX_SESSION=1 setsid /usr/libexec/vinx-shell-autostart || setsid vinx-shell) >/dev/null 2>&1 </dev/null &
+			# Sortie vers le journal (systemd-cat), comme au démarrage de la session : sinon les
+			# avertissements du shell relancé sont perdus (vinx-dev log, rapport, Dépannage).
+			if command -v systemd-cat >/dev/null 2>&1; then
+				(VINX_SESSION=1 setsid systemd-cat -t vinx-shell-autostart /usr/libexec/vinx-shell-autostart) >/dev/null 2>&1 </dev/null &
+			else
+				(VINX_SESSION=1 setsid /usr/libexec/vinx-shell-autostart || setsid vinx-shell) >/dev/null 2>&1 </dev/null &
+			fi
 		}
 	else
 		say "Shell VinX non lancé (hors session VinX) : rien à relancer"

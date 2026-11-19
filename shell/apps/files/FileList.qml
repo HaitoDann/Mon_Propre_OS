@@ -88,7 +88,12 @@ ListView {
         // Glisser : la sélection part comme liste d'URL (vers Fichiers ou une autre application).
         Item {
             id: dragProxy
-            Drag.active: ma.drag.active
+            // Lancé à la main (et non « Drag.active: ma.drag.active ») : le glisser automatique est
+            // bloquant et remet active à false pendant la liaison, d'où une boucle signalée par Qt.
+            Connections {
+                target: ma.drag
+                function onActiveChanged() { if (ma.drag.active) dragProxy.Drag.startDrag() }
+            }
             Drag.dragType: Drag.Automatic
             Drag.supportedActions: Qt.MoveAction | Qt.CopyAction
             Drag.proposedAction: Qt.MoveAction

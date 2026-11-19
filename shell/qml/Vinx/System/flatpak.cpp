@@ -182,3 +182,36 @@ QString Flatpak::iconUrl(const QString &appId) const
     }
     return {};
 }
+
+bool Flatpak::appstreamStale(const QDateTime &lastUpdate, const QDateTime &now)
+{
+    return !lastUpdate.isValid() || lastUpdate.secsTo(now) > 24 * 3600 || lastUpdate > now.addSecs(3600);
+}
+
+void Flatpak::refreshAppstream()
+{
+    if (!m_available || m_appstreamRunning)
+        return;
+    QDateTime last;
+    for (const QString &root : {QDir::homePath() + QStringLiteral("/.local/share/flatpak"), QStringLiteral("/var/lib/flatpak")}) {
+        const QFileInfo active(root + QStringLiteral("/appstream/flathub/x86_64/active"));
+        if (active.exists() && (!last.isValid() || active.lastModified() > last))
+            last = active.lastModified();
+    }
+    if (!appstreamStale(last, QDateTime::currentDateTime()))
+        return;
+    m_appstreamRunning = true;
+    auto *p = new QProcess(this);
+    connect(p, &QProcess::finished, this, [this, p](int code, QProcess::ExitStatus status) {
+        m_appstreamRunning = false;
+        p->deleteLater();
+        if (status == QProcess::NormalExit && code == 0) {
+            ++m_iconsRevision;
+            Q_EMIT iconsChanged();
+        }
+    });
+    connect(p, &QProcess::errorOccurred, this, [this, p](QProcess::ProcessError e) {
+        if (e == QProcess::FailedToStart) { m_appstreamRunning = false; p->deleteLater(); }
+    });
+    p->start(QStringLiteral("flatpak"), {QStringLiteral("update"), QStringLiteral("--appstream"), QStringLiteral("--noninteractive"), QStringLiteral("flathub")});
+}

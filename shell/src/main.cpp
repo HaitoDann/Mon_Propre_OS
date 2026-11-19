@@ -5,6 +5,7 @@
 
 #include <QCommandLineParser>
 #include "vinxi18n.h"
+#include "themeicons.h"   // image://theme/<nom>, commun avec les applications
 #include <QDir>
 #include <QHash>
 #include <QPointer>
@@ -21,23 +22,6 @@
 #include <QQmlEngine>
 #include <QQuickWindow>
 #include <QTimer>
-
-// Icônes du thème système pour les applications sans icône VinX : image://theme/<nom>
-class ThemeIconProvider : public QQuickImageProvider
-{
-public:
-    ThemeIconProvider() : QQuickImageProvider(QQuickImageProvider::Pixmap) {}
-    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requested) override
-    {
-        const QSize s = requested.isValid() ? requested : QSize(64, 64);
-        const QIcon icon = QIcon::fromTheme(id);
-        // Pixmap vide si l'icône est absente : le QML affiche alors un pictogramme VinX.
-        const QPixmap pm = icon.isNull() ? QPixmap() : icon.pixmap(s);
-        if (size)
-            *size = pm.size();
-        return pm;
-    }
-};
 
 #ifdef VINX_HAVE_LAYERSHELL
 #include <LayerShellQt/Window>

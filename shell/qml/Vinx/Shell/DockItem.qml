@@ -30,7 +30,8 @@ Item {
     property real base: Theme.dockIcon
     readonly property real size: {
         if (!magnify || pointerX < 0) return base
-        const c = mapToItem(coordItem, width / 2, 0).x
+        // Centre au repos (bord gauche + demi-taille normale) : lire width, qui vaut size, bouclait.
+        const c = mapToItem(coordItem, 0, 0).x + base / 2
         const d = Math.abs(pointerX - c)
         const range = base * 3
         const k = d > range ? 0 : (Math.cos(d / range * Math.PI) + 1) / 2
@@ -67,12 +68,21 @@ Item {
             border.width: 1
             border.color: Theme.border
             Image {
+                id: themeImage
                 anchors.centerIn: parent
                 width: parent.width * 0.66; height: width
                 sourceSize: Qt.size(width * 2, height * 2)
                 source: item.themeIcon
                 smooth: true
             }
+        }
+        // Application sans icône (ou icône introuvable) : pictogramme VinX neutre plutôt qu'une tuile vide.
+        AppIcon {
+            anchors.fill: parent
+            visible: item.style === null && !(themeImage.status === Image.Ready && themeImage.implicitWidth > 1)
+            size: item.size
+            iconName: "grid"
+            tint: "#8A8983"
         }
     }
 

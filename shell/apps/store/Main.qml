@@ -26,6 +26,7 @@ Window {
     Component.onCompleted: {
         if (startPage === "updates") Session.launch("vinx-updates")
         DebianPackages.lookup(Catalog.packages())
+        Flatpak.refreshAppstream()   // logos Flathub : catalogue téléchargé s'il manque ou date de plus d'un jour
         if (startQuery) {
             page = "search"
             query.text = startQuery.replace(/^debian:/, "")
@@ -45,7 +46,7 @@ Window {
         return null
     }
     function resolveAll(entries) {
-        DebianPackages.catalog; Flatpak.installed   // dépendances de la liaison
+        DebianPackages.catalog; Flatpak.installed; Flatpak.iconsRevision   // dépendances de la liaison
         return entries.map(e => resolve(e)).filter(a => a !== null)
     }
     function showApp(a) { detail.open(a) }
@@ -287,6 +288,7 @@ Window {
                 spacing: Theme.space4
                 // Debian d'abord ; une application Flathub déjà proposée par Debian (même nom) est masquée.
                 readonly property var results: {
+                    Flatpak.iconsRevision   // logos disponibles après le téléchargement du catalogue
                     const deb = DebianPackages.results.map(r => ({ source: "debian", name: r.name, summary: r.summary, package: r.package, id: r.id,
                                                                     iconUrl: r.iconUrl || "", icon: r.icon || "", installed: r.installed === true }))
                     const names = deb.map(d => d.name.toLowerCase())
@@ -323,6 +325,7 @@ Window {
                 width: parent.width
                 spacing: Theme.space4
                 readonly property var apps: {
+                    Flatpak.iconsRevision
                     const deb = win.resolveAll(Catalog.all()).filter(a => a.source === "debian" && a.installed)
                     const fp = Flatpak.installedApps.map(a => ({ source: "flathub", name: a.name || a.id, summary: a.version ? qsTr("Version %1").arg(a.version) : a.id,
                                                                  id: a.id, iconUrl: Flatpak.iconUrl(a.id), installed: true }))

@@ -1,3 +1,18 @@
+vinx-shell (0.26.7) trixie; urgency=medium
+
+  * Store : logos Flathub. Le catalogue AppStream de Flathub (logos) n'était
+    jamais téléchargé ; le Store le récupère s'il manque ou date de plus d'un
+    jour (sans mot de passe), puis met les logos à jour.
+  * Dock : plus de boucle de liaison sur la taille des icônes (des milliers
+    d'avertissements et de recalculs à chaque mouvement de souris) ; test de
+    balayage. Pictogramme de secours pour une application sans icône.
+  * Fichiers : glisser-déposer sans boucle de liaison.
+  * Shell : fournisseur d'icônes commun avec les applications (plus
+    d'avertissement pour une icône absente).
+  * vinx-dev restart : la sortie du shell relancé va au journal.
+
+ -- VinX OS <vinx@localhost>  Thu, 19 Nov 2026 19:00:00 +0000
+
 vinx-shell (0.26.6) trixie; urgency=medium
 
   * Dock : seule la zone du plateau reçoit les clics. La bande transparente

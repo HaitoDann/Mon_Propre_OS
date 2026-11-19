@@ -106,8 +106,10 @@ Item {
                     windowStates: dock.backend && dock.backend.windows ? (dock.backend.revision, dock.backend.windows(cell.index)) : []
                     magnify: dock.magnify
                     base: dock.iconSize
-                    coordItem: row
-                    pointerX: hover.hovered ? row.mapFromItem(dock, hover.point.position.x, 0).x : -1
+                    // Repère fixe (le dock), pas la rangée : la rangée se recentre quand les icônes
+                    // grossissent, ce qui faisait boucler la taille (avertissement à chaque mouvement).
+                    coordItem: dock
+                    pointerX: hover.hovered ? hover.point.position.x : -1
                     onClicked: {
                         // Plusieurs fenêtres : liste pour choisir (les réduites y sont marquées).
                         if (windowStates.length > 1) {

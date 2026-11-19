@@ -127,5 +127,16 @@ Item {
             mouseMove(root, 10, 10)
             tryCompare(it, "size", Theme.dockIcon)
         }
+
+        // Balayage du dock au pointeur : aucune boucle de liaison (la taille dépendait de la
+        // position de la rangée, qui dépend de la taille ; 3 000 avertissements par soirée).
+        function test_sweep_without_binding_loop() {
+            failOnWarning(/Binding loop/)
+            const first = dock.itemAt(0), last = dock.itemAt(dock.backend.model.count - 1)
+            const a = first.mapToItem(dock, 0, first.height / 2), b = last.mapToItem(dock, last.width, last.height / 2)
+            for (let x = a.x; x <= b.x; x += 6) { mouseMove(dock, x, a.y); wait(5) }
+            for (let x = b.x; x >= a.x; x -= 6) { mouseMove(dock, x, a.y); wait(5) }
+            mouseMove(root, 10, 10)
+        }
     }
 }
