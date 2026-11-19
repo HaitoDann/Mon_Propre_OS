@@ -8,7 +8,7 @@ Pour changer les couleurs de l'interface, on modifie `tokens.toml` : `Theme.qml`
 
 | Fichier | Rôle |
 |---|---|
-| `brand.toml` | Nom, version, couleurs principales, chemins des logos |
+| `brand.toml` | Nom, couleurs principales, chemins des logos (version : paquet vinx-shell, ADR 0040) |
 | `tokens.toml` | Design tokens complets (couleurs par thème, typo, espacements, rayons, durées) → `Theme.qml` |
 | `icons/` | Pictogrammes SVG de l'interface (trait 1,8 px, grille 24 px) |
 | `icon-theme/gen_icons.py` | Générateur du thème d'icônes système « VinX » (tuile + pictogramme + point) |

@@ -1,0 +1,29 @@
+#!/bin/sh
+# vinx-release : version unique de VinX OS = version du paquet vinx-shell (ADR 0040).
+# Appelé par le postinst de vinx-shell (installation, mise à jour) et par le déclencheur posé sur
+# /usr/lib/os-release (base-files le réécrit à chaque mise à jour de Debian). Écrit :
+#   /etc/vinx-release        VINX_VERSION="X.Y.Z"   (lu par Mises à jour)
+#   /usr/lib/os-release      NAME, PRETTY_NAME, VINX_VERSION (lu par À propos, l'écran de connexion…)
+#   /etc/issue               invite des consoles texte
+# VINX_RELEASE_ROOT : racine à modifier (tests).
+set -eu
+VERSION=${VINX_RELEASE_VERSION:-@PROJECT_VERSION@}
+R=${VINX_RELEASE_ROOT:-}
+OS=$R/usr/lib/os-release
+
+printf 'VINX_VERSION="%s"\n' "$VERSION" > "$R/etc/vinx-release"
+
+if [ -f "$OS" ]; then
+	debian=$(sed -n 's/^VERSION_ID="\{0,1\}\([0-9]*\).*/\1/p' "$OS")
+	codename=$(sed -n 's/^VERSION_CODENAME=//p' "$OS")
+	tmp=$(mktemp "$OS.XXXXXX")
+	sed -e '/^VINX_VERSION=/d' \
+		-e 's/^NAME=.*/NAME="VinX OS"/' \
+		-e "s/^PRETTY_NAME=.*/PRETTY_NAME=\"VinX OS $VERSION (Debian ${debian:-13} ${codename:-trixie})\"/" \
+		"$OS" > "$tmp"
+	printf 'VINX_VERSION="%s"\n' "$VERSION" >> "$tmp"
+	chmod 644 "$tmp"
+	mv "$tmp" "$OS"
+fi
+
+printf 'VinX OS %s \\n \\l\n\n' "$VERSION" > "$R/etc/issue"

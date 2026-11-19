@@ -1,0 +1,15 @@
+#!/bin/sh
+# Version unique de VinX OS (ADR 0040) : /etc/vinx-release et le nom du système suivent le paquet.
+# « triggered » : base-files vient de réécrire /usr/lib/os-release (mise à jour de Debian).
+set -e
+case "$1" in
+configure|triggered)
+	if [ -z "${DPKG_ROOT:-}" ] && [ -x /usr/lib/vinx/vinx-release ]; then
+		/usr/lib/vinx/vinx-release || true
+	fi
+	;;
+esac
+
+#DEBHELPER#
+
+exit 0

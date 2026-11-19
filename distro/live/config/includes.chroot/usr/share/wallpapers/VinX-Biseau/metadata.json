@@ -1,8 +1,0 @@
-{
-    "KPlugin": {
-        "Id": "VinX-Biseau",
-        "Name": "VinX Biseau",
-        "Authors": [ { "Name": "VinX OS" } ],
-        "License": "CC-BY-SA-4.0"
-    }
-}

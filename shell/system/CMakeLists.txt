@@ -5,3 +5,6 @@ install(PROGRAMS vinx-dev vinx-backup DESTINATION "${CMAKE_INSTALL_BINDIR}")
 install(FILES vinx-backup.service vinx-backup.timer DESTINATION "lib/systemd/user")
 install(FILES 80vinx-snapshot DESTINATION "${CMAKE_INSTALL_SYSCONFDIR}/apt/apt.conf.d")
 install(FILES org.vinx.snapshots.policy org.vinx.admin.policy DESTINATION "${CMAKE_INSTALL_DATADIR}/polkit-1/actions")
+# Version unique de VinX OS (ADR 0040) : écrite par le postinst du paquet et le déclencheur os-release.
+configure_file(vinx-release.in "${CMAKE_CURRENT_BINARY_DIR}/vinx-release" @ONLY)
+install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/vinx-release" DESTINATION "lib/vinx")

@@ -96,6 +96,9 @@ target_include_directories(tst_accounts PRIVATE "${PROJECT_SOURCE_DIR}/qml/Vinx/
 target_link_libraries(tst_accounts PRIVATE Qt6::Test Qt6::DBus Qt6::Qml crypt)
 add_test(NAME accounts COMMAND tst_accounts)
 
+# Version unique de VinX OS (vinx-release, ADR 0040).
+add_test(NAME release COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/release-test.sh" "${PROJECT_BINARY_DIR}/system/vinx-release")
+
 # Sauvegarde des documents (vinx-backup) : versions, liens physiques, restauration à part.
 find_program(RSYNC rsync)
 if(RSYNC)

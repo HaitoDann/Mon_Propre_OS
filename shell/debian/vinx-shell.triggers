@@ -1,0 +1,2 @@
+# base-files réécrit /usr/lib/os-release : on y remet le nom et la version de VinX OS (ADR 0040).
+interest-noawait /usr/lib/os-release

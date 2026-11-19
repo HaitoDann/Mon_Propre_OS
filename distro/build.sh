@@ -7,7 +7,8 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DISTRO="$ROOT/distro"
 WORK="$DISTRO/build"
 OUT="$DISTRO/out"
-VERSION="$(sed -n 's/^version *= *"\(.*\)"/\1/p' "$ROOT/branding/brand.toml")"
+# Version unique (ADR 0040) : celle du paquet vinx-shell, qui la réécrit aussi à chaque mise à jour APT.
+VERSION="$(sed -n '1s/^[^(]*(\([^)~-]*\).*/\1/p' "$ROOT/shell/debian/changelog")"
 
 [ "$(id -u)" -eq 0 ] || { echo "Ce script doit être lancé en root." >&2; exit 1; }
 for cmd in lb debootstrap rsvg-convert rsync dpkg-buildpackage; do

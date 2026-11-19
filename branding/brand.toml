@@ -2,7 +2,7 @@
 # tokens.toml (source de Theme.qml) ; les règles d'usage dans docs/DESIGN.md.
 [identity]
 name = "VinX OS"
-version = "0.17.1"
+# Version : celle du paquet vinx-shell (shell/debian/changelog), voir ADR 0040.
 tagline = "Simple. Ergonomique. Stable."
 
 [logo]

@@ -55,7 +55,7 @@ par `scripts/render-assets.sh` : fonds d'écran, logos, écran de démarrage, me
 
 | Élément | Fichier(s) |
 |---|---|
-| Nom et version | `branding/brand.toml` → `/etc/vinx-release`, hook `0900-vinx-os-release` |
+| Nom et version | version du paquet `vinx-shell` (`shell/debian/changelog`) → `/etc/vinx-release`, hook `0900-vinx-os-release`, puis `/usr/lib/vinx/vinx-release` à chaque mise à jour (ADR 0040) |
 | Fond d'écran | `/usr/share/wallpapers/VinX*` |
 | Apparence et disposition Plasma | `/usr/share/plasma/look-and-feel/org.vinx.desktop`, `/etc/xdg/kdeglobals`, `/etc/xdg/kwinrc` |
 | Palette | `/usr/share/color-schemes/VinXDark.colors` |
