@@ -3,10 +3,10 @@ widgetStyle=Breeze
 
 [kdeglobals][General]
 ColorScheme=VinXLight
-AccentColor=115,88,189
+AccentColor=16,221,140
 
 [kdeglobals][Icons]
-Theme=breeze-dark
+Theme=VinX
 
 [plasmarc][Theme]
 name=default

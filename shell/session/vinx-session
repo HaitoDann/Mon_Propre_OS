@@ -21,6 +21,13 @@ if [ -n "$KWC" ]; then
 	for kv in library=org.kde.kwin.aurorae theme=__aurorae__svg__VinX ButtonsOnLeft= ButtonsOnRight=IAX BorderSize=Normal BorderSizeAuto=false; do
 		"$KWC" --file kwinrc --group org.kde.kdecoration2 --key "${kv%%=*}" "${kv#*=}"
 	done
+	# Thème d'icônes VinX (ADR 0018) : les anciens réglages d'apparence (kdedefaults, écrits par le
+	# paquet d'apparence) imposaient breeze-dark et masquaient /etc/xdg/kdeglobals. Un choix de
+	# l'utilisateur (~/.config/kdeglobals) reste prioritaire.
+	KDEF="${XDG_CONFIG_HOME:-$HOME/.config}/kdedefaults/kdeglobals"
+	if [ -f "$KDEF" ] && grep -qx 'Theme=breeze-dark' "$KDEF"; then
+		"$KWC" --file "$KDEF" --group Icons --key Theme VinX
+	fi
 	# Raccourcis globaux du shell (kglobalaccel lit les .desktop listés dans [services]).
 	for p in search:Meta+Space control:Meta+A calendar:Meta+N clipboard:Meta+V; do
 		"$KWC" --file kglobalshortcutsrc --group services --group "org.vinx.shellctl.${p%%:*}.desktop" --key _launch "${p#*:}"

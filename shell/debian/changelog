@@ -1,3 +1,11 @@
+vinx-shell (0.26.5) trixie; urgency=medium
+
+  * Thème d'icônes VinX enfin actif dans la session : le paquet d'apparence
+    imposait breeze-dark (kdedefaults) ; corrigé à l'ouverture de session et
+    dans l'ISO. Accent KDE par défaut : vert du logo au lieu de l'ancien violet.
+
+ -- VinX OS <vinx@localhost>  Thu, 19 Nov 2026 08:30:00 +0000
+
 vinx-shell (0.26.4) trixie; urgency=medium
 
   * Recette 1.0 (rapport du portable) :

@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
     parser.process(app);
 
     if (QIcon::themeName().isEmpty() || QIcon::themeName() == QLatin1String("hicolor"))
-        QIcon::setThemeName(QStringLiteral("breeze-dark"));
+        QIcon::setThemeName(QStringLiteral("VinX"));   // hérite de Breeze et hicolor
 
     QQmlEngine engine;
     engine.addImageProvider(QStringLiteral("theme"), new ThemeIconProvider);
