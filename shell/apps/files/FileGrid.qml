@@ -65,13 +65,17 @@ GridView {
         // Glisser : la sélection part comme liste d'URL (vers Fichiers ou une autre application).
         Item {
             id: dragProxy
-            // Lancé à la main (et non « Drag.active: ma.drag.active ») : le glisser automatique est
-            // bloquant et remet active à false pendant la liaison, d'où une boucle signalée par Qt.
+            // Suit le glisser de la souris par une affectation (et non « Drag.active: ma.drag.active ») :
+            // le glisser automatique remet active à false pendant la liaison, d'où une boucle signalée
+            // par Qt. (startDrag() ne convient pas : il exige un glisser déjà actif.)
             Connections {
                 target: ma.drag
-                function onActiveChanged() { if (ma.drag.active) dragProxy.Drag.startDrag() }
+                function onActiveChanged() { dragProxy.Drag.active = ma.drag.active }
             }
             Drag.dragType: Drag.Automatic
+            // Vignette qui suit le pointeur : l'icône du fichier, capturée à l'appui (la capture est
+            // asynchrone ; elle est prête avant les 8 px qui déclenchent le glisser).
+            Drag.hotSpot: Qt.point(24, 24)
             Drag.supportedActions: Qt.MoveAction | Qt.CopyAction
             Drag.proposedAction: Qt.MoveAction
             Drag.mimeData: ({ "text/uri-list": (grid.host.selected, grid.host.selectedUrls().map(u => u.toString()).join("\r\n")) })
@@ -102,6 +106,8 @@ GridView {
             onPressed: (m) => {
                 grid.forceActiveFocus()
                 if (m.button === Qt.RightButton) return
+                if (m.button === Qt.LeftButton)
+                    icon.grabToImage(r => dragProxy.Drag.imageSource = r.url, Qt.size(48, 48))
                 if (m.button === Qt.MiddleButton) { if (cell.isDir) grid.host.newTab(cell.url); return }
                 // Clic sur un élément déjà seul sélectionné : renommage après un court délai (comme ailleurs).
                 grid.host.select(cell.index, m.modifiers)

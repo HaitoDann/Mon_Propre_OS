@@ -88,13 +88,17 @@ ListView {
         // Glisser : la sélection part comme liste d'URL (vers Fichiers ou une autre application).
         Item {
             id: dragProxy
-            // Lancé à la main (et non « Drag.active: ma.drag.active ») : le glisser automatique est
-            // bloquant et remet active à false pendant la liaison, d'où une boucle signalée par Qt.
+            // Suit le glisser de la souris par une affectation (et non « Drag.active: ma.drag.active ») :
+            // le glisser automatique remet active à false pendant la liaison, d'où une boucle signalée
+            // par Qt. (startDrag() ne convient pas : il exige un glisser déjà actif.)
             Connections {
                 target: ma.drag
-                function onActiveChanged() { if (ma.drag.active) dragProxy.Drag.startDrag() }
+                function onActiveChanged() { dragProxy.Drag.active = ma.drag.active }
             }
             Drag.dragType: Drag.Automatic
+            // Vignette qui suit le pointeur : l'icône du fichier, capturée à l'appui (la capture est
+            // asynchrone ; elle est prête avant les 8 px qui déclenchent le glisser).
+            Drag.hotSpot: Qt.point(icon.width / 2, icon.height / 2)
             Drag.supportedActions: Qt.MoveAction | Qt.CopyAction
             Drag.proposedAction: Qt.MoveAction
             Drag.mimeData: ({ "text/uri-list": (list.host.selected, list.host.selectedUrls().map(u => u.toString()).join("\r\n")) })
@@ -124,6 +128,8 @@ ListView {
             drag.threshold: 8
             onPressed: (m) => {
                 list.forceActiveFocus()
+                if (m.button === Qt.LeftButton)
+                    icon.grabToImage(r => dragProxy.Drag.imageSource = r.url)
                 if (m.button === Qt.MiddleButton) { if (row.isDir) list.host.newTab(row.url); return }
                 if (m.button !== Qt.RightButton) list.host.select(row.index, m.modifiers)
             }

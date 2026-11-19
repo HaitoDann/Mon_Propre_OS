@@ -1,3 +1,16 @@
+vinx-shell (0.26.10) trixie; urgency=medium
+
+  * Fichiers : l'icône du fichier suit le pointeur pendant un glisser-déposer.
+
+ -- VinX OS <vinx@localhost>  Thu, 19 Nov 2026 20:10:00 +0000
+
+vinx-shell (0.26.9) trixie; urgency=medium
+
+  * Fichiers : glisser-déposer rétabli (cassé en 0.26.7 : startDrag() exige
+    un glisser déjà actif ; le glisser ne démarrait plus).
+
+ -- VinX OS <vinx@localhost>  Thu, 19 Nov 2026 19:50:00 +0000
+
 vinx-shell (0.26.8) trixie; urgency=medium
 
   * Fichiers : lâcher un fichier dans son propre dossier ne crée plus de copie
