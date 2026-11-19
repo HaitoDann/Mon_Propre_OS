@@ -72,6 +72,8 @@ un **bord vert foncé**, et l'état se lit aussi par la position ou le texte (ja
 
 - Fond par défaut **« VinX Logo »** : blanc cassé, grille de points discrète, **logo vert en grand,
   décalé à droite**. Variante « VinX Logo (sombre) ».
+- Fonds VinX proposés : VinX Logo, VinX Logo (sombre), VinX Graphite (les fonds violets « Nebula »
+  et « Biseau » sont retirés, ADR 0040).
 - Démarrage (Plymouth), menu GRUB, connexion (SDDM), verrouillage : même fond clair à points,
   logo vert, cartes claires, IBM Plex Sans.
 

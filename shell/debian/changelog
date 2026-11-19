@@ -1,3 +1,23 @@
+vinx-shell (0.26.4) trixie; urgency=medium
+
+  * Recette 1.0 (rapport du portable) :
+    - Paramètres ouverts sur une page (recherche, menu VinX) : la page charge
+      ses données (Date et heure, Écrans, Son, Énergie…).
+    - Plus de plantage du suivi des tâches hors Wayland (vinx-settings,
+      vinx-shell pendant les captures).
+    - Sauvegarde : le minuteur ne signale plus d'échec sans disque choisi.
+    - Moniteur : les scripts sh ne s'affichent plus comme « Installer le
+      système » ; icônes VinX pour Store, Moniteur, Capture et Images.
+    - Dépannage, Clavier, Accessibilité, Apparence, Dock, Mises à jour :
+      finitions et traductions.
+  * Version unique de VinX OS = version de ce paquet (ADR 0040) :
+    /etc/vinx-release et le nom du système suivent les mises à jour.
+  * Fonds violets (Nebula) et « Biseau » retirés (ADR 0040).
+  * vinx-dev : captures fidèles (thème KDE, vrai écran), mot de passe sans
+    terminal.
+
+ -- VinX OS <vinx@localhost>  Thu, 19 Nov 2026 01:00:00 +0000
+
 vinx-shell (0.26.3) trixie; urgency=medium
 
   * vinx-dev rapport : captures du bureau et des Paramètres réparées
