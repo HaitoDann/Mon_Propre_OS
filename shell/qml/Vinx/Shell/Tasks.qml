@@ -11,7 +11,9 @@ QtObject {
 
     function _create() {
         // VINX_TASKS_BACKEND=preview impose le modèle d'aperçu (tests, même si Plasma est installé).
-        if (Session.environment("VINX_TASKS_BACKEND") === "preview")
+        // Hors Wayland (captures hors écran, X11) : libtaskmanager plante dans VirtualDesktopInfo
+        // faute de connexion Wayland ; on prend aussi le modèle d'aperçu.
+        if (Session.environment("VINX_TASKS_BACKEND") === "preview" || Qt.platform.pluginName !== "wayland")
             return Qt.createComponent("PreviewTasksBackend.qml").createObject(tasks)
         const kde = Qt.createComponent("KdeTasksBackend.qml")
         if (kde.status === Component.Ready) {

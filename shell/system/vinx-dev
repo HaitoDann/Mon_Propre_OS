@@ -42,6 +42,15 @@ check_repo() {
 # Versions construites, de la plus récente à la plus ancienne.
 builds() { ls -1t "$HIST"/*.deb 2>/dev/null || true; }
 
+# Sans terminal (commande « ! » d'un assistant, raccourci…), sudo ne peut pas lire le mot de passe :
+# on passe par la fenêtre graphique de KDE (ksshaskpass) quand elle est disponible.
+SUDO=sudo
+if ! [ -t 0 ] && [ -z "${SUDO_ASKPASS:-}" ] && command -v ksshaskpass >/dev/null 2>&1; then
+	SUDO_ASKPASS=$(command -v ksshaskpass)
+	export SUDO_ASKPASS
+	SUDO="sudo -A"
+fi
+
 installed_version() { dpkg-query -W -f '${Version}' vinx-shell 2>/dev/null || echo "aucune"; }
 
 restart_shell() {
@@ -52,7 +61,8 @@ restart_shell() {
 		sleep 2
 		pgrep -x vinx-shell >/dev/null 2>&1 || {
 			say "Le shell n'a pas redémarré seul : lancement direct"
-			(VINX_SESSION=1 setsid /usr/libexec/vinx-shell-autostart >/dev/null 2>&1 || setsid vinx-shell >/dev/null 2>&1) &
+			# Sous-shell détaché lui aussi de la sortie : sinon l'appelant (terminal, script) attend sa fin.
+			(VINX_SESSION=1 setsid /usr/libexec/vinx-shell-autostart || setsid vinx-shell) >/dev/null 2>&1 </dev/null &
 		}
 	else
 		say "Shell VinX non lancé (hors session VinX) : rien à relancer"
@@ -73,8 +83,8 @@ do_build() {
 	cd "$REPO/shell"
 	if ! dpkg-checkbuilddeps >/dev/null 2>&1; then
 		say "Installation des dépendances de construction (mot de passe administrateur)"
-		sudo apt-get update -qq
-		sudo apt-get build-dep -y "$REPO/shell"
+		$SUDO apt-get update -qq
+		$SUDO apt-get build-dep -y "$REPO/shell"
 	fi
 	say "Construction de vinx-shell $(dpkg-parsechangelog -S Version)"
 	dpkg-buildpackage -us -uc -b >"$REPO/.vinx-dev-build.log" 2>&1 || {
@@ -96,7 +106,7 @@ install_deb() {
 	deb=$1
 	[ -f "$deb" ] || die "paquet introuvable : $deb"
 	say "Installation de $(basename "$deb") (mot de passe administrateur)"
-	sudo apt-get install -y --allow-downgrades "$deb"
+	$SUDO apt-get install -y --allow-downgrades "$deb"
 	restart_shell
 	say "VinX shell $(installed_version) installé."
 }
@@ -152,7 +162,7 @@ rapport)
 	# Les fenêtres réelles (liste des tâches de KWin) ne sont pas lisibles hors écran : modèle d'aperçu.
 	out=${XDG_CACHE_HOME:-$HOME/.cache}/vinx-dev/rapport-$(date +%Y%m%d-%H%M%S)
 	mkdir -p "$out/captures"
-	shot() { name=$1; shift; VINX_TASKS_BACKEND=preview QT_QPA_PLATFORM=offscreen timeout 30 "$@" --screenshot "$out/captures/$name.png" >>"$out/captures.log" 2>&1 || echo "échec : $name" >>"$out/captures.log"; }
+	shot() { name=$1; shift; VINX_TASKS_BACKEND=preview QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=kde timeout 30 "$@" --screenshot "$out/captures/$name.png" >>"$out/captures.log" 2>&1 || echo "échec : $name" >>"$out/captures.log"; }
 	say "Captures des Paramètres"
 	for p in appearance wallpaper desktop dock notifications office displays sound power network printers drivers \
 		accessibility keyboard datetime users backup troubleshoot updates about; do

@@ -59,6 +59,10 @@ int main(int argc, char *argv[])
     // QApplication (et non QGuiApplication) : les menus d'application importés en DBusMenu
     // (menu global) sont des QMenu, qui exigent une application « widgets ».
     QApplication app(argc, argv);
+    // Captures hors écran (vinx-dev rapport) : les commandes lancées (kscreen-doctor…) doivent
+    // voir le vrai bureau, pas l'écran factice de la plateforme « offscreen ».
+    if (QGuiApplication::platformName() == QLatin1String("offscreen"))
+        qunsetenv("QT_QPA_PLATFORM");
     vinxInstallTranslator(app);
     app.setApplicationName(QStringLiteral("vinx-shell"));
     app.setApplicationVersion(QStringLiteral(VINX_VERSION));

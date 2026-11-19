@@ -16,6 +16,10 @@ inline int vinxAppMain(int argc, char *argv[], const char *appName, const char *
                        const QList<QCommandLineOption> &extraOptions = {}, const QStringList &stringProperties = {})
 {
     QGuiApplication app(argc, argv);
+    // Captures hors écran (vinx-dev rapport) : les commandes lancées (kscreen-doctor…) doivent
+    // voir le vrai bureau, pas l'écran factice de la plateforme « offscreen ».
+    if (QGuiApplication::platformName() == QLatin1String("offscreen"))
+        qunsetenv("QT_QPA_PLATFORM");
     vinxInstallTranslator(app);
     app.setApplicationName(QString::fromLatin1(appName));
     app.setApplicationVersion(QStringLiteral(VINX_VERSION));
