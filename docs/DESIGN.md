@@ -16,7 +16,7 @@ connexion, installateur. Les valeurs exactes sont dans [`branding/tokens.toml`](
 | Bordures | `#D8D6CF` | blanc 8 % | Séparations, contours |
 | **Accent (défaut : vert du logo)** | `#10DD8C` | `#10DD8C` | Bouton principal, interrupteurs, curseurs, sélection, trait signature |
 | Encre sur l'accent | `#06130D` | `#06130D` | Texte posé sur l'accent (**jamais de blanc sur l'accent**) |
-| Accent foncé (texte, focus) | `#0A7F51` | `#10DD8C` | Liens, texte coloré, anneau de focus, bord des contrôles actifs |
+| Accent foncé (texte, focus) | `#0A7A4E` | `#10DD8C` | Liens, texte coloré, anneau de focus, bord des contrôles actifs |
 | États | succès `#3FA66B` · alerte `#D4A13C` · danger `#E5484D` | idem | Uniquement pour leur sens |
 
 Règles :
@@ -33,9 +33,13 @@ Règles :
 | Paire | Rapport |
 |---|---|
 | Encre `#06130D` sur vert `#10DD8C` | 10,6:1 |
-| Vert foncé `#0A7F51` sur surface claire | 4,7:1 |
+| Vert foncé `#0A7A4E` sur surface claire / fond | 5,0:1 / 4,5:1 |
 | Vert `#10DD8C` sur surface sombre | 9,6:1 |
 | Texte secondaire clair `#5F5E5A` sur surface | 6,1:1 |
+| Texte tertiaire clair `#888781` sur fond (indications) | 3,0:1 |
+
+Vérifié automatiquement pour les 8 accents, en clair et en sombre (test `contrast`, `shell/tests/contrast.py`) ;
+`#0A7F51` est devenu `#0A7A4E` en novembre 2026 (4,2:1 seulement sur le fond du bureau).
 
 Le vert clair sur fond clair n'atteint que 1,7:1 : les interrupteurs et curseurs actifs ont donc
 un **bord vert foncé**, et l'état se lit aussi par la position ou le texte (jamais la couleur seule).

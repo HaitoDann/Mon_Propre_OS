@@ -82,7 +82,7 @@ Item {
             Theme.dark = false
             verify(darkWindow !== Theme.surfaceWindow.toString())
             compare(Theme.accent, Qt.color("#10DD8C"))
-            compare(Theme.accentForeground, Qt.color("#0A7F51"))
+            compare(Theme.accentForeground, Qt.color("#0A7A4E"))
             Theme.accentId = "lagon"
             compare(Theme.accent, Qt.color("#2E9BFF"))
             compare(Theme.accentText, Qt.color("#04121F"))

@@ -15,7 +15,7 @@ wallpaper_dark = "wallpaper/vinx-logo-sombre.svg"
 [colors]
 logo = "#10DD8C"            # vert du logo
 accent = "#10DD8C"          # accent de l'interface : le même vert (encre #06130D posée dessus)
-accent_text = "#0A7F51"     # vert foncé pour le texte et le focus sur fond clair
+accent_text = "#0A7A4E"     # vert foncé pour le texte et le focus sur fond clair
 logo_gradient = ["#10DD8C", "#10DD8C"]
 background_light = "#ECEBE6" # thème par défaut
 background_dark = "#121413"

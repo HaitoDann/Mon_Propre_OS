@@ -18,7 +18,7 @@ default_accent = "vert"
 name = "Vert VinX"
 fill = "#10DD8C"
 ink = "#06130D"
-text = "#0A7F51"
+text = "#0A7A4E"
 [accents.lagon]
 name = "Lagon"
 fill = "#2E9BFF"
@@ -105,7 +105,7 @@ surface_hover = ["#FFFFFF0F", "#1414140A"]
 surface_active = ["#FFFFFF1A", "#14141414"]
 text = ["#ECECEA", "#141414"]
 text_secondary = ["#A3A6A3", "#5F5E5A"]
-text_tertiary = ["#7A7D7A", "#8A8983"]
+text_tertiary = ["#7A7D7A", "#888781"]
 border = ["#FFFFFF14", "#D8D6CF"]
 border_strong = ["#FFFFFF24", "#C9C7C0"]
 shadow = ["#00000066", "#0000001F"]

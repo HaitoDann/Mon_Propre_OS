@@ -32,7 +32,7 @@ inline Palette palette(const Colors &c)
     p.bar = c.dark ? "#1A1C1B" : "#F8F7F4";
     p.border = c.dark ? "#2C302E" : "#DAD8D1";
     p.text = c.dark ? "#ECECEA" : "#141414";
-    p.textInactive = c.dark ? "#7A7D7A" : "#8A8983";
+    p.textInactive = c.dark ? "#7A7D7A" : "#888781";
     p.neutral = c.dark ? "#3A3E3C" : "#D2D0C9";
     p.neutralInactive = c.dark ? "#2C302E" : "#E3E1DB";
     p.glyph = c.dark ? "#ECECEA" : "#141414";

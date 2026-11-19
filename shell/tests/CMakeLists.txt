@@ -152,3 +152,6 @@ add_test(NAME accent-names
 add_test(NAME installed-tools
     COMMAND sh -c "rm -rf destdir && DESTDIR=$PWD/destdir \"${CMAKE_COMMAND}\" --install \"${PROJECT_BINARY_DIR}\" --prefix /usr >/dev/null && sh \"${CMAKE_CURRENT_SOURCE_DIR}/installed-tools.sh\" \"${PROJECT_SOURCE_DIR}\" destdir"
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+
+# Contrastes WCAG AA de tokens.toml, 8 accents, clair et sombre (docs/DESIGN.md § 2).
+add_test(NAME contrast COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/contrast.py" "${VINX_BRANDING_DIR}/tokens.toml")

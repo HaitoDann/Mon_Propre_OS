@@ -135,7 +135,7 @@ find config/bootloaders/grub-pc -type f \( -name '*.cfg' -o -name '*.txt' \) -pr
 	-e 's/(menu_color_normal=)[^ ]+/\1black\/black/' \
 	-e 's/(menu_color_highlight=)[^ ]+/\1green\/black/' \
 	-e 's/((item|title|message|label|text)[-_]color *[=:] *)"#[0-9A-Fa-f]{6}"/\1"#141414"/' \
-	-e 's/(selected_item_color *[=:] *)"#[0-9A-Fa-f]{6}"/\1"#0A7F51"/'
+	-e 's/(selected_item_color *[=:] *)"#[0-9A-Fa-f]{6}"/\1"#0A7A4E"/'
 # Entrées du menu de démarrage : « VinX OS » au lieu de « Debian GNU/Linux » / « Live system ».
 grep -rlE "Debian GNU/Linux|Live system" config/bootloaders | xargs -r sed -i \
 	-e 's#Debian GNU/Linux#VinX OS#g' -e 's#Live system#VinX OS (live)#g'
