@@ -21,7 +21,11 @@ KDE et les autres applications à la prochaine ouverture de session (`plasma-loc
 
 ## Pas encore traduit
 
-- Noms et résumés du catalogue du Store (`apps/store/Catalog.js`) et noms des couleurs d'accent
-  (`branding/tokens.toml`).
-- Messages des scripts (`vinx-backup`, `vinx-update`, `vinx-dev`, notifications qu'ils envoient).
+- Messages d'erreur des outils en ligne de commande (`vinx-admin`, `vinx-snapshots`, `vinx-dev`) :
+  destinés au terminal et au journal, ils restent en français.
 - Diaporama de l'installateur et écran de connexion.
+
+Traduits depuis la 0.26.11 : catalogue du Store (`Catalog.js`, contexte « Catalog »), noms des
+couleurs d'accent (`common/accentnames.h`, contexte « Accent », test `accent-names`), notifications
+de `vinx-update` et `vinx-backup` et nom du dossier de restauration (`system/vinx-i18n.sh` :
+`T "français" "English"`, même règle de langue que les applications).

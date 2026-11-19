@@ -11,6 +11,7 @@ printf '#!/bin/sh\ncase "$1" in DOCUMENTS) echo "$HOME/Documents";; PICTURES) ec
 printf '#!/bin/sh\nexit 0\n' > "$T/bin/busctl"
 chmod +x "$T/bin/"*
 export PATH="$T/bin:$PATH"
+export VINX_I18N="$(dirname "$SCRIPT")/vinx-i18n.sh"
 # Aucun disque choisi : le minuteur (--if-due) sort sans erreur, une sauvegarde manuelle échoue.
 printf '[backup]\nauto=true\n' > "$XDG_CONFIG_HOME/vinx/shell.ini"
 sh "$SCRIPT" run --if-due
@@ -44,6 +45,11 @@ echo "modifié" > "$HOME/Documents/budget.txt"
 OUT=$(sh "$SCRIPT" restore 2026-01-01)
 grep -q budget "$OUT/Documents/budget.txt"
 grep -q modifié "$HOME/Documents/budget.txt"
+case "$OUT" in *"/Restauration du 2026-01-01") ;; *) echo "dossier inattendu : $OUT" >&2; exit 1 ;; esac
+# Interface en anglais : dossier de restauration en anglais.
+printf '[interface]\nlanguage=en\n' >> "$XDG_CONFIG_HOME/vinx/shell.ini"
+OUT=$(sh "$SCRIPT" restore 2026-01-01)
+case "$OUT" in *"/Restored on 2026-01-01") ;; *) echo "dossier inattendu (en) : $OUT" >&2; exit 1 ;; esac
 
 # Disque débranché : --if-due ne fait rien et ne signale pas d'erreur.
 sed -i "s#destination=.*#destination=$T/absent#" "$XDG_CONFIG_HOME/vinx/shell.ini"

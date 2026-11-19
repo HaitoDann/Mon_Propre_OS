@@ -1,5 +1,6 @@
 # Outils système de VinX (exécutés en administrateur via pkexec ou APT).
-install(PROGRAMS vinx-snapshots vinx-admin DESTINATION "lib/vinx")
+install(PROGRAMS vinx-snapshots vinx-admin vinx-update DESTINATION "lib/vinx")
+install(FILES vinx-i18n.sh DESTINATION "lib/vinx")
 install(PROGRAMS vinx-dev vinx-backup DESTINATION "${CMAKE_INSTALL_BINDIR}")
 # Sauvegarde des documents : minuteur utilisateur, démarré par vinx-session (ADR 0032).
 install(FILES vinx-backup.service vinx-backup.timer DESTINATION "lib/systemd/user")

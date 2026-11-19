@@ -10,10 +10,14 @@ STATUS=$RUN/vinx-update.json
 exec 9>"$RUN/vinx-update.lock"
 flock -n 9 || exit 0   # déjà en cours
 
+# Langue des notifications (T "français" "English").
+# shellcheck source=/dev/null
+. "${VINX_I18N:-/usr/lib/vinx/vinx-i18n.sh}" 2>/dev/null || T() { printf '%s' "$1"; }
+
 put() { printf '{"state":"%s","step":"%s","percent":%s,"time":%s}\n' "$1" "$2" "$3" "$(date +%s)" > "$STATUS.tmp" && mv "$STATUS.tmp" "$STATUS"; }
 notify() {
 	busctl --user call org.freedesktop.Notifications /org/freedesktop/Notifications org.freedesktop.Notifications \
-		Notify 'susssasa{sv}i' "Mises à jour" 0 "org.vinx.store" "$1" "$2" 0 0 -1 >/dev/null 2>&1 || true
+		Notify 'susssasa{sv}i' "$(T "Mises à jour" "Updates")" 0 "org.vinx.store" "$1" "$2" 0 0 -1 >/dev/null 2>&1 || true
 }
 
 # step LIBELLÉ COMMANDE… : exécute en relevant les pourcentages ; renvoie le code de la commande.
@@ -43,8 +47,8 @@ fi
 
 if [ "$ok" = 1 ]; then
 	put "done" end 100
-	notify "Le système est à jour" "Les mises à jour ont été installées."
+	notify "$(T "Le système est à jour" "Your system is up to date")" "$(T "Les mises à jour ont été installées." "The updates have been installed.")"
 else
 	put failed end 100
-	notify "Mises à jour incomplètes" "Certaines mises à jour n'ont pas pu être installées. Réessayez depuis le Store."
+	notify "$(T "Mises à jour incomplètes" "Updates incomplete")" "$(T "Certaines mises à jour n'ont pas pu être installées. Réessayez depuis le Store." "Some updates could not be installed. Try again from the Store.")"
 fi

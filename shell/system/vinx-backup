@@ -14,6 +14,9 @@ INI=${XDG_CONFIG_HOME:-$HOME/.config}/vinx/shell.ini
 STATE=${XDG_STATE_HOME:-$HOME/.local/state}/vinx
 KEEP=${VINX_BACKUP_KEEP:-30}
 mkdir -p "$STATE"
+# Langue des notifications et du dossier de restauration (T "français" "English").
+# shellcheck source=/dev/null
+. "${VINX_I18N:-/usr/lib/vinx/vinx-i18n.sh}" 2>/dev/null || T() { printf '%s' "$1"; }
 
 # Valeur d'une clé du groupe [backup] (QSettings : guillemets éventuels).
 conf() {
@@ -22,7 +25,7 @@ conf() {
 json_escape() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'; }
 notify() {
 	busctl --user call org.freedesktop.Notifications /org/freedesktop/Notifications org.freedesktop.Notifications \
-		Notify 'susssasa{sv}i' "Sauvegarde" 0 "drive-harddisk" "$1" "$2" 0 0 -1 >/dev/null 2>&1 || true
+		Notify 'susssasa{sv}i' "$(T "Sauvegarde" "Backup")" 0 "drive-harddisk" "$1" "$2" 0 0 -1 >/dev/null 2>&1 || true
 }
 
 DEST=$(conf destination)
@@ -97,18 +100,18 @@ run)
 		date '+%Y-%m-%d %H:%M' > "$STATE/backup-last"
 		date +%s > "$STATE/backup-last-epoch"
 		echo ok > "$STATE/backup-ok"
-		[ "${2:-}" = --if-due ] && notify "Sauvegarde terminée" "Vos documents sont copiés sur $(basename "$DEST")."
+		[ "${2:-}" = --if-due ] && notify "$(T "Sauvegarde terminée" "Backup complete")" "$(T "Vos documents sont copiés sur" "Your documents were copied to") $(basename "$DEST")."
 		exit 0
 	fi
 	echo failed > "$STATE/backup-ok"
-	notify "Sauvegarde incomplète" "Certains fichiers n'ont pas pu être copiés sur $(basename "$DEST")."
+	notify "$(T "Sauvegarde incomplète" "Backup incomplete")" "$(T "Certains fichiers n'ont pas pu être copiés sur" "Some files could not be copied to") $(basename "$DEST")."
 	exit 5
 	;;
 restore)
 	DATE=${2:?date de la version manquante}
 	case "$DATE" in *[!0-9-]*) echo "Date invalide." >&2; exit 2 ;; esac
 	[ -d "$ROOT/$DATE" ] || { echo "Version introuvable (disque branché ?)." >&2; exit 3; }
-	OUT="$HOME/Restauration du $DATE"
+	OUT="$HOME/$(T "Restauration du" "Restored on") $DATE"
 	mkdir -p "$OUT"
 	# Copie à part : les fichiers actuels ne sont jamais écrasés.
 	rsync -a --no-owner --no-group "$ROOT/$DATE/" "$OUT/" || exit 4

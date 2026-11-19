@@ -147,3 +147,8 @@ set_tests_properties(viewer PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;LA
 add_test(NAME accent-names
     COMMAND "${Python3_EXECUTABLE}" -c "import re,sys,tomllib; t=tomllib.load(open(sys.argv[1],'rb')); h=open(sys.argv[2],encoding='utf-8').read(); m=[a['name'] for a in t['accents'].values() if '\"'+a['name']+'\"' not in h]; print('manquants :', m) if m else None; sys.exit(1 if m else 0)"
             "${VINX_BRANDING_DIR}/tokens.toml" "${PROJECT_SOURCE_DIR}/common/accentnames.h")
+
+# Outils /usr/lib/vinx cités dans le code : tous installés (installation de test dans le dossier de build).
+add_test(NAME installed-tools
+    COMMAND sh -c "rm -rf destdir && DESTDIR=$PWD/destdir \"${CMAKE_COMMAND}\" --install \"${PROJECT_BINARY_DIR}\" --prefix /usr >/dev/null && sh \"${CMAKE_CURRENT_SOURCE_DIR}/installed-tools.sh\" \"${PROJECT_SOURCE_DIR}\" destdir"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
