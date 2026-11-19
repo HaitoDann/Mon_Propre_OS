@@ -25,7 +25,7 @@ Identité : thème clair, **vert du logo `#10DD8C`**, police IBM Plex Sans, desi
 | `branding/` | Identité : tokens, logo, icônes, fonds d'écran, écrans de démarrage, police |
 | `distro/` | Construction de l'ISO (live-build), dépôt APT, test de démarrage |
 | `docs/` | Design, UX, architecture, roadmap, recette 1.0, guides, décisions (ADR) |
-| `web/` | Site de présentation (page `vinxlabs.fr/vinx-os/`) |
+| `web/` | Site de présentation (page `vinxlabs.fr/VinX-OS/`) |
 
 ## Démarrer
 

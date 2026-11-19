@@ -13,7 +13,7 @@
 | 5 bis — Système | Instantanés btrfs + retour arrière au démarrage (ADR 0031), sauvegarde des documents | ✅ à valider sur ISO neuve |
 | 5 ter — Traduction | Anglais (ADR 0034) | ✅ sauf catalogue du Store, noms d'accents, messages des scripts |
 | **6 — Consolidation** | Gel des fonctions, recette sur matériel ([RECETTE.md](RECETTE.md)), corrections, qualité | ⏳ **en cours** |
-| 7 — Publication 1.0 | ISO signée, site (vinxlabs.fr/vinx-os), guide utilisateur, notes de version | à venir |
+| 7 — Publication 1.0 | ISO signée, site (vinxlabs.fr/VinX-OS), guide utilisateur, notes de version | à venir |
 
 ## Phase 6 — Consolidation (détail)
 
@@ -33,7 +33,7 @@
 1. Version `1.0.0` (shell et ISO), étiquette `shell-v1.0.0`, entrée de changelog « 1.0 ».
 2. ISO `vinx-1.0-amd64.iso` + `SHA256SUMS` + `SHA256SUMS.asc` (signée avec la clé du projet), publiée en
    *release* GitHub.
-3. Site `vinxlabs.fr/vinx-os/` (sources : `web/`), guide nouveaux utilisateurs, notes de version,
+3. Site `vinxlabs.fr/VinX-OS/` (sources : `web/`), guide nouveaux utilisateurs, notes de version,
    configuration requise et matériel testé.
 4. Modèles de tickets GitHub (bogue, matériel), `CONTRIBUTING.md`, `SECURITY.md`.
 

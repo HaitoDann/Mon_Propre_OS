@@ -1,23 +1,17 @@
 # Site web de VinX OS
 
-Page produit `vinxlabs.fr/vinx-os/`, sur le modèle de la page Nilo du dépôt `vinx-labs`
-(même squelette, `/assets/shell.css` commun, thème vert VinX, IBM Plex Sans).
+Page produit **`vinxlabs.fr/VinX-OS/`**, publiée dans le dépôt `vinx-labs` (dossier `VinX-OS/`), sur le
+modèle de la page Nilo (même squelette, `/assets/shell.css` commun, thème vert VinX, IBM Plex Sans).
+Sources de référence : `web/VinX-OS/` ici ; toute modification se reporte dans `vinx-labs/VinX-OS/`.
 
-## Mise en ligne (dans le dépôt vinx-labs)
-
-```bash
-cp -r ~/Mon_Propre_OS/web/vinx-os ~/vinx-labs/
-```
-
-Puis, dans `vinx-labs` : ajouter une carte « VinX OS » sur `index.html` (à côté de Nilo), l'URL dans
-`sitemap.xml`, commiter et pousser sur `main`.
+Pour l'instant la page n'est **pas annoncée** : absente de l'accueil et du `sitemap.xml`, `noindex`.
+Pour l'annoncer (1.0) : retirer la balise `robots`, ajouter une carte sur `index.html` et l'URL au sitemap.
 
 ## Captures
 
-La section « Aperçu » reste masquée tant que les images n'existent pas. Les produire sur le portable
-avec `vinx-dev rapport`, puis copier dans `vinx-os/assets/` :
-`capture-bureau.png`, `capture-controle.png`, `capture-parametres.png`, `capture-store.png`
-(et `og-vinx-os.png`, 1200×630, pour les partages).
+La section « Aperçu » reste masquée tant que les images n'existent pas. Les produire avec
+`vinx-dev rapport`, puis copier dans `VinX-OS/assets/` : `capture-bureau.png`, `capture-controle.png`,
+`capture-parametres.png`, `capture-store.png` (et `og-vinx-os.png`, 1200×630, pour les partages).
 
 ## Téléchargement
 

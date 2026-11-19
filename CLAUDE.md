@@ -53,7 +53,7 @@ Abandonnés (ne pas réintroduire) : violet/indigo, biseau partout, étiquettes 
 | `shell/sddm/vinx`, `shell/lockscreen` | Connexion et verrouillage |
 | `shell/tests/` | Tests QML (qmltestrunner) et C++ (QtTest) |
 | `distro/` | ISO : `build.sh`, `live/` (live-build), hooks, `scripts/` (APT, assets), `tests/boot-test.sh` |
-| `web/vinx-os/` | Site de présentation (à copier dans le dépôt `vinx-labs`, voir `web/README.md`) |
+| `web/VinX-OS/` | Site de présentation (à copier dans le dépôt `vinx-labs`, voir `web/README.md`) |
 | `.github/workflows/` | `shell.yml` (paquet + tests, à chaque poussée sur shell/), `iso.yml` (ISO + test de démarrage QEMU, déclenchement manuel uniquement), `apt-repo.yml` (étiquette `shell-v*`), `checks.yml` |
 
 Préférences utilisateur : `~/.config/vinx/shell.ini` (QSettings, clés `section/clé`).
