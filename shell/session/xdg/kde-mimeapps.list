@@ -1,3 +1,5 @@
+# Variante propre à la session (XDG_CURRENT_DESKTOP=KDE) : la spécification n'y autorise que
+# [Default Applications] ; les associations ajoutées sont dans mimeapps.list.
 [Default Applications]
 inode/directory=org.vinx.files.desktop;org.kde.dolphin.desktop;
 
@@ -11,16 +13,3 @@ image/svg+xml=org.vinx.images.desktop;org.kde.gwenview.desktop;
 image/heic=org.vinx.images.desktop;org.kde.gwenview.desktop;
 image/heif=org.vinx.images.desktop;org.kde.gwenview.desktop;
 image/avif=org.vinx.images.desktop;org.kde.gwenview.desktop;
-
-[Added Associations]
-inode/directory=org.vinx.files.desktop;
-image/jpeg=org.vinx.images.desktop;
-image/png=org.vinx.images.desktop;
-image/webp=org.vinx.images.desktop;
-image/gif=org.vinx.images.desktop;
-image/bmp=org.vinx.images.desktop;
-image/tiff=org.vinx.images.desktop;
-image/svg+xml=org.vinx.images.desktop;
-image/heic=org.vinx.images.desktop;
-image/heif=org.vinx.images.desktop;
-image/avif=org.vinx.images.desktop;

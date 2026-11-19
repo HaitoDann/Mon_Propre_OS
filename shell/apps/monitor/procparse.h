@@ -5,6 +5,7 @@
 
 #include <QByteArray>
 #include <QList>
+#include <QProcess>
 #include <QRegularExpression>
 #include <QString>
 #include <QStringList>
@@ -202,14 +203,34 @@ inline QString appIdFromCgroup(const QByteArray &cgroup)
 }
 
 // Nom de programme d'une ligne Exec : « env A=B firefox-esr %u » → « firefox-esr »,
-// « flatpak run org.gimp.GIMP » → « org.gimp.GIMP ».
+// « flatpak run org.gimp.GIMP » → « org.gimp.GIMP », « sh -c "pkexec calamares" » → « calamares ».
+// Un interpréteur de commandes nu (sh, bash…) n'est jamais un nom d'application : sinon tous
+// les scripts du système seraient attribués à ce lanceur.
 inline QString execProgram(const QStringList &args)
 {
+    static const QStringList wrappers = {QStringLiteral("pkexec"), QStringLiteral("sudo"), QStringLiteral("nice"),
+                                         QStringLiteral("ionice"), QStringLiteral("nohup"), QStringLiteral("setsid")};
+    static const QStringList shells = {QStringLiteral("sh"), QStringLiteral("bash"), QStringLiteral("dash"), QStringLiteral("zsh")};
     int i = 0;
-    if (i < args.size() && args.at(i).endsWith(QLatin1String("env"))) {
-        ++i;
-        while (i < args.size() && args.at(i).contains(QLatin1Char('=')))
+    while (i < args.size()) {
+        const QString name = args.at(i).section(QLatin1Char('/'), -1);
+        if (name == QLatin1String("env")) {
             ++i;
+            while (i < args.size() && (args.at(i).contains(QLatin1Char('=')) || args.at(i).startsWith(QLatin1Char('-'))))
+                ++i;
+        } else if (wrappers.contains(name)) {
+            ++i;
+            while (i < args.size() && args.at(i).startsWith(QLatin1Char('-')))
+                ++i;
+        } else if (shells.contains(name)) {
+            // « sh -c "commande" » : on analyse la commande ; sinon rien d'identifiable.
+            const int c = args.indexOf(QStringLiteral("-c"), i + 1);
+            if (c < 0 || c + 1 >= args.size())
+                return {};
+            return execProgram(QProcess::splitCommand(args.at(c + 1)));
+        } else {
+            break;
+        }
     }
     if (i < args.size() && args.at(i).endsWith(QLatin1String("flatpak"))) {
         for (int j = i + 1; j < args.size(); ++j) {

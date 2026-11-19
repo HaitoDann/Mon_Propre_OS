@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     app.setApplicationName(QStringLiteral("vinx-screenshot"));
     app.setApplicationVersion(QStringLiteral(VINX_VERSION));
     app.setDesktopFileName(QStringLiteral("org.vinx.screenshot"));
-    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("applets-screenshooter")));
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("org.vinx.screenshot")));
     app.setQuitOnLastWindowClosed(false);   // les fenêtres de sélection se cachent pendant le retardateur
 
     QCommandLineParser parser;

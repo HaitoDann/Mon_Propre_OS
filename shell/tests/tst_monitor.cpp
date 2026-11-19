@@ -90,6 +90,10 @@ private Q_SLOTS:
         QCOMPARE(ProcParse::execProgram({QStringLiteral("/usr/lib/firefox-esr/firefox-esr"), QStringLiteral("%u")}), QStringLiteral("firefox-esr"));
         QCOMPARE(ProcParse::execProgram({QStringLiteral("env"), QStringLiteral("A=1"), QStringLiteral("gimp")}), QStringLiteral("gimp"));
         QCOMPARE(ProcParse::execProgram({QStringLiteral("/usr/bin/flatpak"), QStringLiteral("run"), QStringLiteral("--branch=stable"), QStringLiteral("org.gimp.GIMP")}), QStringLiteral("org.gimp.GIMP"));
+        // Lanceur de Calamares : « sh -c "pkexec calamares" » ne doit pas capter tous les scripts sh.
+        QCOMPARE(ProcParse::execProgram({QStringLiteral("sh"), QStringLiteral("-c"), QStringLiteral("pkexec calamares")}), QStringLiteral("calamares"));
+        QCOMPARE(ProcParse::execProgram({QStringLiteral("/bin/bash")}), QString());
+        QCOMPARE(ProcParse::execProgram({QStringLiteral("sudo"), QStringLiteral("-E"), QStringLiteral("/usr/bin/gparted")}), QStringLiteral("gparted"));
     }
 
     // Faux /proc : navigateur et ses onglets, LibreOffice (lanceur oosplash), une application dans

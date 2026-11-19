@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     app.setApplicationName(QStringLiteral("vinx-monitor"));
     app.setApplicationVersion(QStringLiteral(VINX_VERSION));
     app.setDesktopFileName(QStringLiteral("org.vinx.monitor"));
-    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("utilities-system-monitor")));
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("org.vinx.monitor")));
 
     QCommandLineParser parser;
     parser.addHelpOption();

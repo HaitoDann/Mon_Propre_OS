@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     app.setApplicationName(QStringLiteral("vinx-images"));
     app.setApplicationVersion(QStringLiteral(VINX_VERSION));
     app.setDesktopFileName(QStringLiteral("org.vinx.images"));
-    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("image-x-generic")));
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("org.vinx.images")));
 
     QCommandLineParser parser;
     parser.addHelpOption();

@@ -71,6 +71,14 @@ if [ -f $SM ] && ! grep -q vinx-off $SM; then
 for f in $CHROOT/etc/apt/sources.list.d/*.list $CHROOT/etc/apt/sources.list.d/*.sources; do [ -e "$f" ] \&\& mv "$f" "$f.vinx-off"; done' $SM
 fi
 
+# Système installé : calamares-settings-debian retire ses réglages mais laisse le programme
+# calamares (et son lanceur « Installer le système »). On ajoute calamares à la liste à retirer,
+# sur le modèle de la ligne existante (même indentation, mêmes guillemets).
+if [ -f $M/packages.conf ] && grep -q "calamares-settings-debian" $M/packages.conf \
+	&& ! grep -Eq "^[[:space:]]*-[[:space:]]*['\"]?calamares['\"]?[[:space:]]*$" $M/packages.conf; then
+	sed -i "/calamares-settings-debian/{p;s/calamares-settings-debian/calamares/}" $M/packages.conf
+fi
+
 # Renomme le raccourci « Install Debian » fourni par calamares-settings-debian.
 for f in /usr/share/applications/*.desktop /etc/skel/Desktop/*.desktop; do
 	[ -f "$f" ] && grep -q "Install Debian" "$f" && sed -i \

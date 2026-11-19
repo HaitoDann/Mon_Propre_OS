@@ -303,7 +303,7 @@ void Shot::notifySaved()
 {
     QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.freedesktop.Notifications"), QStringLiteral("/org/freedesktop/Notifications"),
                                                       QStringLiteral("org.freedesktop.Notifications"), QStringLiteral("Notify"));
-    msg.setArguments({tr("Capture d'écran"), uint(0), QStringLiteral("applets-screenshooter"), tr("Capture enregistrée"),
+    msg.setArguments({tr("Capture d'écran"), uint(0), QStringLiteral("org.vinx.screenshot"), tr("Capture enregistrée"),
                       tr("Copiée dans le presse-papiers et enregistrée dans Images › Captures."),
                       QStringList{QStringLiteral("annotate"), tr("Annoter"), QStringLiteral("folder"), tr("Ouvrir le dossier")},
                       QVariantMap{{QStringLiteral("image-path"), m_savedPath}}, 8000});
