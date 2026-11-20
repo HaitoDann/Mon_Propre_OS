@@ -1,0 +1,9 @@
+#!/bin/sh
+# Pare-feu activé par défaut : entrées refusées, sorties permises (politique par défaut de ufw).
+# Les règles par défaut de ufw laissent passer mDNS (découverte des imprimantes) et DHCP.
+# « ufw enable » demande un noyau en marche : on active par la configuration, prise en compte au démarrage.
+set -e
+if [ -f /etc/ufw/ufw.conf ]; then
+	sed -i 's/^ENABLED=.*/ENABLED=yes/' /etc/ufw/ufw.conf
+fi
+systemctl enable ufw.service >/dev/null 2>&1 || true

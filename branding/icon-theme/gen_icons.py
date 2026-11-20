@@ -54,6 +54,8 @@ ICONS = {
     "preferences-devices-printer": ("printer", "#2F6FD0", "apps"),
     "org.kde.kwalletmanager": ("lock", "#8A8983", "apps"),
     "kwalletmanager": ("lock", "#8A8983", "apps"),
+    "org.kde.skanlite": ("scanner", "#2F6FD0", "apps"),
+    "skanlite": ("scanner", "#2F6FD0", "apps"),
     # Emplacements
     "folder": ("folder", None, "places"),
     "inode-directory": ("folder", None, "mimetypes"),

@@ -40,6 +40,7 @@ levé en partie le 20/11 pour le design (écran de connexion, fenêtres aimanté
 | D.5 | Variantes du fond « VinX Logo » (maquette du 20/11) | en attente du choix |
 | D.6 | Espaces de travail (ADR 0044) : étape 1 — menu, noms, Méta+1…9, bandeau | ✅ à voir sur le portable |
 | D.7 | Espaces : couleur par espace (accent et logo du fond, sans halo), étape 2 | ✅ à voir sur le portable |
+| D.9 | Essentiels du quotidien dans l'ISO : correcteur français, exFAT/NTFS, MTP/SMB, codecs GStreamer, numérisation (Skanlite, scanners sans pilote), pare-feu ufw actif | ✅ à vérifier sur une ISO neuve |
 | D.8 | Espaces : tiroir latéral et documents récents (étapes 3 et 4) | ✖ abandonné (ADR 0044) |
 
 ## Phase 7 — Publication 1.0

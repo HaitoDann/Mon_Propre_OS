@@ -9,3 +9,22 @@ libreoffice-l10n-fr
 thunderbird
 thunderbird-l10n-fr
 vlc
+# Essentiels du quotidien (vérification du 20/11/2026 : absents des listes, ajoutés explicitement)
+# Correcteur orthographique, coupure des mots et synonymes en français (LibreOffice, Firefox, Thunderbird)
+hunspell-fr
+hyphen-fr
+mythes-fr
+# Clés USB et disques venant de Windows/macOS : exFAT et NTFS ; téléphones (MTP) et partages réseau (SMB)
+exfatprogs
+ntfs-3g
+kio-extras
+# Audio et vidéo : codecs pour les applications KDE/Qt (GStreamer) ; VLC et Firefox utilisent FFmpeg
+gstreamer1.0-libav
+gstreamer1.0-plugins-good
+# Numérisation : scanners USB et réseau sans pilote (eSCL/WSD, imprimantes multifonctions)
+skanlite
+sane-utils
+sane-airscan
+ipp-usb
+# Pare-feu : connexions entrantes refusées par défaut (hook 0950-vinx-firewall)
+ufw
