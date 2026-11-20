@@ -1,3 +1,13 @@
+vinx-shell (0.29.2) trixie; urgency=medium
+
+  * Écran de verrouillage VinX enfin affiché (ADR 0045) : kscreenlocker 6
+    lit l'écran dans le paquet de *shell* Plasma, plus dans le paquet
+    d'apparence. Nouveau paquet de shell réduit org.vinx.lockscreen (écran
+    de verrouillage seulement), désigné par PLASMA_DEFAULT_SHELL dans la
+    session VinX ; la session Plasma garde Breeze.
+
+ -- VinX OS <vinx@localhost>  Fri, 20 Nov 2026 19:30:00 +0000
+
 vinx-shell (0.29.1) trixie; urgency=medium
 
   * Verrouillage : l'écran VinX est imposé à l'ouverture de session

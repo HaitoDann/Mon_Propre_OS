@@ -2,6 +2,9 @@
 # Session VinX OS : infrastructure Plasma (KWin, services, portails) avec le shell VinX
 # à la place de plasmashell (cf. docs/adr/0009-session-vinx.md).
 export VINX_SESSION=1
+# Écran de verrouillage VinX (ADR 0045) : kscreenlocker (Plasma 6) le lit dans le paquet de shell
+# désigné ici ; plasmashell ne démarre pas en session VinX, la session Plasma garde Breeze.
+export PLASMA_DEFAULT_SHELL=org.vinx.lockscreen
 # Réglages propres à la session (KWin…), prioritaires sur ceux du système.
 export XDG_CONFIG_DIRS="/usr/share/vinx/xdg:${XDG_CONFIG_DIRS:-/etc/xdg}"
 # Applications KDE remplacées par VinX (Konsole, Dolphin, Discover, Configuration du système) :
@@ -32,11 +35,14 @@ if [ -n "$KWC" ]; then
 	for p in search:Meta+Space control:Meta+A calendar:Meta+N clipboard:Meta+V; do
 		"$KWC" --file kglobalshortcutsrc --group services --group "org.vinx.shellctl.${p%%:*}.desktop" --key _launch "${p#*:}"
 	done
-	# Écran de verrouillage VinX : Plasma écrit souvent « Breeze » dans la configuration de
-	# l'utilisateur (kdeglobals, kscreenlockerrc), qui passe avant /etc/xdg ; kscreenlocker
-	# affichait alors l'écran Breeze au verrouillage.
+	# Un « ShellPackage » écrit dans plasmashellrc passerait avant PLASMA_DEFAULT_SHELL : on retire
+	# seulement la valeur par défaut de Plasma (sans effet sur la session Plasma, qui y revient d'office).
+	if [ "$(kreadconfig6 --file plasmashellrc --group Shell --key ShellPackage 2>/dev/null)" = org.kde.plasma.desktop ]; then
+		"$KWC" --file plasmashellrc --group Shell --key ShellPackage --delete
+	fi
+	# Apparence VinX dans la configuration de l'utilisateur (Plasma y écrit parfois Breeze, qui passe
+	# avant /etc/xdg). L'écran de verrouillage, lui, vient de PLASMA_DEFAULT_SHELL (plus haut).
 	"$KWC" --file kdeglobals --group KDE --key LookAndFeelPackage org.vinx.desktop
-	"$KWC" --file kscreenlockerrc --group Greeter --key Theme org.vinx.desktop
 	# Espaces de travail (ADR 0044) : Méta+1…9 pour aller à l'espace N (bureaux virtuels de KWin).
 	for n in 1 2 3 4 5 6 7 8 9; do
 		"$KWC" --file kglobalshortcutsrc --group kwin --key "Switch to Desktop $n" "Meta+$n,none,Switch to Desktop $n"

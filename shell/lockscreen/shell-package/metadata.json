@@ -1,0 +1,12 @@
+{
+    "KPackageStructure": "Plasma/Shell",
+    "KPlugin": {
+        "Id": "org.vinx.lockscreen",
+        "Name": "VinX OS (verrouillage)",
+        "Description": "Paquet de shell réduit : porte l'écran de verrouillage VinX lu par kscreenlocker (Plasma 6)",
+        "Authors": [ { "Name": "VinX OS" } ],
+        "License": "GPL-3.0-or-later",
+        "Version": "1.0"
+    },
+    "X-Plasma-APIVersion": "2"
+}
