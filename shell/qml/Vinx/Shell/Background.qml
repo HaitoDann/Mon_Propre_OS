@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Shapes
 import Vinx.Theme
 import Vinx.System
 import Vinx.Controls
@@ -31,33 +30,6 @@ Rectangle {
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
         sourceSize: Qt.size(bg.width, bg.height)
-    }
-
-    // Espace coloré (ADR 0044) : halo doux de la couleur de l'espace, qui apparaît en fondu.
-    Shape {
-        id: halo
-        anchors.fill: parent
-        opacity: ShellState.spaceTinted ? 1 : 0
-        visible: opacity > 0
-        Behavior on opacity { NumberAnimation { duration: Theme.durSlow * 2 } }
-        readonly property color tint: Theme.accent
-        ShapePath {
-            strokeWidth: 0
-            strokeColor: "transparent"
-            fillGradient: RadialGradient {
-                centerX: halo.width * 0.62; centerY: halo.height * 0.5
-                focalX: centerX; focalY: centerY
-                centerRadius: Math.max(halo.width, halo.height) * 0.62
-                focalRadius: 0
-                GradientStop { position: 0; color: Qt.rgba(halo.tint.r, halo.tint.g, halo.tint.b, Theme.dark ? 0.22 : 0.26) }
-                GradientStop { position: 1; color: Qt.rgba(halo.tint.r, halo.tint.g, halo.tint.b, 0) }
-            }
-            startX: 0; startY: 0
-            PathLine { x: halo.width; y: 0 }
-            PathLine { x: halo.width; y: halo.height }
-            PathLine { x: 0; y: halo.height }
-            PathLine { x: 0; y: 0 }
-        }
     }
 
     MouseArea {

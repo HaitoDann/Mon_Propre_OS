@@ -39,7 +39,7 @@ levé en partie le 20/11 pour le design (écran de connexion, fenêtres aimanté
 | D.4 | Animations et transitions (maquette du 20/11) | en attente du choix |
 | D.5 | Variantes du fond « VinX Logo » (maquette du 20/11) | en attente du choix |
 | D.6 | Espaces de travail (ADR 0044) : étape 1 — menu, noms, Méta+1…9, bandeau | ✅ à voir sur le portable |
-| D.7 | Espaces : couleur par espace (accent + halo du fond), étape 2 | ✅ à voir sur le portable |
+| D.7 | Espaces : couleur par espace (accent et logo du fond, sans halo), étape 2 | ✅ à voir sur le portable |
 | D.8 | Espaces : tiroir latéral et documents récents (étapes 3 et 4) | à venir |
 
 ## Phase 7 — Publication 1.0

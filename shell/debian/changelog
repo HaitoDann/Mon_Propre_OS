@@ -3,7 +3,7 @@ vinx-shell (0.29.0) trixie; urgency=medium
   * Espaces de travail, étape 2 (ADR 0044) : couleur par espace, choisie
     dans le menu des espaces (Modifier → numéro de l'espace). Sans couleur,
     un espace garde l'accent global (vert). Dans un espace coloré, l'accent
-    du bureau, le logo du fond et un halo doux prennent sa couleur ; les
+    du bureau et le logo du fond prennent sa couleur (sans halo) ; les
     points de la barre et le menu montrent la couleur de chaque espace.
     La décoration des fenêtres et l'écran de connexion gardent l'accent
     global.

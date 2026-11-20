@@ -21,7 +21,8 @@ Maquette : « Espaces VinX » (20/11/2026).
 - **Bouton** : les points des bureaux, déjà présents dans la barre, ouvrent le menu des espaces. Ce menu affiche
   pour chaque espace une miniature, son nom, son dossier et son raccourci Méta+1…9, ainsi que « Nouvel espace » et « Modifier ».
 - **Couleur** : « accent + fond ». Dans un espace coloré, l'accent du système prend la couleur de l'espace,
-  et le fond d'écran reçoit un halo de cette couleur (le logo du fond « VinX Logo » suit l'accent).
+  et le logo du fond « VinX Logo » suit cet accent. (Un halo coloré sur le fond a été essayé en 0.29.0
+  puis retiré à la demande de l'utilisateur : pas esthétique.)
 - **Dock du bas** : universel. Il montre les applications ouvertes de **tous** les espaces. Un clic sur une
   fenêtre ouverte dans un autre espace mène à cet espace.
 - **Tiroir latéral** : il s'ouvre quand le curseur reste environ 250 ms contre le bord gauche, et se ferme dès que
@@ -32,7 +33,7 @@ Maquette : « Espaces VinX » (20/11/2026).
 ## Étapes
 
 1. Espaces : noms, menu dans la barre, Méta+1…9, bandeau du nom au changement.
-2. Couleur par espace (accent + halo du fond), à partir du réglage d'accent existant (ADR 0021).
+2. Couleur par espace (accent et logo du fond), à partir du réglage d'accent existant (ADR 0021).
 3. Tiroir latéral : fenêtre layer-shell au bord gauche, raccourcis et dossier.
 4. Documents récents par espace (journal de l'espace, à partir des fichiers ouverts quand il est actif).
 

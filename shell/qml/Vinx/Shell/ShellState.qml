@@ -61,7 +61,7 @@ QtObject {
 
     // Couleur des espaces (ADR 0044, étape 2) : identifiant d'accent par espace (clé : identifiant
     // KWin du bureau), « » = accent global (vert par défaut). Préférence spaces/colors (JSON).
-    property bool spaceTinted: false        // l'espace courant a sa propre couleur (halo du fond)
+    property bool spaceTinted: false        // l'espace courant a sa propre couleur (indicateur, sans effet visuel sur le fond)
     readonly property var spaceColors: { Preferences.revision; try { return JSON.parse(String(Preferences.value("spaces/colors", "{}"))) || {} } catch (e) { return {} } }
     function spaceColorAt(i) {
         const b = Tasks.backend
