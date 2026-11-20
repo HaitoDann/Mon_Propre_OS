@@ -47,6 +47,13 @@ target_include_directories(tst_windowtheme PRIVATE "${PROJECT_SOURCE_DIR}/window
 target_link_libraries(tst_windowtheme PRIVATE Qt6::Test Qt6::Gui Qt6::Svg)
 add_test(NAME window-theme COMMAND tst_windowtheme)
 
+# Aperçu des fenêtres aimantées (QML généré pour KWin, ADR 0042).
+qt_add_executable(tst_snapoutline tst_snapoutline.cpp)
+target_include_directories(tst_snapoutline PRIVATE "${PROJECT_SOURCE_DIR}/windowtheme")
+target_link_libraries(tst_snapoutline PRIVATE Qt6::Test Qt6::Quick)
+add_test(NAME snap-outline COMMAND tst_snapoutline)
+set_tests_properties(snap-outline PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+
 qt_add_executable(tst_termtheme tst_termtheme.cpp)
 target_include_directories(tst_termtheme PRIVATE "${PROJECT_SOURCE_DIR}/apps/terminal")
 target_link_libraries(tst_termtheme PRIVATE Qt6::Test Qt6::Gui vinx::tokens)
@@ -162,6 +169,8 @@ set_tests_properties(apps-smoke PROPERTIES TIMEOUT 900)
 
 # vinx-admin (administrateur) : arguments douteux refusés (option, plusieurs lignes, URI non IPP…).
 add_test(NAME admin COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/admin-test.sh" "${PROJECT_SOURCE_DIR}/system/vinx-admin")
+# vinx-greeter-sync (sans mot de passe) : seuls clair/sombre et un accent connu sont acceptés.
+add_test(NAME greeter-sync COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/greeter-sync-test.sh" "${PROJECT_SOURCE_DIR}/system/vinx-greeter-sync")
 
 # vinx-snapshots restore : Timeshift appelé pour un nom valide, noms douteux refusés.
 add_test(NAME snapshots COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/snapshots-test.sh" "${PROJECT_SOURCE_DIR}/system/vinx-snapshots")

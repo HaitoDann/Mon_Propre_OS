@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>VinX OS</vendor>
+  <!-- Apparence de l'écran de connexion (clair/sombre, accent) : sans mot de passe pour la session
+       locale active, l'outil n'écrit que deux valeurs validées (ADR 0041). -->
+  <action id="org.vinx.greeter-sync">
+    <description>Apply the session appearance to the login screen</description>
+    <description xml:lang="fr">Appliquer l'apparence de la session à l'écran de connexion</description>
+    <message>Authentication is required to change the login screen appearance</message>
+    <message xml:lang="fr">Saisissez votre mot de passe pour modifier l'apparence de l'écran de connexion</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/vinx/vinx-greeter-sync</annotate>
+  </action>
+</policyconfig>

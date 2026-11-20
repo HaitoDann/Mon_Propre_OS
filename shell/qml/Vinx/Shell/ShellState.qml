@@ -49,6 +49,14 @@ QtObject {
         if (dark) args.push("--dark")
         Session.run("vinx-window-theme", args)
     }
+    // Écran de connexion (ADR 0041) : même clair/sombre et même accent que la session. pkexec ne demande
+    // pas de mot de passe (action org.vinx.greeter-sync) ; appelé seulement quand la valeur change.
+    function syncGreeter(dark, accentId) {
+        const value = (dark ? "dark " : "light ") + accentId
+        if (Session.environment("VINX_SESSION") !== "1" || String(Preferences.value("appearance/greeter", "")) === value) return
+        Preferences.setValue("appearance/greeter", value)
+        Session.run("pkexec", ["/usr/lib/vinx/vinx-greeter-sync", dark ? "dark" : "light", accentId])
+    }
 
     // Liste des fenêtres d'une application du dock : { index, name }
     property var windowList: ({})

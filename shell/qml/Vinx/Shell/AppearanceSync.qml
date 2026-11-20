@@ -20,6 +20,8 @@ QtObject {
             Preferences.setValue("appearance/resolvedAccent", Theme.accentId)
         if (windowTheme)
             ShellState.syncWindowTheme(String(Theme.accent), String(Theme.accentText), Theme.dark)
+        if (windowTheme)
+            ShellState.syncGreeter(Theme.dark, Theme.accentId)
         Notifications.doNotDisturb = truthy(Preferences.value("notifications/dnd"), false)
     }
     // Accent : identifiant du nuancier, « auto » (d'après le fond d'écran) ou vide/inconnu (défaut).

@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QMap>
 #include <QString>
+#include <QStringList>
 
 namespace windowtheme {
 
@@ -185,6 +186,78 @@ inline QMap<QString, QByteArray> themeFiles(const Colors &c)
         {QStringLiteral("maximize.svg"), buttonSvg(p, Glyph::Maximize)},
         {QStringLiteral("restore.svg"), buttonSvg(p, Glyph::Restore)},
     };
+}
+
+// Aperçu des fenêtres aimantées (ADR 0042) : KWin affiche ce QML quand on glisse une fenêtre contre un
+// bord (moitié), un coin (quart) ou le haut (agrandir). Il remplace l'aperçu Plasma par une zone
+// arrondie à la couleur d'accent, qui part de la fenêtre et glisse vers sa place. KWin le cherche dans
+// <données>/kwin/outline/plasma/outline.qml (objet de contexte « outline » : active, geometry,
+// unifiedGeometry, visualParentGeometry). QtQuick seul : aucune dépendance chargée dans KWin.
+inline QByteArray outlineQml(const Colors &c)
+{
+    QColor fill = c.accent;
+    fill.setAlphaF(c.dark ? 0.22 : 0.18);
+    return QStringLiteral(R"(// Généré par vinx-window-theme (VinX OS, ADR 0042) : ne pas modifier.
+import QtQuick
+import QtQuick.Window
+
+Window {
+    id: window
+    property bool animate: false
+    flags: Qt.BypassWindowManagerHint | Qt.FramelessWindowHint
+    color: "transparent"
+    x: outline.unifiedGeometry.x
+    y: outline.unifiedGeometry.y
+    width: outline.unifiedGeometry.width
+    height: outline.unifiedGeometry.height
+    visible: outline.active
+
+    function place(g) {
+        zone.x = g.x - outline.unifiedGeometry.x
+        zone.y = g.y - outline.unifiedGeometry.y
+        zone.width = g.width
+        zone.height = g.height
+    }
+    onVisibleChanged: {
+        if (!visible) return
+        const from = outline.visualParentGeometry
+        animate = false
+        place(from.width > 0 && from.height > 0 ? from : outline.geometry)
+        zone.opacity = from.width > 0 ? 0.4 : 1
+        animate = true
+        place(outline.geometry)
+        zone.opacity = 1
+    }
+    Connections {
+        target: outline
+        function onGeometryChanged() { window.place(outline.geometry) }
+    }
+
+    Item {
+        id: zone
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: 8
+            radius: 14
+            color: "%1"
+            border.width: 2
+            border.color: "%2"
+        }
+        Behavior on x { enabled: window.animate; NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+        Behavior on y { enabled: window.animate; NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+        Behavior on width { enabled: window.animate; NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+        Behavior on height { enabled: window.animate; NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+        Behavior on opacity { enabled: window.animate; NumberAnimation { duration: 120 } }
+    }
+}
+)").arg(fill.name(QColor::HexArgb).toUpper(), hex(c.accent)).toUtf8();
+}
+
+// Chemins (relatifs au dossier de données de l'utilisateur) où KWin cherche l'aperçu : « kwin » jusqu'à
+// Plasma 6.3 (Debian 13), « kwin-wayland » depuis la séparation X11/Wayland de Plasma 6.4.
+inline QStringList outlinePaths()
+{
+    return {QStringLiteral("kwin/outline/plasma/outline.qml"), QStringLiteral("kwin-wayland/outline/plasma/outline.qml")};
 }
 
 // Applications GTK à barre de titre intégrée (Firefox, Thunderbird…) : elles dessinent leurs propres

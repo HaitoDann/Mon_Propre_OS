@@ -1,0 +1,19 @@
+#!/bin/sh
+# Recopie l'apparence de la session (clair/sombre, accent) vers l'écran de connexion VinX (ADR 0041).
+# Appelé par vinx-shell via pkexec (action org.vinx.greeter-sync, sans mot de passe pour la session
+# active) : n'écrit qu'un seul fichier, avec deux valeurs strictement validées.
+#
+#   vinx-greeter-sync light|dark ACCENT
+set -eu
+[ $# -eq 2 ] || { echo "usage : vinx-greeter-sync light|dark ACCENT" >&2; exit 2; }
+case "$1" in light) dark=false ;; dark) dark=true ;; *) echo "Thème invalide." >&2; exit 2 ;; esac
+case "$2" in vert|lagon|turquoise|citron|ambre|corail|framboise|graphite) accent=$2 ;; *) echo "Accent invalide." >&2; exit 2 ;; esac
+[ "${VINX_ADMIN_CHECK:-0}" = 1 ] && exit 0
+[ "$(id -u)" = 0 ] || [ -n "${VINX_GREETER_DIR:-}" ] || { echo "À lancer via pkexec." >&2; exit 1; }
+
+dir=${VINX_GREETER_DIR:-/usr/share/sddm/themes/vinx}
+[ -d "$dir" ] || exit 0
+tmp=$(mktemp "$dir/.theme.conf.user.XXXXXX")
+printf '[General]\ndark=%s\naccent=%s\n' "$dark" "$accent" > "$tmp"
+chmod 644 "$tmp"
+mv -f "$tmp" "$dir/theme.conf.user"

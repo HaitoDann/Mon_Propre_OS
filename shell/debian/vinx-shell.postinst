@@ -7,6 +7,19 @@ configure|triggered)
 	if [ -z "${DPKG_ROOT:-}" ] && [ -x /usr/lib/vinx/vinx-release ]; then
 		/usr/lib/vinx/vinx-release || true
 	fi
+	# Écran de connexion VinX (ADR 0041). SDDM lit /etc/sddm.conf.d/* par ordre alphabétique puis
+	# /etc/sddm.conf : un « Current=breeze » écrit par les réglages KDE (kde_settings.conf) ou
+	# l'installation masquait le thème VinX. On le retire une seule fois (tant que zz-vinx-theme.conf n'existe pas), puis zz-vinx-theme.conf, lu en
+	# dernier, fixe le thème.
+	if [ "$1" = configure ] && [ -z "${DPKG_ROOT:-}" ] && [ -d /usr/share/sddm/themes/vinx ] \
+		&& [ ! -f /etc/sddm.conf.d/zz-vinx-theme.conf ]; then
+		for f in /etc/sddm.conf /etc/sddm.conf.d/kde_settings.conf; do
+			if [ -f "$f" ]; then sed -i '/^Current=/{/^Current=vinx$/!d}' "$f"; fi
+		done
+		mkdir -p /etc/sddm.conf.d
+		printf '# Thème de l'"'"'écran de connexion VinX OS (vinx-shell, ADR 0041).\n[Theme]\nCurrent=vinx\n' \
+			> /etc/sddm.conf.d/zz-vinx-theme.conf
+	fi
 	;;
 esac
 

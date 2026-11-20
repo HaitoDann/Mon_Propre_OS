@@ -1,6 +1,7 @@
 # Roadmap
 
-État au 19 novembre 2026 — shell 0.26.13. Phase en cours : **consolidation vers la 1.0** (ADR 0039).
+État au 20 novembre 2026 — shell 0.27.0. Phase en cours : **consolidation vers la 1.0** (ADR 0039), gel des fonctions
+levé en partie le 20/11 pour le design (écran de connexion, fenêtres aimantées, icônes, animations, fonds).
 
 | Phase | Contenu | État |
 |---|---|---|
@@ -27,6 +28,16 @@
 | 6.6 | Traduction restante (Store, accents, notifications des scripts, installateur, écran de connexion) | Claude | ✅ |
 | 6.7 | Passe de qualité : relecture de code, tests manquants, cohérence visuelle, accessibilité clavier/contrastes, absence de commandes système (contrastes testés, menus au clavier, outils installés testés, boucles de liaison, fumée de toutes les pages, outils administrateur relus et testés, shellcheck des scripts du shell) | Claude | ✅ |
 | 6.8 | Vérification des licences des éléments fournis (polices, logos tiers, fonds) — [LICENCES.md](LICENCES.md) | Claude | ✅ |
+
+## Lot design (gel levé, 20/11/2026)
+
+| # | Étape | État |
+|---|---|---|
+| D.1 | Écran de connexion : panneau latéral, thème de la session, Breeze ne le remplace plus (ADR 0041) | ✅ à voir sur le portable |
+| D.2 | Fenêtres aimantées : aperçu VinX (ADR 0042) | ✅ à voir sur le portable |
+| D.3 | Icônes des utilitaires par défaut (ADR 0043) | ✅ |
+| D.4 | Animations et transitions (maquette du 20/11) | en attente du choix |
+| D.5 | Variantes du fond « VinX Logo » (maquette du 20/11) | en attente du choix |
 
 ## Phase 7 — Publication 1.0
 

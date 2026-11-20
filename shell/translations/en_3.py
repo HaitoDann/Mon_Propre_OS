@@ -439,4 +439,5 @@ T = {
 "d MMMM yyyy 'à' HH:mm": "MMMM d, yyyy 'at' HH:mm",
 'modifiée': 'edited',
 '« %1 » mise à la corbeille.': '“%1” moved to the trash.',
+'Session : %1': 'Session: %1',
 }

@@ -1,3 +1,18 @@
+vinx-shell (0.27.0) trixie; urgency=medium
+
+  * Écran de connexion redessiné : panneau latéral minimaliste à gauche
+    (heure, comptes, mot de passe, alimentation), fond « VinX Logo » à
+    l'accent ; il suit le clair/sombre et l'accent de la session
+    (vinx-greeter-sync, sans mot de passe). ADR 0041.
+  * Le thème Breeze de KDE ne remplace plus l'écran de connexion VinX
+    (Current=breeze retiré une fois, zz-vinx-theme.conf).
+  * Fenêtres aimantées : aperçu VinX (zone arrondie à l'accent, animée)
+    à la place du cadre Plasma. ADR 0042.
+  * Icônes VinX pour Archives, Calculatrice, Okular, Timeshift,
+    l'installateur, les imprimantes et Mises à jour. ADR 0043.
+
+ -- VinX OS <vinx@localhost>  Fri, 20 Nov 2026 11:00:00 +0000
+
 vinx-shell (0.26.13) trixie; urgency=medium
 
   * Instantanés : « Revenir à cet instantané » fonctionne. Une apostrophe

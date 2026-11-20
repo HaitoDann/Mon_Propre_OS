@@ -10,6 +10,7 @@
 #include <QDir>
 #include <QProcess>
 #include <QFile>
+#include <QFileInfo>
 #include <QSaveFile>
 #include <QStandardPaths>
 
@@ -47,6 +48,24 @@ int main(int argc, char **argv)
         if (!f.open(QIODevice::WriteOnly) || f.write(it.value()) != it.value().size() || !f.commit()) {
             qCritical("vinx-window-theme : écriture impossible de %s", qUtf8Printable(f.fileName()));
             return 1;
+        }
+    }
+    // Aperçu des fenêtres aimantées (ADR 0042), à la couleur d'accent ; avec --output : outline.qml.
+    {
+        const QByteArray qml = windowtheme::outlineQml(colors);
+        const QStringList targets = parser.isSet(output)
+            ? QStringList{dir + QStringLiteral("/outline.qml")}
+            : [] {
+                  QStringList l;
+                  for (const QString &rel : windowtheme::outlinePaths())
+                      l << QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + rel;
+                  return l;
+              }();
+        for (const QString &path : targets) {
+            QDir().mkpath(QFileInfo(path).absolutePath());
+            QSaveFile f(path);
+            if (!f.open(QIODevice::WriteOnly) || f.write(qml) != qml.size() || !f.commit())
+                qWarning("vinx-window-theme : écriture impossible de %s", qUtf8Printable(path));
         }
     }
     // Pastilles des applications GTK à barre de titre intégrée (Firefox, Thunderbird).

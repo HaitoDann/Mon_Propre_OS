@@ -3864,43 +3864,43 @@
         <translation>No email application is set up.</translation>
     </message>
     <message>
-        <location filename="../sddm/vinx/Main.qml" line="54" />
+        <location filename="../sddm/vinx/Main.qml" line="65" />
         <source>Mot de passe incorrect.</source>
         <translation>Wrong password.</translation>
     </message>
     <message>
-        <location filename="../sddm/vinx/Main.qml" line="165" />
-        <location filename="../sddm/vinx/Main.qml" line="169" />
+        <location filename="../sddm/vinx/Main.qml" line="177" />
+        <location filename="../sddm/vinx/Main.qml" line="181" />
         <source>Mot de passe</source>
         <translation>Password</translation>
     </message>
     <message>
-        <location filename="../sddm/vinx/Main.qml" line="179" />
+        <location filename="../sddm/vinx/Main.qml" line="192" />
         <source>Se connecter</source>
         <translation>Connect</translation>
     </message>
     <message>
-        <location filename="../sddm/vinx/Main.qml" line="185" />
+        <location filename="../sddm/vinx/Main.qml" line="200" />
         <source>Majuscules activées</source>
         <translation>Caps Lock is on</translation>
     </message>
     <message>
-        <location filename="../sddm/vinx/Main.qml" line="196" />
-        <source>Session :</source>
-        <translation>Session:</translation>
+        <location filename="../sddm/vinx/Main.qml" line="217" />
+        <source>Session : %1</source>
+        <translation>Session: %1</translation>
     </message>
     <message>
-        <location filename="../sddm/vinx/Main.qml" line="211" />
+        <location filename="../sddm/vinx/Main.qml" line="223" />
         <source>Veille</source>
         <translation>Sleep</translation>
     </message>
     <message>
-        <location filename="../sddm/vinx/Main.qml" line="212" />
+        <location filename="../sddm/vinx/Main.qml" line="224" />
         <source>Redémarrer</source>
         <translation>Restart</translation>
     </message>
     <message>
-        <location filename="../sddm/vinx/Main.qml" line="213" />
+        <location filename="../sddm/vinx/Main.qml" line="225" />
         <source>Éteindre</source>
         <translation>Shut down</translation>
     </message>

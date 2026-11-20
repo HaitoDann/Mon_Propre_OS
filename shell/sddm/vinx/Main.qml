@@ -2,9 +2,12 @@ import QtQuick
 import Vinx.Theme
 import Vinx.Controls
 
-// Écran de connexion VinX OS (SDDM, API de thème 2) : fond clair à points, logo vert, formes douces (ADR 0018).
+// Écran de connexion VinX OS (SDDM, API de thème 2) — ADR 0041 : panneau latéral minimaliste à gauche
+// (heure, comptes, mot de passe, alimentation) et fond « VinX Logo » dessiné en direct à droite.
+// Il suit le thème global : clair/sombre et accent sont recopiés par vinx-greeter-sync dans
+// theme.conf.user (clés « dark » et « accent »), lu ici via « config ».
 // Objets fournis par SDDM : sddm (login, powerOff, reboot, suspend…), userModel, sessionModel,
-// config (theme.conf), keyboard. Aucune logique d'authentification ici : SDDM et PAM s'en chargent.
+// config (theme.conf + theme.conf.user), keyboard. Aucune logique d'authentification ici : SDDM et PAM.
 Rectangle {
     id: root
     width: 1920; height: 1080
@@ -15,8 +18,15 @@ Rectangle {
     property string message: ""
     property date now: new Date()
     property bool shown: false
-    // Identité VinX : thème clair (fond « VinX Logo »), comme le bureau par défaut.
-    Component.onCompleted: { Theme.dark = false; shown = true; password.forceActiveFocus() }
+
+    function truthy(v) { return v === true || String(v) === "true" }
+    Component.onCompleted: {
+        Theme.dark = truthy(config.dark)          // thème clair par défaut (identité VinX)
+        const a = String(config.accent || "")
+        if (Theme.accents.some(e => e.id === a)) Theme.accentId = a
+        shown = true
+        password.forceActiveFocus()
+    }
     Timer { interval: 1000; running: true; repeat: true; onTriggered: root.now = new Date() }
 
     // Comptes et sessions lus via les rôles des modèles SDDM (« name », « realName »).
@@ -47,6 +57,7 @@ Rectangle {
         root.message = ""
         sddm.login(root.userName, password.text, root.sessionIndex)
     }
+    function selectUser(i) { root.userIndex = i; password.text = ""; root.message = ""; password.forceActiveFocus() }
 
     Connections {
         target: sddm
@@ -57,106 +68,107 @@ Rectangle {
         }
     }
 
-    // ---------- Fond ----------
-    Image {
+    // ---------- Fond : « VinX Logo » à la couleur d'accent (même composition que le bureau : le logo,
+    // placé à droite du centre, reste entièrement visible à côté du panneau) ----------
+    LogoWallpaper {
+        id: wallpaper
         anchors.fill: parent
-        source: config.background ? "file://" + config.background : ""
-        fillMode: Image.PreserveAspectCrop
-        sourceSize: Qt.size(root.width, root.height)
-        asynchronous: true
-    }
-    Rectangle { anchors.fill: parent; color: Theme.background; opacity: 0.25 }
-
-    // ---------- Marque ----------
-    Row {
-        anchors { left: parent.left; top: parent.top; margins: 32 }
-        spacing: 10
-        Icon { name: "vinx"; width: 26; height: 19; color: Theme.text; anchors.verticalCenter: parent.verticalCenter }
-        Label { text: "VinX OS"; color: Theme.text; font.weight: Font.DemiBold; font.pixelSize: 15 }
+        dark: Theme.dark
+        logoColor: Theme.logo
     }
 
-    // ---------- Heure ----------
-    Column {
-        anchors { horizontalCenter: parent.horizontalCenter; top: parent.top; topMargin: parent.height * 0.14 }
-        spacing: 4
-        Label { anchors.horizontalCenter: parent.horizontalCenter; text: Qt.formatTime(root.now, "HH:mm"); color: Theme.text; font.pixelSize: 88; font.weight: Font.Light }
-        Label {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: { const s = root.now.toLocaleDateString(Qt.locale(), "dddd d MMMM"); return s.charAt(0).toUpperCase() + s.slice(1) }
-            color: Theme.textSecondary; font.pixelSize: 17
+    // ---------- Panneau latéral ----------
+    Rectangle {
+        id: panel
+        width: Math.round(Math.min(Math.max(root.width * 0.3, 380), 520))
+        anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
+        color: Theme.surfaceWindow
+        // Arrivée : le panneau glisse depuis la gauche.
+        transform: Translate {
+            x: root.shown ? 0 : -24
+            Behavior on x { NumberAnimation { duration: Theme.durSlow; easing.type: Easing.OutCubic } }
         }
-    }
-
-    // ---------- Carte de connexion (animation signature : arrivée en diagonale) ----------
-    Surface {
-        id: card
-        kind: Surface.Strong
-        elevation: 2
-        radius: 18
-        width: 360
-        height: form.height + 56
-        anchors { horizontalCenter: parent.horizontalCenter; top: parent.verticalCenter; topMargin: -20 }
         opacity: root.shown ? 1 : 0
-        transform: Translate { id: slide; x: root.shown ? 0 : 18; y: root.shown ? 0 : -18
-            Behavior on x { NumberAnimation { duration: 420; easing.type: Easing.OutCubic } }
-            Behavior on y { NumberAnimation { duration: 420; easing.type: Easing.OutCubic } } }
-        Behavior on opacity { NumberAnimation { duration: 320 } }
-        edgeProgress: root.shown ? 1 : 0
-        Behavior on edgeProgress { NumberAnimation { duration: 700; easing.type: Easing.OutCubic } }
+        Behavior on opacity { NumberAnimation { duration: Theme.durSlow } }
+        Rectangle { anchors { right: parent.right; top: parent.top; bottom: parent.bottom } width: 1; color: Theme.border }
 
-        SequentialAnimation {
-            id: shake
-            loops: 1
-            NumberAnimation { target: card; property: "anchors.horizontalCenterOffset"; to: -10; duration: 50 }
-            NumberAnimation { target: card; property: "anchors.horizontalCenterOffset"; to: 10; duration: 70 }
-            NumberAnimation { target: card; property: "anchors.horizontalCenterOffset"; to: -6; duration: 60 }
-            NumberAnimation { target: card; property: "anchors.horizontalCenterOffset"; to: 0; duration: 50 }
+        readonly property int pad: 48
+
+        // Marque
+        Row {
+            anchors { left: parent.left; top: parent.top; leftMargin: panel.pad; topMargin: 40 }
+            spacing: 10
+            Icon { name: "vinx"; width: 26; height: 19; color: Theme.accentForeground; anchors.verticalCenter: parent.verticalCenter }
+            Label { text: "VinX OS"; color: Theme.text; font.weight: Font.DemiBold; font.pixelSize: 15 }
         }
 
+        // Contenu centré verticalement
         Column {
-            id: form
-            x: 28; y: 28
-            width: parent.width - 56
-            spacing: 14
+            id: content
+            anchors { left: parent.left; right: parent.right; leftMargin: panel.pad; rightMargin: panel.pad; verticalCenter: parent.verticalCenter }
+            spacing: 0
 
-            // Choix de l'utilisateur (plusieurs comptes)
-            Row {
-                visible: root.users.length > 1
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: 10
+            Label { text: Qt.formatTime(root.now, "HH:mm"); color: Theme.text; font.pixelSize: 76; font.weight: Font.Light }
+            Label {
+                text: { const s = root.now.toLocaleDateString(Qt.locale(), "dddd d MMMM"); return s.charAt(0).toUpperCase() + s.slice(1) }
+                color: Theme.textSecondary; font.pixelSize: 17
+            }
+            Item { width: 1; height: 56 }
+
+            // Comptes : liste si plusieurs, sinon le seul compte
+            Column {
+                width: parent.width
+                spacing: 4
                 Repeater {
                     model: root.users
-                    delegate: Bevel {
+                    delegate: Rectangle {
+                        id: userRow
                         required property int index
                         required property var modelData
-                        readonly property string realName: modelData ? modelData.realName : ""
-                        readonly property string name: modelData ? modelData.name : ""
-                        width: 44; height: 44; cut: 10
-                        color: index === root.userIndex ? Theme.accent : Theme.surfaceActive
-                        Label { anchors.centerIn: parent; text: (realName || name).charAt(0).toUpperCase(); color: index === root.userIndex ? Theme.accentText : Theme.text; font.weight: Font.DemiBold; font.pixelSize: 17 }
-                        MouseArea { anchors.fill: parent; onClicked: { root.userIndex = index; password.forceActiveFocus() } }
+                        readonly property bool current: index === root.userIndex
+                        readonly property string label: modelData ? modelData.realName : ""
+                        width: parent.width; height: 56; radius: 14
+                        color: root.users.length > 1 && current ? Theme.surfaceSunken
+                             : userMouse.containsMouse && root.users.length > 1 ? Theme.surfaceHover : "transparent"
+                        Behavior on color { ColorAnimation { duration: Theme.durFast } }
+                        Rectangle {
+                            id: avatar
+                            x: 8; anchors.verticalCenter: parent.verticalCenter
+                            width: 40; height: 40; radius: 20
+                            color: userRow.current ? Theme.accent : Theme.surfaceActive
+                            Label { anchors.centerIn: parent; text: userRow.label.charAt(0).toUpperCase(); color: userRow.current ? Theme.accentText : Theme.text; font.pixelSize: 17; font.weight: Font.DemiBold }
+                        }
+                        Label {
+                            anchors { left: avatar.right; leftMargin: 14; right: parent.right; rightMargin: 8; verticalCenter: parent.verticalCenter }
+                            text: userRow.label; elide: Text.ElideRight
+                            color: userRow.current ? Theme.text : Theme.textSecondary
+                            font.pixelSize: 16; font.weight: userRow.current ? Font.DemiBold : Font.Normal
+                        }
+                        MouseArea { id: userMouse; anchors.fill: parent; hoverEnabled: true; enabled: root.users.length > 1; onClicked: root.selectUser(userRow.index) }
+                        Accessible.role: Accessible.Button
+                        Accessible.name: userRow.label
                     }
                 }
             }
-            // Utilisateur sélectionné
-            Bevel {
-                visible: root.users.length <= 1
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: 64; height: 64; cut: 14
-                color: Theme.accent
-                Label { anchors.centerIn: parent; text: root.realName.charAt(0).toUpperCase(); color: Theme.accentText; font.pixelSize: 26; font.weight: Font.DemiBold }
-            }
-            Label { anchors.horizontalCenter: parent.horizontalCenter; text: root.realName; color: Theme.text; font.pixelSize: 17; font.weight: Font.DemiBold }
+            Item { width: 1; height: 16 }
 
             // Mot de passe
-            Bevel {
-                width: parent.width; height: 42; cut: 10
+            Rectangle {
+                id: field
+                width: parent.width; height: 48; radius: 24
                 color: Theme.surfaceSunken
-                borderWidth: password.activeFocus ? 2 : 1
-                borderColor: password.activeFocus ? Theme.accentForeground : Theme.borderStrong
+                border.width: password.activeFocus ? 2 : 1
+                border.color: root.message ? Theme.danger : password.activeFocus ? Theme.accentForeground : Theme.borderStrong
+                SequentialAnimation {
+                    id: shake
+                    NumberAnimation { target: field; property: "x"; to: -10; duration: 50 }
+                    NumberAnimation { target: field; property: "x"; to: 10; duration: 70 }
+                    NumberAnimation { target: field; property: "x"; to: -6; duration: 60 }
+                    NumberAnimation { target: field; property: "x"; to: 0; duration: 50 }
+                }
                 TextInput {
                     id: password
-                    anchors { left: parent.left; right: go.left; leftMargin: 14; rightMargin: 8; verticalCenter: parent.verticalCenter }
+                    anchors { left: parent.left; right: go.left; leftMargin: 20; rightMargin: 8; verticalCenter: parent.verticalCenter }
                     echoMode: TextInput.Password
                     passwordCharacter: "●"
                     color: Theme.text; selectionColor: Theme.accent; selectedTextColor: Theme.accentText
@@ -168,58 +180,60 @@ Rectangle {
                     onTextChanged: root.message = ""
                     Label { visible: !password.text; anchors.verticalCenter: parent.verticalCenter; text: qsTr("Mot de passe"); color: Theme.textTertiary; font.pixelSize: 15 }
                 }
-                Bevel {
+                Rectangle {
                     id: go
                     anchors { right: parent.right; rightMargin: 6; verticalCenter: parent.verticalCenter }
-                    width: 32; height: 30; cut: 8
-                    color: password.text ? Theme.accent : Theme.surfaceSunken
-                    Icon { anchors.centerIn: parent; name: "chevron-r"; color: password.text ? Theme.accentText : Theme.text }
+                    width: 36; height: 36; radius: 18
+                    color: password.text ? Theme.accent : Theme.surfaceActive
+                    Behavior on color { ColorAnimation { duration: Theme.durFast } }
+                    Icon { anchors.centerIn: parent; name: "chevron-r"; color: password.text ? Theme.accentText : Theme.textSecondary }
                     MouseArea { anchors.fill: parent; onClicked: root.login() }
                     Accessible.role: Accessible.Button
                     Accessible.name: qsTr("Se connecter")
                 }
             }
+            Item { width: 1; height: 10 }
             Label {
-                visible: root.message !== "" || keyboard.capsLock
-                width: parent.width; horizontalAlignment: Text.AlignHCenter
+                width: parent.width; leftPadding: 20
+                height: 18
+                opacity: root.message !== "" || keyboard.capsLock ? 1 : 0
                 text: root.message || qsTr("Majuscules activées")
-                color: root.message ? Theme.danger : Theme.accentForeground; font.pixelSize: 12
+                color: root.message ? Theme.danger : Theme.accentForeground; font.pixelSize: 13
             }
         }
-    }
 
-    // ---------- Session et alimentation ----------
-    Row {
-        anchors { left: parent.left; bottom: parent.bottom; margins: 28 }
-        spacing: 8
-        visible: root.sessions.length > 1
-        Label { text: qsTr("Session :"); color: Theme.textSecondary; anchors.verticalCenter: parent.verticalCenter }
-        Bevel {
-            width: sessionLabel.implicitWidth + 28; height: 32; cut: 8
-            color: sessionMouse.containsMouse ? Theme.surfaceActive : Theme.surfaceGlassStrong
-            Label {
-                id: sessionLabel; anchors.centerIn: parent; color: Theme.text
-                text: root.sessions[root.sessionIndex] || ""
-            }
-            MouseArea { id: sessionMouse; anchors.fill: parent; hoverEnabled: true; onClicked: root.sessionIndex = (root.sessionIndex + 1) % root.sessions.length }
-        }
-    }
-    Row {
-        anchors { right: parent.right; bottom: parent.bottom; margins: 28 }
-        spacing: 8
-        Repeater {
-            model: [{ icon: "moon", text: qsTr("Veille"), ok: sddm.canSuspend, act: () => sddm.suspend() },
-                    { icon: "restart", text: qsTr("Redémarrer"), ok: sddm.canReboot, act: () => sddm.reboot() },
-                    { icon: "power", text: qsTr("Éteindre"), ok: sddm.canPowerOff, act: () => sddm.powerOff() }]
-            delegate: Bevel {
-                required property var modelData
-                visible: modelData.ok
-                width: 40; height: 40; cut: 10
-                color: pm.containsMouse ? Theme.surfaceActive : Theme.surfaceGlassStrong
-                Icon { anchors.centerIn: parent; name: modelData.icon; color: Theme.text }
-                MouseArea { id: pm; anchors.fill: parent; hoverEnabled: true; onClicked: modelData.act() }
+        // Bas du panneau : session (s'il y en a plusieurs) et alimentation
+        Item {
+            anchors { left: parent.left; right: parent.right; bottom: parent.bottom; leftMargin: panel.pad; rightMargin: panel.pad; bottomMargin: 36 }
+            height: 40
+            Rectangle {
+                visible: root.sessions.length > 1
+                anchors { left: parent.left; verticalCenter: parent.verticalCenter }
+                width: sessionLabel.implicitWidth + 28; height: 32; radius: 16
+                color: sessionMouse.containsMouse ? Theme.surfaceActive : Theme.surfaceSunken
+                Label { id: sessionLabel; anchors.centerIn: parent; color: Theme.textSecondary; font.pixelSize: 13; text: root.sessions[root.sessionIndex] || "" }
+                MouseArea { id: sessionMouse; anchors.fill: parent; hoverEnabled: true; onClicked: root.sessionIndex = (root.sessionIndex + 1) % root.sessions.length }
                 Accessible.role: Accessible.Button
-                Accessible.name: modelData.text
+                Accessible.name: qsTr("Session : %1").arg(sessionLabel.text)
+            }
+            Row {
+                anchors { right: parent.right; verticalCenter: parent.verticalCenter }
+                spacing: 6
+                Repeater {
+                    model: [{ icon: "moon", text: qsTr("Veille"), ok: sddm.canSuspend, act: () => sddm.suspend() },
+                            { icon: "restart", text: qsTr("Redémarrer"), ok: sddm.canReboot, act: () => sddm.reboot() },
+                            { icon: "power", text: qsTr("Éteindre"), ok: sddm.canPowerOff, act: () => sddm.powerOff() }]
+                    delegate: Rectangle {
+                        required property var modelData
+                        visible: modelData.ok
+                        width: 40; height: 40; radius: 20
+                        color: pm.containsMouse ? Theme.surfaceActive : "transparent"
+                        Icon { anchors.centerIn: parent; name: modelData.icon; color: Theme.textSecondary }
+                        MouseArea { id: pm; anchors.fill: parent; hoverEnabled: true; onClicked: modelData.act() }
+                        Accessible.role: Accessible.Button
+                        Accessible.name: modelData.text
+                    }
+                }
             }
         }
     }
