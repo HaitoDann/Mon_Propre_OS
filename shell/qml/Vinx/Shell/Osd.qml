@@ -7,7 +7,9 @@ import Vinx.System
 // au centre, au-dessus du dock, qui s'efface après 1,5 s (ADR 0028).
 Item {
     id: osd
-    width: 300
+    // Espace (ADR 0044) : pilule ajustée au nom ; autres bulles : largeur fixe (jauge).
+    width: kind === "space" ? Math.round(Math.max(160, Math.min(300, nameMetrics.advanceWidth + 16 + Theme.space3 + Theme.space5 * 2 + 4))) : 300
+    TextMetrics { id: nameMetrics; font.family: Theme.fontFamily; font.pixelSize: Theme.fsMd; font.weight: Font.DemiBold; text: osd.text }
     height: 52
     property string kind: ""
     property string icon: "volume"
@@ -25,6 +27,14 @@ Item {
     }
     Timer { id: hide; interval: 1500; onTriggered: osd.shown = false }
     Connections { target: DesktopPrompts; function onOsd(k, i, p, t) { osd.show(k, i, p, t) } }
+    // Changement d'espace (ADR 0044) : son nom s'affiche un instant.
+    property int _desktop: Tasks.backend ? Tasks.backend.currentDesktopIndex : 0
+    on_DesktopChanged: {
+        const b = Tasks.backend
+        if (!b || b.desktopCount < 2) return
+        const n = String((b.desktopNames || [])[_desktop] || "")
+        show("space", "grid", -1, n !== "" ? n : qsTr("Espace %1").arg(_desktop + 1))
+    }
 
     Surface {
         anchors.fill: parent

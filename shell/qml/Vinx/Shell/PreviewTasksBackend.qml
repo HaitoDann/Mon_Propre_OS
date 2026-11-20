@@ -18,6 +18,12 @@ QtObject {
     function addDesktop() { desktopNames = desktopNames.concat(["Bureau " + (desktopCount + 1)]); desktopCount++ }
     function removeDesktop() { if (desktopCount > 1) { desktopCount--; desktopNames = desktopNames.slice(0, desktopCount); currentDesktopIndex = Math.min(currentDesktopIndex, desktopCount - 1) } }
     function renameDesktop(i, name) { const n = desktopNames.slice(); n[i] = name; desktopNames = n }
+    function removeDesktopAt(i) {
+        if (desktopCount <= 1 || i < 0 || i >= desktopCount) return
+        const n = desktopNames.slice(); n.splice(i, 1); desktopNames = n
+        desktopCount--
+        if (currentDesktopIndex > i || currentDesktopIndex >= desktopCount) currentDesktopIndex = Math.max(0, currentDesktopIndex - 1)
+    }
     function activateDesktop(i) { if (i >= 0 && i < desktopCount) currentDesktopIndex = i }
 
     // false : fenêtres purement simulées (démonstration, tests) — aucune application n'est lancée.

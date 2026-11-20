@@ -440,4 +440,12 @@ T = {
 'modifiée': 'edited',
 '« %1 » mise à la corbeille.': '“%1” moved to the trash.',
 'Session : %1': 'Session: %1',
+'Espaces : %1 (%2 sur %3)': 'Spaces: %1 (%2 of %3)',
+'Espaces': 'Spaces',
+'Espace %1': 'Space %1',
+'Méta+%1': 'Meta+%1',
+"Nom de l'espace %1": 'Name of space %1',
+"Supprimer l'espace (ses fenêtres vont dans un espace voisin)": 'Delete space (its windows move to a neighbouring space)',
+'Nouvel espace': 'New space',
+'Terminé': 'Done',
 }

@@ -3978,6 +3978,14 @@
     </message>
 </context>
 <context>
+    <name>Osd</name>
+    <message>
+        <location filename="../qml/Vinx/Shell/Osd.qml" line="36" />
+        <source>Espace %1</source>
+        <translation>Space %1</translation>
+    </message>
+</context>
+<context>
     <name>OsdAdaptor</name>
     <message>
         <location filename="../qml/Vinx/System/kdeprompts.cpp" line="30" />
@@ -4013,140 +4021,140 @@
 <context>
     <name>Panels</name>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="53" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="54" />
         <source>À propos de cet ordinateur</source>
         <translation>About this computer</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="55" />
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="146" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="56" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="147" />
         <source>Paramètres…</source>
         <translation>Settings…</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="56" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="57" />
         <source>Store…</source>
         <translation>Store…</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="58" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="59" />
         <source>Verrouiller l'écran</source>
         <translation>Lock screen</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="59" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="60" />
         <source>Mettre en veille</source>
         <translation>Sleep</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="60" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="61" />
         <source>Fermer la session…</source>
         <translation>Log out…</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="61" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="62" />
         <source>Redémarrer…</source>
         <translation>Restart…</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="62" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="63" />
         <source>Éteindre…</source>
         <translation>Shut down…</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="93" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="94" />
         <source>Réduite</source>
         <translation>Minimized</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="94" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="95" />
         <source>Toutes les fenêtres</source>
         <translation>All windows</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="113" />
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="121" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="114" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="122" />
         <source>Nouvelle fenêtre</source>
         <translation>New window</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="114" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="115" />
         <source>Retirer du dock</source>
         <translation>Remove from dock</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="114" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="115" />
         <source>Garder dans le dock</source>
         <translation>Keep in dock</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="115" />
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="122" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="116" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="123" />
         <source>Quitter</source>
         <translation>Quit</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="140" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="141" />
         <source>Widgets</source>
         <translation>Widgets</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="141" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="142" />
         <source>Horloge</source>
         <translation>Clock</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="142" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="143" />
         <source>Calendrier</source>
         <translation>Calendar</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="143" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="144" />
         <source>Note rapide</source>
         <translation>Quick note</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="145" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="146" />
         <source>Changer le fond d'écran…</source>
         <translation>Change wallpaper…</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="222" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="232" />
         <source>Éteindre l'ordinateur ?</source>
         <translation>Shut down the computer?</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="222" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="232" />
         <source>Éteindre</source>
         <translation>Shut down</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="223" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="233" />
         <source>Redémarrer l'ordinateur ?</source>
         <translation>Restart the computer?</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="223" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="233" />
         <source>Redémarrer</source>
         <translation>Restart</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="224" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="234" />
         <source>Fermer la session ?</source>
         <translation>Log out?</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="224" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="234" />
         <source>Fermer la session</source>
         <translation>Log out</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="233" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="243" />
         <source>Les documents non enregistrés seront perdus.</source>
         <translation>Unsaved documents will be lost.</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/Panels.qml" line="238" />
+        <location filename="../qml/Vinx/Shell/Panels.qml" line="248" />
         <source>Annuler</source>
         <translation>Cancel</translation>
     </message>
@@ -4779,6 +4787,50 @@
     </message>
 </context>
 <context>
+    <name>SpacesPanel</name>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="25" />
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="31" />
+        <source>Espace %1</source>
+        <translation>Space %1</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="40" />
+        <source>Espaces</source>
+        <translation>Spaces</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="92" />
+        <source>Méta+%1</source>
+        <translation>Meta+%1</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="119" />
+        <source>Nom de l'espace %1</source>
+        <translation>Name of space %1</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="141" />
+        <source>Supprimer l'espace (ses fenêtres vont dans un espace voisin)</source>
+        <translation>Delete space (its windows move to a neighbouring space)</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="155" />
+        <source>Nouvel espace</source>
+        <translation>New space</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="162" />
+        <source>Terminé</source>
+        <translation>Done</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="162" />
+        <source>Modifier</source>
+        <translation>Edit</translation>
+    </message>
+</context>
+<context>
     <name>TerminalWindow</name>
     <message>
         <location filename="../apps/terminal/terminalwindow.cpp" line="93" />
@@ -5361,9 +5413,9 @@
 <context>
     <name>WorkspaceIndicator</name>
     <message>
-        <location filename="../qml/Vinx/Shell/WorkspaceIndicator.qml" line="18" />
-        <source>Bureau %1 sur %2</source>
-        <translation>Desktop %1 of %2</translation>
+        <location filename="../qml/Vinx/Shell/WorkspaceIndicator.qml" line="21" />
+        <source>Espaces : %1 (%2 sur %3)</source>
+        <translation>Spaces: %1 (%2 of %3)</translation>
     </message>
 </context>
 </TS>

@@ -11,7 +11,7 @@ Item {
 
     function sync() {
         const name = ShellState.openPanel
-        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, windows: windowMenu, power: powerDialog, search: searchPanel, clipboard: clipboardPanel, desktop: desktopMenu, appmenu: appMenu }
+        const all = { system: systemMenu, control: control, calendar: calendar, confirm: confirm, dock: dockMenu, windows: windowMenu, power: powerDialog, search: searchPanel, clipboard: clipboardPanel, desktop: desktopMenu, appmenu: appMenu, spaces: spacesPanel }
         if (name === "search" || name === "clipboard") ShellState.anchorRect = Qt.rect(layer.width / 2 - 1, layer.height * 0.12, 2, 1)
         if (name === "power") ShellState.anchorRect = Qt.rect(layer.width / 2 - 1, layer.height * 0.3, 2, 1)
         for (const k in all) {
@@ -22,6 +22,7 @@ Item {
         if (name === "calendar") calendarContent.reset()
         if (name === "search") searchContent.reset()
         if (name === "clipboard") clipboardContent.reset()
+        if (name === "spaces") spacesContent.reset()
     }
     Connections { target: ShellState; function onOpenPanelChanged() { layer.sync() } }
     // Touche Méta (KWin) ou autre programme : org.vinx.Shell.toggleSearch
@@ -32,7 +33,7 @@ Item {
         function onPanelRequested(name) {
             const w = layer.width, h = Theme.topbarHeight
             const rects = { control: Qt.rect(w - 48, 0, 32, h), calendar: Qt.rect(w / 2 - 60, 0, 120, h),
-                            system: Qt.rect(8, 0, 32, h), search: Qt.rect(0, 0, 0, 0), clipboard: Qt.rect(0, 0, 0, 0) }
+                            system: Qt.rect(8, 0, 32, h), spaces: Qt.rect(w - 260, 0, 60, h), search: Qt.rect(0, 0, 0, 0), clipboard: Qt.rect(0, 0, 0, 0) }
             if (rects[name] !== undefined) ShellState.toggle(name, rects[name])
         }
     }
@@ -194,6 +195,15 @@ Item {
         align: Popover.Center
         onClosed: if (ShellState.openPanel === "clipboard") ShellState.close()
         ClipboardPanel { id: clipboardContent; onDone: ShellState.close() }
+    }
+
+    // Espaces de travail (ADR 0044), sous les points de la barre.
+    Popover {
+        id: spacesPanel
+        padding: Theme.space2
+        align: Popover.End
+        onClosed: if (ShellState.openPanel === "spaces") ShellState.close()
+        SpacesPanel { id: spacesContent; onDone: ShellState.close() }
     }
 
     Popover {

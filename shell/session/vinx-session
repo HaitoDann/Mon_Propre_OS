@@ -32,6 +32,10 @@ if [ -n "$KWC" ]; then
 	for p in search:Meta+Space control:Meta+A calendar:Meta+N clipboard:Meta+V; do
 		"$KWC" --file kglobalshortcutsrc --group services --group "org.vinx.shellctl.${p%%:*}.desktop" --key _launch "${p#*:}"
 	done
+	# Espaces de travail (ADR 0044) : Méta+1…9 pour aller à l'espace N (bureaux virtuels de KWin).
+	for n in 1 2 3 4 5 6 7 8 9; do
+		"$KWC" --file kglobalshortcutsrc --group kwin --key "Switch to Desktop $n" "Meta+$n,none,Switch to Desktop $n"
+	done
 	# Moniteur système VinX à la place de celui de KDE (ADR 0035).
 	"$KWC" --file kglobalshortcutsrc --group services --group org.vinx.monitor.desktop --key _launch "Ctrl+Esc"
 	# Capture d'écran VinX (ADR 0036) : Méta+Maj+S pour choisir, Impr. écran pour tout l'écran.
@@ -54,6 +58,9 @@ if [ -n "$KWC" ]; then
 	"$KWC" --file ksplashrc --group KSplash --key Theme --delete
 	for n in search control calendar clipboard; do
 		"$KWC" --file kglobalshortcutsrc --group services --group "org.vinx.shellctl.$n.desktop" --key _launch --delete
+	done
+	for n in 1 2 3 4 5 6 7 8 9; do
+		"$KWC" --file kglobalshortcutsrc --group kwin --key "Switch to Desktop $n" --delete
 	done
 	"$KWC" --file kglobalshortcutsrc --group services --group org.vinx.monitor.desktop --key _launch --delete
 	"$KWC" --file kglobalshortcutsrc --group services --group org.vinx.screenshot.desktop --key _launch --delete

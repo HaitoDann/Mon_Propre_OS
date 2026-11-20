@@ -26,6 +26,12 @@ Item {
             Session.callDBus("org.kde.KWin", "/VirtualDesktopManager", "org.kde.KWin.VirtualDesktopManager",
                              "setDesktopName", [String(desktops.desktopIds[i]), name])
     }
+    // Supprime un bureau précis (ses fenêtres passent sur un bureau voisin, comme dans KWin).
+    function removeDesktopAt(i) {
+        if (desktops.numberOfDesktops > 1 && i >= 0 && i < desktops.desktopIds.length)
+            Session.callDBus("org.kde.KWin", "/VirtualDesktopManager", "org.kde.KWin.VirtualDesktopManager",
+                             "removeDesktop", [String(desktops.desktopIds[i])])
+    }
     function activateDesktop(i) { if (i >= 0 && i < desktops.desktopIds.length) desktops.requestActivate(desktops.desktopIds[i]) }
 
     function _launcherUrls(ids) { return ids.map(id => "applications:" + id + ".desktop") }

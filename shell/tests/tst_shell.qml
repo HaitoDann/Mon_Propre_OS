@@ -100,6 +100,34 @@ Item {
             Notifications.clear()
         }
 
+        // Espaces de travail (ADR 0044) : menu, aller à un espace, renommer, ajouter, supprimer, bandeau.
+        function test_spaces_menu() {
+            const b = Tasks.backend
+            const btn = bar.findButton("spaces")
+            verify(btn !== null)
+            mouseClick(btn)
+            compare(ShellState.openPanel, "spaces")
+            const add = findChild(panels, "addSpace")
+            verify(add !== null)
+            wait(Theme.durSlow + 50)                  // fin de l'animation d'ouverture
+            const before = b.desktopCount
+            mouseClick(add)
+            compare(b.desktopCount, before + 1)
+            compare(b.desktopNames[before], "Espace " + (before + 1))
+            b.removeDesktopAt(before)
+            compare(b.desktopCount, before)
+            b.renameDesktop(1, "Compta")
+            b.activateDesktop(1)
+            compare(b.currentDesktopIndex, 1)
+            tryCompare(osd, "shown", true)
+            compare(osd.text, "Compta")
+            verify(osd.width < 300)                    // pilule ajustée au nom
+            b.removeDesktopAt(0)                       // l'espace courant glisse d'un rang
+            compare(b.currentDesktopIndex, 0)
+            b.addDesktop(); b.renameDesktop(0, "Bureau 1"); b.renameDesktop(1, "Bureau 2"); b.renameDesktop(2, "Bureau 3")
+            compare(b.desktopCount, 3)
+        }
+
         function test_bar_height() { compare(bar.height, Theme.topbarHeight) }
 
         function test_button_toggles_panel() {

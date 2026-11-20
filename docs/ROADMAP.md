@@ -1,6 +1,6 @@
 # Roadmap
 
-État au 20 novembre 2026 — shell 0.27.0. Phase en cours : **consolidation vers la 1.0** (ADR 0039), gel des fonctions
+État au 20 novembre 2026 — shell 0.28.0. Phase en cours : **consolidation vers la 1.0** (ADR 0039), gel des fonctions
 levé en partie le 20/11 pour le design (écran de connexion, fenêtres aimantées, icônes, animations, fonds).
 
 | Phase | Contenu | État |
@@ -38,6 +38,8 @@ levé en partie le 20/11 pour le design (écran de connexion, fenêtres aimanté
 | D.3 | Icônes des utilitaires par défaut (ADR 0043) | ✅ |
 | D.4 | Animations et transitions (maquette du 20/11) | en attente du choix |
 | D.5 | Variantes du fond « VinX Logo » (maquette du 20/11) | en attente du choix |
+| D.6 | Espaces de travail (ADR 0044) : étape 1 — menu, noms, Méta+1…9, bandeau | ✅ à voir sur le portable |
+| D.7 | Espaces : couleur (accent + fond), tiroir latéral, documents récents (étapes 2 à 4) | à venir |
 
 ## Phase 7 — Publication 1.0
 

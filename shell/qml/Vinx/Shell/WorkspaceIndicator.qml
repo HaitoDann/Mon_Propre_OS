@@ -3,47 +3,54 @@ import Vinx.Theme
 import Vinx.Controls
 import Vinx.System
 
-// Espaces de travail (bureaux virtuels de KWin) : un point par bureau, le courant allongé.
-// Clic sur un point : changer de bureau. Clic sur le bureau courant : vue d'ensemble.
-Item {
+// Espaces de travail (ADR 0044) : bouton discret de la barre. Un point par espace (bureau virtuel de
+// KWin), le courant allongé, suivi du nom de l'espace courant quand il a été renommé.
+// Clic : menu des espaces. Molette : espace précédent / suivant.
+TopBarButton {
     id: ind
+    objectName: "spacesButton"
+    panel: "spaces"
+    spacing: 5
     readonly property var backend: Tasks.backend
     readonly property int count: backend ? backend.desktopCount : 0
     readonly property int current: backend ? backend.currentDesktopIndex : 0
+    readonly property string currentName: backend && backend.desktopNames ? String(backend.desktopNames[current] || "") : ""
+    // Nom affiché seulement s'il a été choisi (pas « Bureau 2 », nom par défaut de KWin).
+    readonly property bool customName: currentName !== "" && !/^(Bureau|Desktop) \d+$/.test(currentName)
 
-    visible: count > 1
-    implicitWidth: row.implicitWidth + Theme.space2 * 2
-    implicitHeight: 24
-    Accessible.role: Accessible.PageTabList
-    Accessible.name: qsTr("Bureau %1 sur %2").arg(current + 1).arg(count)
+    readonly property color dotCurrent: Theme.text
+    readonly property color dotOther: Theme.textTertiary
+    Accessible.name: qsTr("Espaces : %1 (%2 sur %3)").arg(currentName).arg(current + 1).arg(Math.max(1, count))
 
-    Rectangle {
-        anchors.fill: parent
-        radius: Theme.radiusSm
-        color: hover.hovered ? Theme.surfaceHover : "transparent"
+    Repeater {
+        model: Math.max(1, ind.count)
+        Rectangle {
+            required property int index
+            readonly property bool isCurrent: index === ind.current
+            width: isCurrent ? 14 : 6
+            height: 6
+            radius: 3
+            anchors.verticalCenter: parent.verticalCenter
+            color: isCurrent ? ind.dotCurrent : ind.dotOther
+            Behavior on width { NumberAnimation { duration: Theme.durNormal; easing.type: Easing.OutCubic } }
+        }
     }
-    HoverHandler { id: hover }
+    Label {
+        visible: ind.customName
+        anchors.verticalCenter: parent.verticalCenter
+        text: ind.currentName
+        font.pixelSize: Theme.fsSm
+        font.weight: Font.DemiBold
+        elide: Text.ElideRight
+        width: Math.min(implicitWidth, 140)
+    }
 
-    Row {
-        id: row
-        anchors.centerIn: parent
-        spacing: 5
-        Repeater {
-            model: ind.count
-            Rectangle {
-                required property int index
-                readonly property bool isCurrent: index === ind.current
-                width: isCurrent ? 14 : 6
-                height: 6
-                radius: 3
-                anchors.verticalCenter: parent.verticalCenter
-                color: isCurrent ? Theme.text : Theme.textTertiary
-                Behavior on width { NumberAnimation { duration: Theme.durNormal; easing.type: Easing.OutCubic } }
-                MouseArea {
-                    anchors { fill: parent; margins: -5 }
-                    onClicked: parent.isCurrent ? Session.invokeKWinShortcut("Overview") : ind.backend.activateDesktop(parent.index)
-                }
-            }
+    WheelHandler {
+        acceptedDevices: PointerDevice.Mouse
+        onWheel: (e) => {
+            if (!ind.backend || ind.count < 2) return
+            const next = ind.current + (e.angleDelta.y < 0 ? 1 : -1)
+            if (next >= 0 && next < ind.count) ind.backend.activateDesktop(next)
         }
     }
 }

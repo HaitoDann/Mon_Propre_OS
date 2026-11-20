@@ -40,6 +40,13 @@ Window {
     Panels { anchors.fill: parent }
     Osd { id: osd; anchors { horizontalCenter: parent.horizontalCenter; bottom: parent.bottom; bottomMargin: 100 } }
 
+    function findSpaces(item) {
+        if (!item) return null
+        if (typeof item.addSpace === "function") return item
+        const kids = item.children || []
+        for (let i = 0; i < kids.length; ++i) { const r = findSpaces(kids[i]); if (r) return r }
+        return null
+    }
     // Ouverture d'un panneau au démarrage (--open), après la mise en page.
     Timer {
         interval: 150
@@ -52,6 +59,14 @@ Window {
             }
             if (win.startOpen === "osd") { osd.show("volume", "volume", 64, ""); return }
             if (win.startOpen === "power") { ShellState.askPower("all"); return }
+            if (win.startOpen.startsWith("spaces")) {     // espaces nommés (ADR 0044)
+                const b = Tasks.backend
+                if (win.demo && b) { b.renameDesktop(0, "Travail"); b.renameDesktop(1, "Compta"); b.renameDesktop(2, "Maison") }
+                if (win.startOpen === "spaces-switch") { b.activateDesktop(1); return }
+                bar.findButton("spaces").open()
+                if (win.startOpen === "spaces-edit") Qt.callLater(() => { const p = findSpaces(win.contentItem); if (p) p.editing = true })
+                return
+            }
             if (win.startOpen === "search") { ShellState.toggle("search", Qt.rect(0, 0, 0, 0)); return }
             if (win.startOpen === "clipboard") {      // historique d'exemple
                 if (win.demo) {

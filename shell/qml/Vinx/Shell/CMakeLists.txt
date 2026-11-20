@@ -37,6 +37,7 @@ qt_add_qml_module(vinxshell
         Calc.js
         AppearanceSync.qml
         WorkspaceIndicator.qml
+        SpacesPanel.qml
         Widget.qml
         DesktopWidgets.qml
         CalendarGrid.qml

@@ -1,6 +1,6 @@
 # ADR 0044 — Espaces de travail VinX
 
-- **Statut** : proposé (maquette validée dans ses principes le 20/11/2026, en attente du feu vert pour coder)
+- **Statut** : accepté — étape 1 faite (0.28.0), étapes 2 à 4 à venir
 - **Date** : 2026-11-20
 
 ## Contexte

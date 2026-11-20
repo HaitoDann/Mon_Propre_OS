@@ -13,7 +13,7 @@ Rectangle {
     implicitHeight: Theme.topbarHeight
 
     // Bouton associé à un panneau (ouverture au démarrage, tests).
-    function findButton(panel) { return ({ system: systemButton, search: searchButton, control: statusButton, calendar: clockButton })[panel] }
+    function findButton(panel) { return ({ system: systemButton, search: searchButton, control: statusButton, calendar: clockButton, spaces: spacesButton })[panel] }
     color: Theme.surfaceGlass
     Behavior on color { ColorAnimation { duration: Theme.durNormal } }
 
@@ -69,7 +69,7 @@ Rectangle {
             onActivated: Session.invokeKWinShortcut("Overview")
             Icon { name: "grid"; color: Theme.text; anchors.verticalCenter: parent.verticalCenter }
         }
-        WorkspaceIndicator { anchors.verticalCenter: parent.verticalCenter }
+        WorkspaceIndicator { id: spacesButton; anchors.verticalCenter: parent.verticalCenter }
 
         // Mises à jour en cours d'installation (arrière-plan) : progression, clic → Store.
         Item {
