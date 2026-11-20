@@ -32,6 +32,11 @@ if [ -n "$KWC" ]; then
 	for p in search:Meta+Space control:Meta+A calendar:Meta+N clipboard:Meta+V; do
 		"$KWC" --file kglobalshortcutsrc --group services --group "org.vinx.shellctl.${p%%:*}.desktop" --key _launch "${p#*:}"
 	done
+	# Écran de verrouillage VinX : Plasma écrit souvent « Breeze » dans la configuration de
+	# l'utilisateur (kdeglobals, kscreenlockerrc), qui passe avant /etc/xdg ; kscreenlocker
+	# affichait alors l'écran Breeze au verrouillage.
+	"$KWC" --file kdeglobals --group KDE --key LookAndFeelPackage org.vinx.desktop
+	"$KWC" --file kscreenlockerrc --group Greeter --key Theme org.vinx.desktop
 	# Espaces de travail (ADR 0044) : Méta+1…9 pour aller à l'espace N (bureaux virtuels de KWin).
 	for n in 1 2 3 4 5 6 7 8 9; do
 		"$KWC" --file kglobalshortcutsrc --group kwin --key "Switch to Desktop $n" "Meta+$n,none,Switch to Desktop $n"
