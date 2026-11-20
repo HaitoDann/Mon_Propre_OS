@@ -18,7 +18,7 @@ jobs:
           apt-get update
           apt-get install -y --no-install-recommends git ca-certificates build-essential dpkg-dev debhelper cmake python3 \
             qt6-base-dev qt6-declarative-dev qt6-svg-dev qt6-l10n-tools liblayershellqtinterface-dev libkf6kio-dev libqtermwidget-dev libutf8proc-dev libpolkit-qt6-1-dev rsync qml6-module-qtquick qml6-module-qtquick-window qml6-module-qtquick-shapes qml6-module-qtquick-dialogs \
-            qml6-module-qtqml-workerscript qml6-module-qttest fonts-inter
+            qml6-module-qtqml-workerscript qml6-module-qttest fonts-inter gdb
       - uses: actions/checkout@v4
       - name: Vérifier la prise en charge de layer-shell
         run: test -n "$(find /usr -name 'LayerShellQtConfig.cmake' 2>/dev/null)"
@@ -36,7 +36,8 @@ jobs:
           vinx-gallery --screenshot captures/galerie-sombre.png
           vinx-gallery --open cc --screenshot captures/centre-de-controle.png
           vinx-gallery --light --open menu --screenshot captures/galerie-claire.png
-          LANG=fr_FR.UTF-8 vinx-shell --open control --screenshot captures/barre-centre-de-controle.png
+          # Plantage en cas d'erreur : pile d'appels dans le journal (diagnostic, gdb ne change pas le code de sortie).
+          LANG=fr_FR.UTF-8 gdb -q -batch -return-child-result -ex run -ex "thread apply all bt 25" --args vinx-shell --open control --screenshot captures/barre-centre-de-controle.png
           LANG=fr_FR.UTF-8 vinx-shell --open calendar --screenshot captures/barre-calendrier.png
           LANG=fr_FR.UTF-8 vinx-shell --demo --open dock --screenshot captures/dock.png
       - uses: actions/upload-artifact@v4
