@@ -3,6 +3,8 @@
 // Session Wayland (KWin) : la barre et sa couche de panneaux sont des surfaces layer-shell.
 // Ailleurs (X11, développement, --preview) : une seule fenêtre d'aperçu.
 
+#include <cstdio>
+#include <cstdlib>
 #include <QCommandLineParser>
 #include "vinxi18n.h"
 #include "themeicons.h"   // image://theme/<nom>, commun avec les applications
@@ -101,7 +103,11 @@ int main(int argc, char *argv[])
         if (parser.isSet(shot)) {
             const QString file = parser.value(shot);
             QTimer::singleShot(900, &app, [window, file] {
-                QCoreApplication::exit(window && window->grabWindow().save(file) ? 0 : 2);
+                const bool ok = window && window->grabWindow().save(file);
+                // Mode capture (aperçus, CI) : on quitte sans détruire le moteur QML ni les modèles
+                // KDE (libtaskmanager), dont la destruction plantait par intermittence sous Qt 6.8.
+                std::fflush(nullptr);
+                std::_Exit(ok ? 0 : 2);
             });
         }
         return app.exec();
