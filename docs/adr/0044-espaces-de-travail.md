@@ -1,6 +1,6 @@
 # ADR 0044 — Espaces de travail VinX
 
-- **Statut** : accepté — étapes 1 (0.28.0) et 2 (0.29.0) faites, étapes 3 et 4 à venir
+- **Statut** : accepté — terminé à l'étape 2 (0.29.0) ; tiroir latéral et documents récents abandonnés (20/11/2026)
 - **Date** : 2026-11-20
 
 ## Contexte
@@ -52,3 +52,18 @@ Maquette : « Espaces VinX » (20/11/2026).
   points de la barre prennent tous la couleur de leur espace (vert pour ceux qui n'en ont pas).
 - La décoration des fenêtres (vinx-window-theme) et l'écran de connexion restent sur l'accent global :
   pas de rechargement de KWin à chaque changement d'espace.
+
+## Abandon des étapes 3 et 4 (20/11/2026)
+
+Le tiroir latéral (bord gauche) et les documents récents par espace sont **abandonnés**, sur décision de
+l'utilisateur :
+- **Double emploi** : le dock, Fichiers (favoris) et la recherche (Méta) couvrent déjà les applications,
+  les dossiers et les documents récents.
+- **Invisibilité** : un tiroir qui n'apparaît qu'au bord de l'écran est peu découvert, et il s'ouvre par
+  accident (barres de défilement, fenêtres agrandies).
+- **Coût** : nouvelle fenêtre du shell, glisser-déposer, journal par espace, réglages et tests, contre la
+  priorité « simplicité, stabilité » de la 1.0.
+
+Les espaces s'arrêtent donc aux noms, aux couleurs, au menu de la barre et à Méta+1…9. Une piste légère
+reste possible plus tard sans nouvelle interface : que la recherche (Méta) classe d'abord les documents
+ouverts dans l'espace courant.
