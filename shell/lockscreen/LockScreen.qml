@@ -2,7 +2,6 @@ import QtQuick
 import Vinx.Theme
 import Vinx.Controls
 import Vinx.System
-import Vinx.Shell
 
 // Écran de verrouillage de VinX OS, chargé par kscreenlocker (KDE) via le paquet d'apparence
 // org.vinx.desktop. La sécurité reste celle de KDE : l'authentification passe par l'objet
@@ -23,14 +22,38 @@ Item {
     property string message: ""
     property date now: new Date()
 
-    AppearanceSync {}
+    // Apparence de la session (clair/sombre, accent) lue directement dans les préférences : l'écran ne
+    // charge pas le module du bureau (Vinx.Shell), trop lourd pour le processus de verrouillage de KDE ;
+    // une erreur de chargement y fait afficher l'écran Breeze de secours.
+    function truthy(v) { return v === true || v === "true" }
+    function applyAppearance() {
+        Theme.dark = truthy(Preferences.value("appearance/dark", false))
+        const a = String(Preferences.value("appearance/resolvedAccent", ""))
+        Theme.accentId = Theme.accents.some(e => e.id === a) ? a : Theme.accents[0].id
+        Theme.highContrast = truthy(Preferences.value("accessibility/highContrast", false))
+        Theme.reduceMotion = truthy(Preferences.value("accessibility/reduceMotion", false))
+    }
 
     Timer { interval: 1000; running: true; repeat: true; onTriggered: root.now = new Date() }
 
     // ---------- Fond : le fond d'écran du bureau, assombri ----------
     Rectangle { anchors.fill: parent; color: Theme.background }
     // Même fond que le bureau (dont « VinX Logo » à la couleur d'accent).
-    Background { anchors.fill: parent; interactive: false }
+    readonly property string wallpaper: String(Preferences.value("desktop/wallpaper", ""))
+    readonly property var logoMatch: /\/VinX-Logo(-Sombre)?\//.exec(wallpaper)
+    LogoWallpaper {
+        anchors.fill: parent
+        visible: root.wallpaper === "" || root.logoMatch !== null
+        dark: root.logoMatch !== null && root.logoMatch[1] !== undefined ? true : Theme.dark
+    }
+    Image {
+        anchors.fill: parent
+        visible: status === Image.Ready && root.wallpaper !== "" && root.logoMatch === null
+        source: root.wallpaper !== "" && root.logoMatch === null ? "file://" + root.wallpaper : ""
+        fillMode: Image.PreserveAspectCrop
+        asynchronous: true
+        sourceSize: Qt.size(root.width, root.height)
+    }
     Rectangle { anchors.fill: parent; color: Theme.background; opacity: 0.3 }
 
     // ---------- Heure et date ----------
@@ -188,5 +211,5 @@ Item {
 
     // Toute frappe ramène au champ de mot de passe.
     Keys.onPressed: (e) => { if (!password.activeFocus) { password.forceActiveFocus(); password.text += e.text } }
-    Component.onCompleted: password.forceActiveFocus()
+    Component.onCompleted: { applyAppearance(); password.forceActiveFocus() }
 }

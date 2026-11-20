@@ -3,6 +3,9 @@ vinx-shell (0.29.1) trixie; urgency=medium
   * Verrouillage : l'écran VinX est imposé à l'ouverture de session
     (kdeglobals LookAndFeelPackage et kscreenlockerrc Greeter/Theme de
     l'utilisateur) ; Plasma y laissait Breeze, affiché au verrouillage.
+  * Écran de verrouillage autonome : il n'importe plus le module du bureau
+    (Vinx.Shell) et lit l'apparence directement ; son chargement échouait
+    dans le processus de verrouillage de KDE, qui affichait alors Breeze.
 
  -- VinX OS <vinx@localhost>  Fri, 20 Nov 2026 17:50:00 +0000
 
