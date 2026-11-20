@@ -18,8 +18,13 @@ Column {
     readonly property var names: backend && backend.desktopNames ? backend.desktopNames : []
     property bool editing: false
     property int focusIndex: -1          // champ de nom à activer après « Nouvel espace »
+    property int paletteFor: -1          // espace dont on choisit la couleur (mode « Modifier »)
+    onEditingChanged: if (!editing) paletteFor = -1
+    // Accent global (vert par défaut) : couleur des espaces sans couleur propre.
+    readonly property var globalAccent: { Preferences.revision; const id = String(Preferences.value("appearance/resolvedAccent", "")); return Theme.accents.find(a => a.id === id) || Theme.accents[0] }
+    function fillOf(i) { const f = ShellState.spaceFill(i); return f !== "" ? f : globalAccent.fill }
 
-    function reset() { editing = false; focusIndex = -1 }
+    function reset() { editing = false; focusIndex = -1; paletteFor = -1 }
     function nameOf(i) {
         const n = String(names[i] || "")
         return n !== "" ? n : qsTr("Espace %1").arg(i + 1)
@@ -72,10 +77,23 @@ Column {
                 id: badge
                 anchors { left: parent.left; leftMargin: Theme.space2; verticalCenter: parent.verticalCenter }
                 width: 30; height: 22; radius: 6
-                color: Theme.surfaceSunken
-                border.width: row.isCurrent ? 2 : 1
-                border.color: row.isCurrent ? Theme.accentForeground : Theme.border
-                Label { anchors.centerIn: parent; text: row.index + 1; font.pixelSize: Theme.fsSm; font.weight: Font.DemiBold }
+                // Pastille à la couleur de l'espace (ADR 0044) : pleine pour l'espace courant.
+                readonly property color fill: (ShellState.spaceColors, panel.backend.desktopIds, panel.fillOf(row.index))
+                color: row.isCurrent ? fill : Theme.surfaceSunken
+                border.width: 2
+                border.color: fill
+                Label {
+                    anchors.centerIn: parent; text: row.index + 1; font.pixelSize: Theme.fsSm; font.weight: Font.DemiBold
+                    color: row.isCurrent ? (Theme.accents.find(a => a.fill === String(badge.fill).toUpperCase()) || Theme.accents[0]).ink : Theme.text
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    enabled: panel.editing
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: panel.paletteFor = panel.paletteFor === row.index ? -1 : row.index
+                }
+                Accessible.role: panel.editing ? Accessible.Button : Accessible.StaticText
+                Accessible.name: qsTr("Couleur de l'espace %1").arg(row.index + 1)
             }
 
             Label {
@@ -142,6 +160,73 @@ Column {
                 onClicked: panel.backend.removeDesktopAt(row.index)
             }
         }
+    }
+
+    // Palette de l'espace choisi : « Par défaut » (accent global, vert) puis les 8 accents.
+    Column {
+        visible: panel.editing && panel.paletteFor >= 0 && panel.paletteFor < panel.count
+        width: panel.width
+        spacing: Theme.space2
+        topPadding: Theme.space1
+        bottomPadding: Theme.space2
+        Label {
+            leftPadding: Theme.space2
+            text: qsTr("Couleur de « %1 »").arg(panel.nameOf(Math.max(0, panel.paletteFor)))
+            level: Label.Secondary
+            font.pixelSize: Theme.fsSm
+        }
+        Flow {
+            x: Theme.space2
+            width: panel.width - Theme.space2 * 2
+            spacing: 8
+            Repeater {
+                model: [""].concat(Theme.accents.map(a => a.id))
+                delegate: Rectangle {
+                    id: sw
+                    required property string modelData
+                    readonly property var entry: modelData === "" ? panel.globalAccent : Theme.accents.find(a => a.id === modelData)
+                    readonly property bool chosen: (ShellState.spaceColors, ShellState.spaceColorAt(panel.paletteFor)) === modelData
+                    objectName: "swatch_" + (modelData || "default")
+                    width: modelData === "" ? defLabel.implicitWidth + 22 : 26; height: 26; radius: 13
+                    color: entry.fill
+                    border.width: chosen ? 2 : 0
+                    border.color: Theme.text
+                    Rectangle {      // anneau intérieur blanc quand choisie
+                        visible: sw.chosen
+                        anchors { fill: parent; margins: 2 }
+                        radius: width / 2
+                        color: "transparent"
+                        border.width: 2
+                        border.color: Theme.surfaceGlassStrong
+                    }
+                    Label {
+                        id: defLabel
+                        visible: sw.modelData === ""
+                        anchors.centerIn: parent
+                        text: qsTr("Par défaut")
+                        font.pixelSize: Theme.fsXs
+                        font.weight: Font.DemiBold
+                        color: sw.entry.ink
+                    }
+                    MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: ShellState.setSpaceColorAt(panel.paletteFor, sw.modelData) }
+                    Accessible.role: Accessible.RadioButton
+                    Accessible.checked: chosen
+                    Accessible.name: sw.modelData === "" ? qsTr("Par défaut (%1)").arg(panel.globalAccent.name) : sw.entry.name
+                }
+            }
+        }
+    }
+
+    Label {
+        visible: panel.editing && panel.paletteFor < 0
+        width: panel.width
+        leftPadding: Theme.space2
+        rightPadding: Theme.space2
+        bottomPadding: Theme.space1
+        wrapMode: Text.WordWrap
+        text: qsTr("Cliquez sur le numéro d'un espace pour choisir sa couleur.")
+        level: Label.Tertiary
+        font.pixelSize: Theme.fsXs
     }
 
     Rectangle { width: panel.width; height: 1; color: Theme.border; opacity: 0.8 }

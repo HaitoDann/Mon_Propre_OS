@@ -15,12 +15,15 @@ QtObject {
     property int desktopCount: 3
     property int currentDesktopIndex: 0
     property var desktopNames: ["Bureau 1", "Bureau 2", "Bureau 3"]
-    function addDesktop() { desktopNames = desktopNames.concat(["Bureau " + (desktopCount + 1)]); desktopCount++ }
-    function removeDesktop() { if (desktopCount > 1) { desktopCount--; desktopNames = desktopNames.slice(0, desktopCount); currentDesktopIndex = Math.min(currentDesktopIndex, desktopCount - 1) } }
+    property var desktopIds: ["d1", "d2", "d3"]
+    property int _nextId: 4
+    function addDesktop() { desktopNames = desktopNames.concat(["Bureau " + (desktopCount + 1)]); desktopIds = desktopIds.concat(["d" + _nextId++]); desktopCount++ }
+    function removeDesktop() { if (desktopCount > 1) { desktopCount--; desktopNames = desktopNames.slice(0, desktopCount); desktopIds = desktopIds.slice(0, desktopCount); currentDesktopIndex = Math.min(currentDesktopIndex, desktopCount - 1) } }
     function renameDesktop(i, name) { const n = desktopNames.slice(); n[i] = name; desktopNames = n }
     function removeDesktopAt(i) {
         if (desktopCount <= 1 || i < 0 || i >= desktopCount) return
         const n = desktopNames.slice(); n.splice(i, 1); desktopNames = n
+        const ids = desktopIds.slice(); ids.splice(i, 1); desktopIds = ids
         desktopCount--
         if (currentDesktopIndex > i || currentDesktopIndex >= desktopCount) currentDesktopIndex = Math.max(0, currentDesktopIndex - 1)
     }

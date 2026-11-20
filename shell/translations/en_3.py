@@ -448,4 +448,9 @@ T = {
 "Supprimer l'espace (ses fenêtres vont dans un espace voisin)": 'Delete space (its windows move to a neighbouring space)',
 'Nouvel espace': 'New space',
 'Terminé': 'Done',
+"Couleur de l'espace %1": 'Colour of space %1',
+'Couleur de « %1 »': 'Colour of “%1”',
+'Par défaut': 'Default',
+'Par défaut (%1)': 'Default (%1)',
+"Cliquez sur le numéro d'un espace pour choisir sa couleur.": "Click a space's number to choose its colour.",
 }

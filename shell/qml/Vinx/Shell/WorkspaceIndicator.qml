@@ -31,7 +31,11 @@ TopBarButton {
             height: 6
             radius: 3
             anchors.verticalCenter: parent.verticalCenter
-            color: isCurrent ? ind.dotCurrent : ind.dotOther
+            // Dès qu'un espace a une couleur (ADR 0044) : chaque point prend celle de son espace (vert par
+            // défaut) ; sinon encre / gris comme avant.
+            readonly property string fill: (ShellState.spaceColors, ind.backend ? ind.backend.desktopIds : 0, ShellState.anySpaceColored ? ShellState.spaceFillOrGlobal(index) : "")
+            color: fill !== "" ? fill : isCurrent ? ind.dotCurrent : ind.dotOther
+            opacity: fill !== "" && !isCurrent ? 0.55 : 1
             Behavior on width { NumberAnimation { duration: Theme.durNormal; easing.type: Easing.OutCubic } }
         }
     }

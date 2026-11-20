@@ -4789,43 +4789,68 @@
 <context>
     <name>SpacesPanel</name>
     <message>
-        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="25" />
-        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="31" />
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="30" />
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="36" />
         <source>Espace %1</source>
         <translation>Space %1</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="40" />
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="45" />
         <source>Espaces</source>
         <translation>Spaces</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="92" />
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="96" />
+        <source>Couleur de l'espace %1</source>
+        <translation>Colour of space %1</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="110" />
         <source>Méta+%1</source>
         <translation>Meta+%1</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="119" />
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="137" />
         <source>Nom de l'espace %1</source>
         <translation>Name of space %1</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="141" />
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="159" />
         <source>Supprimer l'espace (ses fenêtres vont dans un espace voisin)</source>
         <translation>Delete space (its windows move to a neighbouring space)</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="155" />
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="174" />
+        <source>Couleur de « %1 »</source>
+        <translation>Colour of “%1”</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="206" />
+        <source>Par défaut</source>
+        <translation>Default</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="214" />
+        <source>Par défaut (%1)</source>
+        <translation>Default (%1)</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="227" />
+        <source>Cliquez sur le numéro d'un espace pour choisir sa couleur.</source>
+        <translation>Click a space's number to choose its colour.</translation>
+    </message>
+    <message>
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="240" />
         <source>Nouvel espace</source>
         <translation>New space</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="162" />
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="247" />
         <source>Terminé</source>
         <translation>Done</translation>
     </message>
     <message>
-        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="162" />
+        <location filename="../qml/Vinx/Shell/SpacesPanel.qml" line="247" />
         <source>Modifier</source>
         <translation>Edit</translation>
     </message>
@@ -5413,7 +5438,7 @@
 <context>
     <name>WorkspaceIndicator</name>
     <message>
-        <location filename="../qml/Vinx/Shell/WorkspaceIndicator.qml" line="21" />
+        <location filename="../qml/Vinx/Shell/WorkspaceIndicator.qml" line="23" />
         <source>Espaces : %1 (%2 sur %3)</source>
         <translation>Spaces: %1 (%2 of %3)</translation>
     </message>

@@ -128,6 +128,30 @@ Item {
             compare(b.desktopCount, 3)
         }
 
+        Component { id: syncComp; AppearanceSync { spaces: true } }
+        // Couleur des espaces (ADR 0044, étape 2) : l'accent suit l'espace, vert par défaut, halo.
+        function test_space_colors() {
+            const b = Tasks.backend
+            const sync = createTemporaryObject(syncComp, root)
+            b.activateDesktop(0)
+            compare(Theme.accentId, "vert")
+            compare(ShellState.spaceTinted, false)
+            ShellState.setSpaceColorAt(1, "corail")
+            compare(ShellState.spaceColorAt(1), "corail")
+            verify(ShellState.anySpaceColored)
+            b.activateDesktop(1)
+            tryCompare(Theme, "accentId", "corail")
+            compare(ShellState.spaceTinted, true)
+            b.activateDesktop(0)
+            tryCompare(Theme, "accentId", "vert")
+            compare(ShellState.spaceTinted, false)
+            ShellState.setSpaceColorAt(1, "rouge-inconnu")   // valeur inconnue : ignorée
+            compare(ShellState.spaceColorAt(1), "")
+            ShellState.setSpaceColorAt(1, "")
+            compare(ShellState.anySpaceColored, false)
+            Theme.dark = true
+        }
+
         function test_bar_height() { compare(bar.height, Theme.topbarHeight) }
 
         function test_button_toggles_panel() {

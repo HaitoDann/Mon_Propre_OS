@@ -1,6 +1,6 @@
 # ADR 0044 — Espaces de travail VinX
 
-- **Statut** : accepté — étape 1 faite (0.28.0), étapes 2 à 4 à venir
+- **Statut** : accepté — étapes 1 (0.28.0) et 2 (0.29.0) faites, étapes 3 et 4 à venir
 - **Date** : 2026-11-20
 
 ## Contexte
@@ -42,3 +42,12 @@ Maquette : « Espaces VinX » (20/11/2026).
   sur le portable.
 - Le changement d'accent régénère la décoration des fenêtres (vinx-window-theme), ce qui pourrait être trop lent
   pour un changement d'espace fréquent. Si c'est le cas, l'accent de la décoration restera fixe.
+
+## Étape 2 (0.29.0) — précisions
+
+- Couleur stockée par identifiant KWin du bureau (`spaces/colors`, JSON) : elle suit l'espace même si
+  l'ordre change ; les entrées des espaces supprimés sont nettoyées.
+- Sans couleur, un espace garde l'accent global (vert par défaut). Dès qu'un espace est coloré, les
+  points de la barre prennent tous la couleur de leur espace (vert pour ceux qui n'en ont pas).
+- La décoration des fenêtres (vinx-window-theme) et l'écran de connexion restent sur l'accent global :
+  pas de rechargement de KWin à chaque changement d'espace.

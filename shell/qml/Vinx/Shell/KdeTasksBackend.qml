@@ -18,6 +18,7 @@ Item {
     readonly property int desktopCount: desktops.numberOfDesktops
     readonly property int currentDesktopIndex: Math.max(0, desktops.desktopIds.indexOf(desktops.currentDesktop))
     readonly property var desktopNames: desktops.desktopNames
+    readonly property var desktopIds: desktops.desktopIds.map(String)
     // Paramètres → Bureau (ADR 0030) : nombre et noms des bureaux virtuels, sans le module KDE.
     function addDesktop() { desktops.requestCreateDesktop(desktops.numberOfDesktops) }
     function removeDesktop() { if (desktops.numberOfDesktops > 1) desktops.requestRemoveLastDesktop() }

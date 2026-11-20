@@ -8,7 +8,7 @@ Window {
     width: 1280; height: 800
     visible: true
     title: "VinX Shell — aperçu"
-    AppearanceSync { id: appearance }
+    AppearanceSync { id: appearance; spaces: true }
     color: Theme.background
 
     property bool startLight: false
@@ -61,10 +61,16 @@ Window {
             if (win.startOpen === "power") { ShellState.askPower("all"); return }
             if (win.startOpen.startsWith("spaces")) {     // espaces nommés (ADR 0044)
                 const b = Tasks.backend
-                if (win.demo && b) { b.renameDesktop(0, "Travail"); b.renameDesktop(1, "Compta"); b.renameDesktop(2, "Maison") }
+                if (win.demo && b) {
+                    b.renameDesktop(0, "Travail"); b.renameDesktop(1, "Compta"); b.renameDesktop(2, "Maison")
+                    if (win.startOpen.indexOf("color") >= 0) { ShellState.setSpaceColorAt(1, "corail"); ShellState.setSpaceColorAt(2, "lagon") }
+                }
+                if (win.startOpen === "spaces-color-switch") { b.activateDesktop(1); return }
+                if (win.startOpen === "spaces-color-dark") { Preferences.setValue("appearance/dark", true); b.activateDesktop(2); return }
                 if (win.startOpen === "spaces-switch") { b.activateDesktop(1); return }
                 bar.findButton("spaces").open()
-                if (win.startOpen === "spaces-edit") Qt.callLater(() => { const p = findSpaces(win.contentItem); if (p) p.editing = true })
+                if (win.startOpen === "spaces-edit" || win.startOpen === "spaces-color-edit")
+                    Qt.callLater(() => { const p = findSpaces(win.contentItem); if (p) { p.editing = true; if (win.startOpen === "spaces-color-edit") p.paletteFor = 1 } })
                 return
             }
             if (win.startOpen === "search") { ShellState.toggle("search", Qt.rect(0, 0, 0, 0)); return }
