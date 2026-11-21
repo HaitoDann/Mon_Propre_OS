@@ -1895,28 +1895,30 @@
 <context>
     <name>LockScreen</name>
     <message>
-        <location filename="../lockscreen/LockScreen.qml" line="84" />
+        <location filename="../lockscreen/LockScreen.qml" line="106" />
+        <location filename="../lockscreen/LockScreen.qml" line="107" />
         <source>Session verrouillée</source>
         <translation>Session locked</translation>
     </message>
     <message>
-        <location filename="../lockscreen/LockScreen.qml" line="110" />
-        <location filename="../lockscreen/LockScreen.qml" line="117" />
+        <location filename="../lockscreen/LockScreen.qml" line="136" />
+        <location filename="../lockscreen/LockScreen.qml" line="141" />
         <source>Mot de passe</source>
         <translation>Password</translation>
     </message>
     <message>
-        <location filename="../lockscreen/LockScreen.qml" line="131" />
+        <location filename="../lockscreen/LockScreen.qml" line="152" />
         <source>Déverrouiller</source>
         <translation>Unlock</translation>
     </message>
     <message>
-        <location filename="../lockscreen/LockScreen.qml" line="160" />
+        <location filename="../lockscreen/LockScreen.qml" line="177" />
+        <location filename="../lockscreen/LockScreen.qml" line="181" />
         <source>Mettre en veille</source>
         <translation>Sleep</translation>
     </message>
     <message>
-        <location filename="../lockscreen/LockScreen.qml" line="178" />
+        <location filename="../lockscreen/LockScreen.qml" line="198" />
         <source>Mot de passe incorrect.</source>
         <translation>Wrong password.</translation>
     </message>

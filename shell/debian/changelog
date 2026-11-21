@@ -1,3 +1,11 @@
+vinx-shell (0.29.3) trixie; urgency=medium
+
+  * Écran de verrouillage au même dessin que l'écran de connexion :
+    panneau latéral à gauche (heure, compte, mot de passe, veille), fond
+    « VinX Logo » à l'accent à droite ; suit le clair/sombre et l'accent.
+
+ -- VinX OS <vinx@localhost>  Sat, 21 Nov 2026 00:15:00 +0000
+
 vinx-shell (0.29.2) trixie; urgency=medium
 
   * Écran de verrouillage VinX enfin affiché (ADR 0045) : kscreenlocker 6
